@@ -22,17 +22,42 @@ const ImagePage = () => {
                 <Card
                     // onClick={() => router.push(tool.href)}
                     key={tool.href}
-                    className="p-4 border-black/5 flex items-center justify-between shadow-md hover:shadow-lg hover:bg-white/30 hover:scale-[101%] transition duration-150 cursor-pointer"
+                    className="p-4 border-black/5 shadow-md hover:shadow-lg hover:bg-white/30 hover:scale-[101%] transition duration-150 cursor-pointer"
                 >
-                    <div className="flex items-center gap-4">
-                        <div
-                            className={cn("p-2 w-fit rounded-md", tool.bgColor)}
-                        >
-                            <tool.icon className={cn("w-8 h-8", tool.color)} />
+                    {/* First Row */}
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-4">
+                            <div
+                                className={cn(
+                                    "p-2 w-fit rounded-md",
+                                    tool.bgColor
+                                )}
+                            >
+                                <tool.icon
+                                    className={cn("w-8 h-8", tool.color)}
+                                />
+                            </div>
+                            <p className="font-semibold">{tool.label}</p>
                         </div>
-                        <p className="font-semibold">{tool.label}</p>
+                        {/* Additional content for the first row */}
                     </div>
-                    <ArrowRight />
+
+                    {/* Second Row */}
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                            <div
+                                className={cn(
+                                    "p-2 w-fit rounded-md",
+                                    tool.bgColor
+                                )}
+                            >
+                                <tool.icon
+                                    className={cn("w-8 h-8", tool.color)}
+                                />
+                            </div>
+                            <p className="font-semibold">{tool.label}</p>
+                        </div>
+                    </div>
                 </Card>
             </div>
         </div>

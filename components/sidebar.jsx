@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import {
     Book,
     GridIcon,
+    Home,
     LayoutDashboard,
     ListChecks,
     MessageSquareIcon,
@@ -44,6 +45,12 @@ const routes = [
         icon: Book,
         href: "/docs",
         color: "text-orange-500",
+    },
+    {
+        label: "Home",
+        icon: Home,
+        href: "/",
+        color: "text-blue-500",
     },
     // {
     //     label: "Chat",
