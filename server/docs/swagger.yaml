@@ -1,0 +1,76 @@
+definitions:
+  user.ErrorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  user.Product:
+    properties:
+      product_desc:
+        type: string
+      product_id:
+        type: string
+      product_name:
+        type: string
+      product_price:
+        type: number
+    type: object
+  user.PurchaseRequest:
+    properties:
+      product_ids:
+        items:
+          type: string
+        type: array
+      user_id:
+        type: string
+    type: object
+  user.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /api/users/products:
+    get:
+      description: Get a list of all products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/user.Product'
+            type: array
+      summary: Get products
+      tags:
+      - products
+  /api/users/purchase:
+    post:
+      consumes:
+      - application/json
+      description: Create a purchase record for a user
+      parameters:
+      - description: Purchase Request Body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.PurchaseRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/user.ErrorResponse'
+      summary: Create a purchase
+      tags:
+      - purchases
+swagger: "2.0"

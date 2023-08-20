@@ -12,10 +12,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
     return (
         <ClerkProvider>
-            <head>
-                <link rel="icon" href="/logo-new.png" />
-            </head>
             <html lang="en">
+                <head>
+                    <link rel="icon" href="/logo-new.png" />
+                    {/* Load the Inter font */}
+                    <style>{`
+                        ${inter.style}
+                    `}</style>
+                </head>
                 <body className={inter.className}>{children}</body>
             </html>
         </ClerkProvider>
