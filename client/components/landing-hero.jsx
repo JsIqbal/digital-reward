@@ -2,7 +2,7 @@
 
 import TypewriterComponent from "typewriter-effect";
 import Link from "next/link";
-import { useAuth } from "@clerk/nextjs";
+import useAuth from "@/hooks/useAuth";
 
 import { Button } from "@/components/ui/button";
 

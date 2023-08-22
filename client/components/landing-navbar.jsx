@@ -1,12 +1,13 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useAuth } from "@clerk/nextjs";
 import { Montserrat } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
+
+import useAuth from "@/hooks/useAuth";
 
 const font = Montserrat({
     weight: "600",
