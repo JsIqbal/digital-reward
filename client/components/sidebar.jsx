@@ -28,18 +28,18 @@ const routes = [
         color: "text-purple-500",
     },
 
-    {
-        label: "Campaign",
-        icon: GridIcon,
-        href: "/campaign",
-        color: "text-green-500",
-    },
-    {
-        label: "Report",
-        icon: ListChecks,
-        href: "/report",
-        color: "text-yellow-500",
-    },
+    // {
+    //     label: "Campaign",
+    //     icon: GridIcon,
+    //     href: "/campaign",
+    //     color: "text-green-500",
+    // },
+    // {
+    //     label: "Report",
+    //     icon: ListChecks,
+    //     href: "/report",
+    //     color: "text-yellow-500",
+    // },
     {
         label: "Documentation",
         icon: Book,

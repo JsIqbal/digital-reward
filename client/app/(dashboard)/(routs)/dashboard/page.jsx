@@ -21,20 +21,20 @@ const tools = [
         bgColor: "bg-purple-300",
     },
 
-    {
-        label: "Create & manage campaigns",
-        icon: GridIcon,
-        href: "/campaign",
-        color: "text-green-900",
-        bgColor: "bg-green-300",
-    },
-    {
-        label: "Download & Visualize Reports",
-        icon: ListChecks,
-        href: "/report",
-        color: "text-yellow-900",
-        bgColor: "bg-yellow-300",
-    },
+    // {
+    //     label: "Create & manage campaigns",
+    //     icon: GridIcon,
+    //     href: "/campaign",
+    //     color: "text-green-900",
+    //     bgColor: "bg-green-300",
+    // },
+    // {
+    //     label: "Download & Visualize Reports",
+    //     icon: ListChecks,
+    //     href: "/report",
+    //     color: "text-yellow-900",
+    //     bgColor: "bg-yellow-300",
+    // },
     {
         label: "See Through The Documentation",
         icon: Book,
