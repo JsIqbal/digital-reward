@@ -19,10 +19,9 @@ const LandingPage = () => {
                         </a>
                         . All Rights Reserved.
                     </span>
-                    <ul className="flex flex-wrap items-center mt-3 text-sm font-medium text-white dark:text-white sm:mt-0">
-                        <li className="flex gap-3 mr-4">Powered by CES |</li>
+                    <ul className=" flex-wrap items-center mt-3 text-sm font-medium text-white dark:text-white sm:mt-0">
                         <li className="flex gap-3">
-                            Contact us:
+                            Powered by CES | Contact us:
                             <p className="hover:underline">
                                 ada-bd@ada-asia.com
                             </p>

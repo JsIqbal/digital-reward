@@ -15,6 +15,8 @@ import (
 
 func (s *Server) createUser(ctx *gin.Context) {
 	// validating req obj
+	fmt.Println("the salt", s.salt.SecretKey)
+
 	var req createUserReq
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {

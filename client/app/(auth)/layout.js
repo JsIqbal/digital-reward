@@ -1,9 +1,9 @@
-const AuthLayout = ({children}) => {
+const AuthLayout = ({ children }) => {
     return (
-        <div className="flex items-center justify-center h-full">
+        <div className="bg-[#111827] p-0 m-0  w-full flex items-center justify-center h-full">
             {children}
         </div>
-    )
-}
+    );
+};
 
-export default AuthLayout
+export default AuthLayout;

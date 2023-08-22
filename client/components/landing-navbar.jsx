@@ -1,12 +1,12 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useAuth } from "@clerk/nextjs";
 import { Montserrat } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
+import useAuth from "@/hooks/useAuth";
 
 const font = Montserrat({
     weight: "600",
@@ -31,8 +31,11 @@ const LandingNavabr = () => {
                     DIGITAL REWARD
                 </h1>
             </Link>
-            <div className="flex items-center gap-x-2">
-                <Link href={isSignedIn ? "/dashboard" : "/sign-up"}>
+            <div className="w-[123px] items-center gap-x-2">
+                <Link
+                    className="flex"
+                    href={isSignedIn ? "/dashboard" : "/sign-up"}
+                >
                     <Button
                         variant="outline"
                         className="rounded-full bg-indigo-600 border-none font-bold text-white hover:bg-indigo-500 hover:text-white hover:scale-[103%] transition-all duration-150 shadow-lg"
