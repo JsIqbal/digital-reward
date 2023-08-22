@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { UserButton, useUser } from "@clerk/nextjs";
+// import { UserButton, useUser } from "@clerk/nextjs";
 import LoadingButton from "@/components/loading-button";
 
 const ChatPage = () => {
@@ -118,7 +118,8 @@ const ChatPage = () => {
                                 )}
                             >
                                 {message.role === "user" ? (
-                                    <UserButton className="h-10 w-10 pb-3" />
+                                    // <UserButton className="h-10 w-10 pb-3" />
+                                    <p>hello</p>
                                 ) : (
                                     <Image
                                         fill
