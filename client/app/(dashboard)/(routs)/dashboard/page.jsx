@@ -42,13 +42,6 @@ const tools = [
         color: "text-orange-900",
         bgColor: "bg-orange-300",
     },
-    // {
-    //     label: "Chat with AI",
-    //     icon: MessageSquareIcon,
-    //     href: "/chat",
-    //     color: "text-blue-900",
-    //     bgColor: "bg-blue-300",
-    // },
 ];
 
 const DashboardPage = () => {
@@ -59,9 +52,6 @@ const DashboardPage = () => {
                 <h1 className="text-center text-2xl md:text-3xl lg:4xl font-bold">
                     Explore the Digital Reward
                 </h1>
-                {/* <p className="text-muted-foreground font-light text-sm md:text-lg text-center">
-                    Talk to a real AI ChatBot
-                </p> */}
             </div>
             <div className="px-4 md:px-10 lg:px-20 xl:px-32 2xl:40 space-y-4 w-full">
                 {tools.map((tool) => (
