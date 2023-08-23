@@ -1,10 +1,35 @@
 definitions:
-  user.ErrorResponse:
+  rest.CreateAdminRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  rest.ErrorResponse:
     properties:
       message:
         type: string
     type: object
-  user.Product:
+  rest.EventData:
+    properties:
+      data:
+        properties:
+          email_addresses:
+            items:
+              properties:
+                email_address:
+                  type: string
+              type: object
+            type: array
+          id:
+            type: string
+        type: object
+    type: object
+  rest.Product:
     properties:
       product_desc:
         type: string
@@ -15,7 +40,7 @@ definitions:
       product_price:
         type: number
     type: object
-  user.PurchaseRequest:
+  rest.PurchaseRequest:
     properties:
       product_ids:
         items:
@@ -24,14 +49,175 @@ definitions:
       user_id:
         type: string
     type: object
-  user.SuccessResponse:
+  rest.SuccessResponse:
     properties:
       message:
+        type: string
+    type: object
+  rest.loginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  rest.userResponse:
+    properties:
+      email:
+        type: string
+      user_id:
         type: string
     type: object
 info:
   contact: {}
 paths:
+  /api/admins/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new admin with a unique username and password
+      parameters:
+      - description: Admin creation request
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/rest.CreateAdminRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Admin created successfully
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+      summary: Create a new admin
+      tags:
+      - admin
+  /api/admins/login:
+    post:
+      consumes:
+      - application/json
+      description: Log in as an admin with a valid username and password
+      parameters:
+      - description: Admin login request
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/rest.CreateAdminRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.loginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+      summary: Log in as an admin
+      tags:
+      - admin
+  /api/admins/users:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of all users in the system
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/rest.userResponse'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+      summary: Get all users
+      tags:
+      - admin
+  /api/test:
+    get:
+      consumes:
+      - application/json
+      description: Test the server by sending a request to this endpoint
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.SuccessResponse'
+      summary: Test the server
+      tags:
+      - test
+  /api/users/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with user ID and email address
+      parameters:
+      - description: Event data
+        in: body
+        name: eventData
+        required: true
+        schema:
+          $ref: '#/definitions/rest.EventData'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+      summary: Create a new user
+      tags:
+      - user
+  /api/users/logout:
+    post:
+      consumes:
+      - application/json
+      description: Log out the user by removing the token cookie from the browser
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.SuccessResponse'
+      summary: Log out the admin
+      tags:
+      - admin
   /api/users/products:
     get:
       description: Get a list of all products
@@ -42,11 +228,11 @@ paths:
           description: OK
           schema:
             items:
-              $ref: '#/definitions/user.Product'
+              $ref: '#/definitions/rest.Product'
             type: array
       summary: Get products
       tags:
-      - products
+      - user
   /api/users/purchase:
     post:
       consumes:
@@ -58,19 +244,19 @@ paths:
         name: request
         required: true
         schema:
-          $ref: '#/definitions/user.PurchaseRequest'
+          $ref: '#/definitions/rest.PurchaseRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/user.SuccessResponse'
+            $ref: '#/definitions/rest.SuccessResponse'
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/user.ErrorResponse'
+            $ref: '#/definitions/rest.ErrorResponse'
       summary: Create a purchase
       tags:
-      - purchases
+      - user
 swagger: "2.0"

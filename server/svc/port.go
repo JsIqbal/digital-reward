@@ -6,29 +6,37 @@ import (
 )
 
 type UserRepo interface {
-	Create(ctx context.Context, usr *User) error
-	Find(ctx context.Context, email string) (*User, error)
-	// Get(ctx context.Context, id string) (*User, error)
-	// Update(ctx context.Context, id string, user *User) error
-	// Delete(ctx context.Context, id string) error
-	// Login(ctx context.Context, email, password string) (*User, error)
-	// Logout(ctx context.Context) error
-	// GetAll(ctx context.Context) ([]*User, error)
+	CreateUser(std *User)
+	GetUserByID(userID string) (*User, error)
+	GetUserByEmail(email string) (*User, error)
+
+	Get() []*User
 }
 
 type Service interface {
 	Error(ctx context.Context, internalCode string, description string) *ErrorResponse
 	Response(ctx context.Context, description string, data interface{}) *ResponseData
 
-	CreateUser(ctx context.Context, usr *User) error
-	FindUser(ctx context.Context, email string) (*User, error)
-	// GetUser(ctx context.Context, id string) (*User, error)
-	// UpdateUser(ctx context.Context, id string, user *User) error
-	// DeleteUser(ctx context.Context, id string) error
-	// LoginUser(ctx context.Context, email, password string) (*User, error)
-	// LogoutUser(ctx context.Context) error
-	// FindUser(ctx context.Context, email string) (*User, error)
-	// GetAllUser(ctx context.Context) ([]*User, error)
+	GetDashboardImages() []*Dashboard
+
+	CreateUser(std *User)
+	GetUserByID(userID string) (*User, error)
+	GetUserByEmail(email string) (*User, error)
+
+	LoginAdmin(std *Admin) *Admin
+	CreateAdmin(std *Admin) error
+	FindAdminByUsername(username string) (*Admin, error)
+	GetAllUsers() []*User
+}
+
+type AdminRepo interface {
+	Login(std *Admin) *Admin
+	Create(std *Admin) error
+	Find(username string) (*Admin, error)
+}
+
+type DashboardRepo interface {
+	Get() []*Dashboard
 }
 
 type ErrorRepo interface {

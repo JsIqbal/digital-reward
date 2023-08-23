@@ -9,7 +9,6 @@ import (
 )
 
 var appOnce = sync.Once{}
-var tableOnce = sync.Once{}
 var saltOnce = sync.Once{}
 var tokenOnce = sync.Once{}
 
@@ -23,11 +22,6 @@ type Application struct {
 	DBPort string `mapstructure:"DB_PORT"`
 }
 
-type Table struct {
-	UserTableName     string `mapstructure:"USER_TABLE_NAME"`
-	ErrorTableName    string `mapstructure:"ERROR_TABLE_NAME"`
-}
-
 type Salt struct {
 	SecretKey int `mapstructure:"SECRET_SALT_KEY"`
 }
@@ -37,7 +31,6 @@ type Token struct {
 }
 
 var appConfig *Application
-var tableConfig *Table
 var saltConfig *Salt
 var tokenConfig *Token
 
@@ -61,19 +54,6 @@ func loadApp() error {
 	}
 
 	return nil
-}
-
-func loadTable() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		fmt.Printf(".env file was not found, that's okay")
-	}
-
-	viper.AutomaticEnv()
-
-	tableConfig = &Table{
-		UserTableName:     viper.GetString("USER_TABLE_NAME"),
-	}
 }
 
 func loadSalt() {
@@ -108,13 +88,6 @@ func GetApp() *Application {
 	})
 
 	return appConfig
-}
-
-func GetTable() *Table {
-	tableOnce.Do(func() {
-		loadTable()
-	})
-	return tableConfig
 }
 
 func GetSalt() *Salt {
