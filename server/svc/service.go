@@ -3,26 +3,72 @@ package svc
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"go-rest/logger"
 	"go-rest/util"
 )
 
 type service struct {
-    userRepo UserRepo
-	errRepo      ErrorRepo
-	cache        Cache
+	dashboardRepo DashboardRepo
+	userRepo      UserRepo
+	adminRepo     AdminRepo
+
+	errRepo ErrorRepo
+	cache   Cache
 }
 
-func NewService(userRepo UserRepo,errorRepo ErrorRepo,
-	cache Cache,) Service {
-    return &service{
-        userRepo: userRepo,
-		errRepo:      errorRepo,
-		cache:        cache,
-    }
+func NewService(dashboardRepo DashboardRepo, userRepo UserRepo, adminRepo AdminRepo, errorRepo ErrorRepo, cache Cache) Service {
+	return &service{
+		dashboardRepo: dashboardRepo,
+		userRepo:      userRepo,
+		adminRepo:     adminRepo,
+
+		errRepo: errorRepo,
+		cache:   cache,
+	}
 }
 
+func (s *service) GetDashboardImages() []*Dashboard {
+	return s.dashboardRepo.Get()
+}
 
+func (s *service) CreateUser(std *User) {
+	s.userRepo.CreateUser(std)
+}
+
+func (s *service) LoginAdmin(std *Admin) *Admin {
+	return s.adminRepo.Login(std)
+}
+
+func (s *service) CreateAdmin(std *Admin) error {
+	return s.adminRepo.Create(std)
+}
+
+//	func (s *service) FindAdminByUsername(username string) (*Admin, error) {
+//		return s.adminRepo.Find(username)
+//	}
+func (s *service) FindAdminByUsername(username string) (*Admin, error) {
+	admin, err := s.adminRepo.Find(username)
+	if err != nil {
+		return nil, err
+	}
+	if admin == nil {
+		return nil, errors.New("admin not found")
+	}
+	return admin, nil
+}
+
+func (s *service) GetUserByEmail(email string) (*User, error) {
+	return s.userRepo.GetUserByEmail(email)
+}
+
+func (s *service) GetUserByID(userID string) (*User, error) {
+	return s.userRepo.GetUserByID(userID)
+}
+
+func (s *service) GetAllUsers() []*User {
+	return s.userRepo.Get()
+}
 
 func (s *service) Error(ctx context.Context, internalCode string, description string) *ErrorResponse {
 	var errDetail *ErrorDetail

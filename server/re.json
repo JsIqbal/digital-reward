@@ -1,0 +1,77 @@
+{
+    "data": {
+        "backup_code_enabled": false,
+        "banned": false,
+        "birthday": "",
+        "create_organization_enabled": true,
+        "created_at": 1692016541074,
+        "delete_self_enabled": true,
+        "email_addresses": [
+            {
+                "email_address": "destroyerares6472@gmail.com",
+                "id": "idn_2TyXxfaQIIkIN3b23BZFYAzZB0l",
+                "linked_to": [
+                    {
+                        "id": "idn_2TyXxTMTsutLR2cLGveYDz6X2l2",
+                        "type": "oauth_google"
+                    }
+                ],
+                "object": "email_address",
+                "reserved": false,
+                "verification": {
+                    "attempts": null,
+                    "expire_at": null,
+                    "status": "verified",
+                    "strategy": "from_oauth_google"
+                }
+            }
+        ],
+        "external_accounts": [
+            {
+                "approved_scopes": "email https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid profile",
+                "email_address": "destroyerares6472@gmail.com",
+                "family_name": "Iqbal",
+                "given_name": "Md",
+                "google_id": "114450200254408831519",
+                "id": "idn_2TyXxTMTsutLR2cLGveYDz6X2l2",
+                "label": null,
+                "object": "google_account",
+                "picture": "https://lh3.googleusercontent.com/a/AAcHTtc8IgANU83jLxxpzMGp6LoCFOf5KkyVlyUVE6XvnsjE=s1000-c",
+                "public_metadata": {},
+                "username": null,
+                "verification": {
+                    "attempts": null,
+                    "expire_at": 1692017134921,
+                    "status": "verified",
+                    "strategy": "oauth_google"
+                }
+            }
+        ],
+        "external_id": null,
+        "first_name": "Md",
+        "gender": "",
+        "has_image": true,
+        "id": "user_2TyXxd79JxDUzp22A22jMxwI7RN",
+        "image_url": "https://img.clerk.com/eyJ0eXBlIjoicHJveHkiLCJzcmMiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQWNIVHRjOElnQU5VODNqTHh4cHpNR3A2TG9DRk9mNUtreVZseVVWRTZYdm5zakU9czEwMDAtYyIsInMiOiJjWTJVUmU4S0tpMU9PZHlLSGRlME5JTVFjbXVxeWUwR0tGWER3RUhKd3JBIn0",
+        "last_name": "Iqbal",
+        "last_sign_in_at": null,
+        "object": "user",
+        "password_enabled": false,
+        "phone_numbers": [],
+        "primary_email_address_id": "idn_2TyXxfaQIIkIN3b23BZFYAzZB0l",
+        "primary_phone_number_id": null,
+        "primary_web3_wallet_id": null,
+        "private_metadata": {},
+        "profile_image_url": "https://lh3.googleusercontent.com/a/AAcHTtc8IgANU83jLxxpzMGp6LoCFOf5KkyVlyUVE6XvnsjE=s1000-c",
+        "public_metadata": {},
+        "saml_accounts": [],
+        "totp_enabled": false,
+        "two_factor_enabled": false,
+        "unsafe_metadata": {},
+        "updated_at": 1692016541120,
+        "username": null,
+        "web3_wallets": []
+    },
+    "object": "event",
+    "type": "user.created"
+}

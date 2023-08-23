@@ -1,81 +1,87 @@
 package rest
 
 import (
-	"fmt"
 	"net/http"
 
-	"go-rest/logger"
 	"go-rest/svc"
-	"go-rest/util"
 
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
-	"golang.org/x/crypto/bcrypt"
 )
 
+// @Summary Create a new user
+// @Description Create a new user with user ID and email address
+// @Tags user
+// @Accept json
+// @Produce json
+// @Param eventData body EventData true "Event data"
+// @Success 200 {object} SuccessResponse
+// @Failure 400 {object} ErrorResponse
+// @Failure 401 {object} ErrorResponse
+// @Failure 409 {object} ErrorResponse
+// @Router /api/users/create [post]
 func (s *Server) createUser(ctx *gin.Context) {
-	// validating req obj
-	var req createUserReq
-	err := ctx.ShouldBindJSON(&req)
+	var eventData EventData
+
+	err := ctx.BindJSON(&eventData)
 	if err != nil {
-		logger.Error(ctx, "cannot pass validation", err)
-		ctx.JSON(http.StatusBadRequest, s.svc.Error(ctx, util.EN_API_PARAMETER_INVALID_ERROR, "Bad request"))
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON data"})
 		return
 	}
 
-	user, err := s.svc.FindUser(ctx, req.Email)
+	userID := eventData.Data.ID
+	email := ""
+	if len(eventData.Data.EmailAddresses) > 0 {
+		email = eventData.Data.EmailAddresses[0].EmailAddress
+	}
+
+	if userID == "" || email == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid user ID or email"})
+		return
+	}
+
+	// Check if the user ID or email already exists
+	existingUser, err := s.svc.GetUserByID(userID)
 	if err != nil {
-		logger.Error(ctx, "cannot get user", err)
-		ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_INTERNAL_SERVER_ERROR, "Internal server error"))
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 
-	if user != nil {
-		logger.Error(ctx, "already registered user", nil)
-		ctx.JSON(http.StatusBadRequest, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "Already registered"))
+	if existingUser != nil {
+		ctx.JSON(http.StatusConflict, gin.H{"error": "User with the same user ID already exists"})
 		return
 	}
 
-	fmt.Println("the salt", s.salt.SecretKey)
-	hashedPass, err := bcrypt.GenerateFromPassword([]byte(req.Password), s.salt.SecretKey)
+	existingUserByEmail, err := s.svc.GetUserByEmail(email)
 	if err != nil {
-		logger.Error(ctx, "cannot hash the password", err)
-		ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_INTERNAL_SERVER_ERROR, "Internal server error"))
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 
-	fmt.Println("the hashed pass", hashedPass)
-
-	// create random user id
-	userID, err := uuid.NewUUID()
-	if err != nil {
-		logger.Error(ctx, "cannot generate user id", err)
-		ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_INTERNAL_SERVER_ERROR, "Internal server error"))
+	if existingUserByEmail != nil {
+		ctx.JSON(http.StatusConflict, gin.H{"error": "User with the same email already exists"})
 		return
 	}
 
-	user = &svc.User{
-		ID:        userID.String(),
-		Username:  req.Username,
-		Email:     req.Email,
-		Password:  string(hashedPass),
-		CreatedAt: util.GetCurrentTimestamp(),
+	// Create a new user
+	user := &svc.User{
+		ID:    userID,
+		Email: email,
 	}
 
-	err = s.svc.CreateUser(ctx, user)
-	if err != nil {
-		logger.Error(ctx, "cannot store user into db", err)
-		ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_INTERNAL_SERVER_ERROR, "Internal server error"))
-		return
-	}
+	s.svc.CreateUser(user)
 
-	// send response
-	userRes := createUserRes{
-		ID:        user.ID,
-		Username:  user.Username,
-		Email:     user.Email,
-		CreatedAt: user.CreatedAt,
-	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "User created successfully"})
+}
 
-	ctx.JSON(http.StatusCreated, s.svc.Response(ctx, "Successfully created", userRes))
+// logout godoc
+// @Summary Log out the admin
+// @Description Log out the user by removing the token cookie from the browser
+// @Tags admin
+// @Accept json
+// @Produce json
+// @Success 200 {object} SuccessResponse
+// @Router /api/users/logout [post]
+func (s *Server) logout(ctx *gin.Context) {
+	ctx.SetCookie("token", "", -1, "/", "", false, true)
+	ctx.JSON(http.StatusOK, gin.H{"message": "Logged out successfully"})
 }

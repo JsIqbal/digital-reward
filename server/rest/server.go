@@ -5,7 +5,6 @@ import (
 	"go-rest/config"
 	"go-rest/logger"
 	"go-rest/svc"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,26 +30,36 @@ func NewServer(svc svc.Service, appConfig *config.Application, salt *config.Salt
 	return server, nil
 }
 
-func (server *Server) setupRouter() {
-	server.router = gin.Default() // Assign the created router to the router field
+func (s *Server) setupRouter() {
+	s.router = gin.Default() // Initialize the router here
 
 	// CORS middleware
-	server.router.Use(corsMiddleware)
+	s.router.Use(corsMiddleware)
 
 	// log middleware
-	server.router.Use(logger.ModifyContext)
+	s.router.Use(logger.ModifyContext)
+
+	s.router.Static("/docs", "./docs")
 
 	// healtch check
-	server.router.GET("/api/test", server.test)
+	s.router.GET("/api/test", s.test)
 
 	// public routes
-	server.router.POST("/api/users/signup", server.createUser)
+
+	s.router.POST("/api/users/create", s.createUser)
+
+	s.router.POST("/api/admins/login", s.loginAdmin)
+	s.router.POST("/api/admins/create", s.createAdmin)
+
+	// protected routes
+	authRoutes := s.router.Group("/").Use(s.authMiddleware())
+	authRoutes.GET("/api/admins/users", s.users)
+	authRoutes.POST("/api/users/logout", s.logout)
+
+	// dashboardGroup.GET("/images", getDashboardImages(service))
+
 }
 
 func (s *Server) Start() error {
 	return s.router.Run(fmt.Sprintf("%s:%s", s.appConfig.Host, s.appConfig.Port))
-}
-
-func (server *Server) test(ctx *gin.Context) {
-	ctx.JSON(http.StatusOK, "testing")
 }
