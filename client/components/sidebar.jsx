@@ -52,12 +52,6 @@ const routes = [
         href: "/",
         color: "text-blue-500",
     },
-    // {
-    //     label: "Chat",
-    //     icon: MessageSquareIcon,
-    //     href: "/chat",
-    //     color: "text-blue-500",
-    // },
 ];
 
 const Sidebar = () => {

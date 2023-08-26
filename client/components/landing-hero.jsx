@@ -2,12 +2,11 @@
 
 import TypewriterComponent from "typewriter-effect";
 import Link from "next/link";
-import { useAuth } from "@clerk/nextjs";
 
 import { Button } from "@/components/ui/button";
 
 export const LandingHero = () => {
-    const { isSignedIn } = useAuth();
+    
 
     return (
         <div className="text-white font-bold py-36 text-center space-y-5">
@@ -32,7 +31,7 @@ export const LandingHero = () => {
                 Handle campaigns using our platform 10x faster.
             </div>
             <div>
-                <Link href={isSignedIn ? "/dashboard" : "/sign-up"}>
+                <Link href={true ? "/dashboard" : "/sign-up"}>
                     <Button
                         varient="outline"
                         className="md:text-lg p-4 md:p-6 rounded-full font-semibold bg-gradient-to-r from-indigo-700 to-pink-600 hover:scale-[102%] transition-all duration-150 shadow-lg"
