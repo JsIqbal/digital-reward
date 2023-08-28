@@ -261,6 +261,9 @@ ngrok config add-authtoken YOUR_AUTH_TOKEN
     ```
 
 -   write the documentations for the controllers and after each documentation execute comand:
+
     ```bash
     swag init
     ```
+
+-   There can be an issue like: You have initialized a new swagger documentation for a new platform but still can see the swagger documentation for another platform. In that case you have to clear browser caches and then reload the swagger documentation.
