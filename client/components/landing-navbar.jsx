@@ -29,7 +29,7 @@
 //                 </h1>
 //             </Link>
 //             <div className="flex items-center gap-x-2">
-//                 <Link href={true ? "/dashboard" : "/sign-up"}>
+//                 <Link href={true ? "/dashboard" : "auth/sign-up"}>
 //                     <Button
 //                         variant="outline"
 //                         className="rounded-full bg-indigo-600 border-none font-bold text-white hover:bg-indigo-500 hover:text-white hover:scale-[103%] transition-all duration-150 shadow-lg"
@@ -87,7 +87,9 @@ const LandingNavabr = () => {
                 </h1>
             </Link>
             <div className="flex items-center gap-x-2">
-                <Link href={showDashboardButton ? "/dashboard" : "/sign-up"}>
+                <Link
+                    href={showDashboardButton ? "/dashboard" : "auth/sign-up"}
+                >
                     <Button
                         variant="outline"
                         className="rounded-full bg-indigo-600 border-none font-bold text-white hover:bg-indigo-500 hover:text-white hover:scale-[103%] transition-all duration-150 shadow-lg"

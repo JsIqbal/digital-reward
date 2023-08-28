@@ -9,7 +9,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 export default function Page({ params }) {
-    console.log(params);
     // use react-hook-form to handle the form data and validation
     const {
         register,
@@ -20,8 +19,9 @@ export default function Page({ params }) {
     // use router to navigate to the dashboard page
     const router = useRouter();
 
-    // use state to store the mode of the page (sign-up or sign-in)
-    const [mode, setMode] = useState(params.authType || "sign-up");
+    // use state to store the mode of the page (auth/sign-up or auth/sign-in)
+    const [mode, setMode] = useState(params.authType || "auth/sign-up");
+    console.log(mode);
 
     // define a function to handle the form submission
     const onSubmit = async (data) => {
@@ -44,7 +44,7 @@ export default function Page({ params }) {
 
     // define a function to toggle the mode of the page
     const toggleMode = () => {
-        setMode(mode === "sign-up" ? "sign-in" : "sign-up");
+        setMode(mode === "auth/sign-up" ? "auth/sign-in" : "auth/sign-up");
     };
 
     return (
@@ -53,7 +53,7 @@ export default function Page({ params }) {
             <div className="flex justify-center items-center">
                 <div className="w-full max-w-md bg-white shadow-md rounded-md p-6">
                     <h1 className="text-2xl mb-4">
-                        {mode === "sign-up"
+                        {mode === "auth/sign-up"
                             ? "Create an account"
                             : "Log in to your account"}
                     </h1>
@@ -69,7 +69,7 @@ export default function Page({ params }) {
                                 id="name"
                                 type="text"
                                 {...register("name", {
-                                    required: mode === "sign-up",
+                                    required: mode === "auth/sign-up",
                                 })}
                                 className={`w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 ${
                                     errors.name && "border-red-500"
@@ -128,15 +128,15 @@ export default function Page({ params }) {
                             variantColor="blue"
                             className="w-full py-3 mt-6"
                         >
-                            {mode === "sign-up" ? "Sign up" : "Sign in"}
+                            {mode === "auth/sign-up" ? "Sign up" : "Sign in"}
                         </Button>
                     </form>
                     <p className="text-sm text-gray-600 mt-4 text-center">
-                        {mode === "sign-up"
+                        {mode === "auth/sign-up"
                             ? "Already have an account?"
                             : "Don't have an account?"}{" "}
                         <Button variant="link" onClick={toggleMode}>
-                            {mode === "sign-up" ? "Sign in" : "Sign up"}
+                            {mode === "auth/sign-up" ? "Sign in" : "Sign up"}
                         </Button>
                     </p>
                 </div>
