@@ -65,3 +65,14 @@ func (r *adminRepo) Find(username string) (*svc.Admin, error) {
 	return &admin, nil
 }
 
+func (r *adminRepo) FindByID(userID string) (*svc.Admin, error) {
+    var admin svc.Admin
+    result := r.db.Where("id = ?", userID).First(&admin)
+
+    if result.Error != nil {
+        fmt.Println("Error while fetching admin:", result.Error)
+        return nil, result.Error
+    }
+
+    return &admin, nil
+}

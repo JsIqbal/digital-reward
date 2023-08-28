@@ -1,4 +1,11 @@
 definitions:
+  rest.AdminResponse:
+    properties:
+      user_id:
+        type: string
+      username:
+        type: string
+    type: object
   rest.CreateAdminRequest:
     properties:
       password:
@@ -29,26 +36,6 @@ definitions:
             type: string
         type: object
     type: object
-  rest.Product:
-    properties:
-      product_desc:
-        type: string
-      product_id:
-        type: string
-      product_name:
-        type: string
-      product_price:
-        type: number
-    type: object
-  rest.PurchaseRequest:
-    properties:
-      product_ids:
-        items:
-          type: string
-        type: array
-      user_id:
-        type: string
-    type: object
   rest.SuccessResponse:
     properties:
       message:
@@ -61,9 +48,9 @@ definitions:
     type: object
   rest.userResponse:
     properties:
-      email:
-        type: string
       user_id:
+        type: string
+      username:
         type: string
     type: object
 info:
@@ -133,6 +120,29 @@ paths:
       summary: Log in as an admin
       tags:
       - admin
+  /api/admins/me:
+    get:
+      description: Get the details of the logged-in admin
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.AdminResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Logged In Admin
+      tags:
+      - Admins
   /api/admins/users:
     get:
       consumes:
@@ -218,45 +228,4 @@ paths:
       summary: Log out the admin
       tags:
       - admin
-  /api/users/products:
-    get:
-      description: Get a list of all products
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/rest.Product'
-            type: array
-      summary: Get products
-      tags:
-      - user
-  /api/users/purchase:
-    post:
-      consumes:
-      - application/json
-      description: Create a purchase record for a user
-      parameters:
-      - description: Purchase Request Body
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/rest.PurchaseRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/rest.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/rest.ErrorResponse'
-      summary: Create a purchase
-      tags:
-      - user
 swagger: "2.0"

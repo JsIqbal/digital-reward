@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/go-redis/redis"
+	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -49,7 +50,7 @@ func serveRest() {
 }
 
 func createDefaultAdmin(db *gorm.DB) {
-	db.Exec("DELETE FROM admins")
+	// db.Exec("DELETE FROM admins")
 	// Hash password
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte("P@ssword"), config.GetSalt().SecretKey)
 	if err != nil {
@@ -57,17 +58,27 @@ func createDefaultAdmin(db *gorm.DB) {
 		return
 	}
 
+	adminID, err := uuid.NewUUID()
+	if err != nil {
+		log.Printf("Error generating UUID: %v", err)
+		return
+	}
+
 	// Create admin in the database
 	admin := svc.Admin{
+		ID:        adminID.String(),
 		Username:  "admin",
 		Password:  string(hashedPass),
 		CreatedAt: time.Now().Unix(),
 	}
 
-	if err := db.Create(&admin).Error; err != nil {
+	err = db.Create(&admin).Error
+	if err != nil {
 		log.Printf("Error creating default admin: %v", err)
 		return
 	}
 
 	log.Println("Default admin created successfully")
 }
+
+

@@ -126,3 +126,18 @@ func (s *service) Response(ctx context.Context, description string, data interfa
 		Data:        data,
 	}
 }
+
+func (s *service) FindAdminByID(userID string) (*Admin, error) {
+    admin, err := s.adminRepo.FindByID(userID) // Use FindByID method in adminRepo
+    if err != nil {
+        return nil, err
+    }
+    if admin == nil {
+        return nil, errors.New("admin not found")
+    }
+    return admin, nil
+}
+
+
+
+

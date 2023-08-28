@@ -26,7 +26,6 @@ import (
 // @Failure 500 {object} ErrorResponse
 // @Router /api/admins/login [post]
 func (s *Server) loginAdmin(ctx *gin.Context) {
-
 	var req CreateAdminRequest
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
@@ -38,6 +37,7 @@ func (s *Server) loginAdmin(ctx *gin.Context) {
 	logger.Info(ctx, "failed", req)
 
 	user, err := s.svc.FindAdminByUsername(req.Username)
+	
 	if err != nil {
 		logger.Error(ctx, "cannot get user", err)
 		ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_INTERNAL_SERVER_ERROR, "Internal server error"))
@@ -57,6 +57,7 @@ func (s *Server) loginAdmin(ctx *gin.Context) {
 		return
 	}
 
+	// Generate token
 	token, err := GenerateToken(user.ID, &config.Token{JWToken: s.jwt.JWToken})
 	if err != nil {
 		logger.Error(ctx, "failed to generate token", err)
@@ -64,15 +65,15 @@ func (s *Server) loginAdmin(ctx *gin.Context) {
 		return
 	}
 
+	// Create a user response without the password
 	loginRes := loginResponse{
 		Token: token,
 	}
 
+	// Set the token as a cookie and send the login response
 	ctx.SetCookie("token", token, 3600, "/", "", false, true)
 	ctx.JSON(http.StatusOK, s.svc.Response(ctx, "successfully logged in", loginRes))
-	
 }
-
 
 // @Summary Create a new admin
 // @Description Create a new admin with a unique username and password
@@ -137,7 +138,6 @@ func (s *Server) createAdmin(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "Admin created successfully"})
 }
 
-
 // @Summary Get all users
 // @Description Get a list of all users in the system
 // @Tags admin
@@ -154,9 +154,45 @@ func (s *Server) users(ctx *gin.Context) {
 	for _, user := range allUsers {
 		response = append(response, userResponse{
 			UserID: user.ID,
-			Email:  user.Email,
+			Username:  user.Email,
 		})
 	}
 
 	ctx.JSON(http.StatusOK, response)
+}
+
+// @Summary Get Logged In Admin
+// @Description Get the details of the logged-in admin
+// @Tags Admins
+// @Security ApiKeyAuth
+// @Produce json
+// @Success 200 {object} AdminResponse
+// @Failure 401 {object} ErrorResponse
+// @Failure 500 {object} ErrorResponse
+// @Router /api/admins/me [get]
+func (s *Server) getLoggedInAdmin(ctx *gin.Context) {
+	payload, exists := ctx.Get(authorizationPayloadKey)
+	if !exists {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Not logged in"})
+		return
+	}
+
+	payloadStruct, ok := payload.(Payload) 
+	if !ok {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid payload"})
+		return
+	}
+
+	admin, err := s.svc.FindAdminByID(payloadStruct.ID) 
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+		return
+	}
+
+	adminResponse := AdminResponse{
+		UserID: admin.ID,
+		Username:  admin.Username, 
+	}
+
+	ctx.JSON(http.StatusOK, adminResponse)
 }

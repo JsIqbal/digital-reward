@@ -24,6 +24,7 @@ type Service interface {
 	GetUserByEmail(email string) (*User, error)
 
 	LoginAdmin(std *Admin) *Admin
+	FindAdminByID(userID string) (*Admin, error)
 	CreateAdmin(std *Admin) error
 	FindAdminByUsername(username string) (*Admin, error)
 	GetAllUsers() []*User
@@ -33,7 +34,9 @@ type AdminRepo interface {
 	Login(std *Admin) *Admin
 	Create(std *Admin) error
 	Find(username string) (*Admin, error)
+	FindByID(userID string) (*Admin, error) // Add this line
 }
+
 
 type DashboardRepo interface {
 	Get() []*Dashboard

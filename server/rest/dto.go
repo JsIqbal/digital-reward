@@ -35,8 +35,8 @@ type EventData struct {
 }
 
 type userResponse struct {
-	UserID string `json:"user_id"`
-	Email  string `json:"email"`
+	UserID   string `json:"user_id"`
+	Username string `json:"username"`
 }
 
 type CreateAdminRequest struct {
@@ -46,4 +46,9 @@ type CreateAdminRequest struct {
 
 type loginResponse struct {
 	Token string `json:"token"`
+}
+
+type AdminResponse struct {
+	UserID   string `json:"user_id"`
+	Username string `json:"username"`
 }

@@ -114,6 +114,43 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/admins/me": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get the details of the logged-in admin",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Admins"
+                ],
+                "summary": "Get Logged In Admin",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/rest.AdminResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/rest.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/rest.ErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/admins/users": {
             "get": {
                 "description": "Get a list of all users in the system",
@@ -243,72 +280,20 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/api/users/products": {
-            "get": {
-                "description": "Get a list of all products",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "Get products",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/rest.Product"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/users/purchase": {
-            "post": {
-                "description": "Create a purchase record for a user",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "Create a purchase",
-                "parameters": [
-                    {
-                        "description": "Purchase Request Body",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/rest.PurchaseRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/rest.SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
+        "rest.AdminResponse": {
+            "type": "object",
+            "properties": {
+                "user_id": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
         "rest.CreateAdminRequest": {
             "type": "object",
             "required": [
@@ -356,37 +341,6 @@ const docTemplate = `{
                 }
             }
         },
-        "rest.Product": {
-            "type": "object",
-            "properties": {
-                "product_desc": {
-                    "type": "string"
-                },
-                "product_id": {
-                    "type": "string"
-                },
-                "product_name": {
-                    "type": "string"
-                },
-                "product_price": {
-                    "type": "number"
-                }
-            }
-        },
-        "rest.PurchaseRequest": {
-            "type": "object",
-            "properties": {
-                "product_ids": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "user_id": {
-                    "type": "string"
-                }
-            }
-        },
         "rest.SuccessResponse": {
             "type": "object",
             "properties": {
@@ -406,10 +360,10 @@ const docTemplate = `{
         "rest.userResponse": {
             "type": "object",
             "properties": {
-                "email": {
+                "user_id": {
                     "type": "string"
                 },
-                "user_id": {
+                "username": {
                     "type": "string"
                 }
             }
