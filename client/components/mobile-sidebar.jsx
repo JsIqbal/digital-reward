@@ -17,9 +17,9 @@ const MobileSidebar = () => {
         <Sheet>
             <SheetTrigger>
                 <div className="md:hidden">
-                    <ButtonWrapper>
+                    <MenuButton>
                         <Menu />
-                    </ButtonWrapper>
+                    </MenuButton>
                 </div>
             </SheetTrigger>
             <SheetContent side="left" className="m-0 p-0">
@@ -29,10 +29,10 @@ const MobileSidebar = () => {
     );
 };
 
-const ButtonWrapper = ({ children }) => (
-    <button className="bg-transparent p-0 m-0 border-none cursor-pointer">
+const MenuButton = ({ children }) => (
+    <div className="bg-transparent p-0 m-0 border-none cursor-pointer">
         {children}
-    </button>
+    </div>
 );
 
 export default MobileSidebar;

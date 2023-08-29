@@ -48,8 +48,8 @@ func (s *Server) setupRouter() {
 
 	s.router.POST("/api/users/create", s.createUser)
 
-	s.router.POST("/api/admins/login", s.loginAdmin)
-	s.router.POST("/api/admins/create", s.createAdmin)
+	s.router.POST("/api/auth/sign-in", s.loginAdmin)
+	s.router.POST("/api/auth/sign-up", s.createAdmin)
 
 	// protected routes
 	authRoutes := s.router.Group("/").Use(s.authMiddleware())

@@ -65,7 +65,7 @@ const LandingNavabr = () => {
     const tokenExists = Cookies.get("token");
 
     // Check if loggedIn and userType are stored in localStorage
-    const loggedIn = localStorage.getItem("loggedIn");
+    const loggedIn = localStorage.getItem("isLoggedIn");
     const userType = localStorage.getItem("userType");
 
     // Determine whether to show Dashboard or Get Started button

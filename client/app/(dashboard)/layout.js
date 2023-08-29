@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
@@ -11,11 +11,35 @@ import Loader from "@/components/loader";
 
 const DashboardLayout = ({ children }) => {
     const { isSignedIn } = useUser();
+    const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
 
-    if (!isSignedIn) {
-        router.push("auth/sign-in");
+    useEffect(() => {
+        if (isLoading) {
+            return;
+        }
+
+        if (!isSignedIn) {
+            router.push("auth/sign-in");
+        }
+    }, [isLoading, isSignedIn, router]);
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+
+            setIsLoading(false);
+        };
+
+        fetchUserData();
+    }, []);
+
+    if (isLoading) {
         return <Loader />;
+    }
+
+    if (!isSignedIn) {
+        return null;
     }
 
     return (

@@ -22,6 +22,7 @@ const (
 func (s *Server) authMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		accessToken, err := ctx.Cookie(authorizationHeaderKey)
+		fmt.Println("-----------auth token-----------", accessToken)
 		if err != nil {
 			logger.Error(ctx, "error in getting cookie", err)
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, s.svc.Error(ctx, util.EN_UNAUTHENTICATED_ERROR, "Unauthorized"))
