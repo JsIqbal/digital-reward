@@ -1,5 +1,6 @@
 "use client";
 
+import { DashHeader } from "@/components/dashboard-header";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import {
@@ -55,14 +56,7 @@ const DashboardPage = () => {
     const router = useRouter();
     return (
         <div className="h-full p-4">
-            <div className="mb-8 space-y-3 flex flex-col justify-center items-center">
-                <h1 className="text-center text-2xl md:text-3xl lg:4xl font-bold">
-                    Explore the Digital Reward
-                </h1>
-                {/* <p className="text-muted-foreground font-light text-sm md:text-lg text-center">
-                    Talk to a real AI ChatBot
-                </p> */}
-            </div>
+            <DashHeader />
             <div className="px-4 md:px-10 lg:px-20 xl:px-32 2xl:40 space-y-4 w-full">
                 {tools.map((tool) => (
                     <Card

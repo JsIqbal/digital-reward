@@ -44,7 +44,7 @@ export const PopOver = () => {
                         onClick={handleLogout}
                         className="flex items-center space-x-2 mt-2 hover:bg-gray-200 p-2 cursor-pointer rounded"
                     >
-                        <LogOut />
+                        <LogOut color="red" />
                         <span>Logout</span>
                     </div>
                 </div>

@@ -2,7 +2,7 @@
 
 import React from "react";
 import MobileSidebar from "./mobile-sidebar";
-import { PopOver } from "./pop-over";
+import { PopOver } from "./profile-pop-over";
 
 const Navbar = () => {
     return (
