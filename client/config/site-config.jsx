@@ -4,7 +4,6 @@ import {
     Home,
     LayoutDashboard,
     ListChecks,
-    MessageSquareIcon,
 } from "lucide-react";
 
 export const routes = [

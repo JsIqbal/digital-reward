@@ -1,6 +1,5 @@
 "use client";
 
-import { Trash } from "lucide-react";
 import {
     Form,
     FormField,

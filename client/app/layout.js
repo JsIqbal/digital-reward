@@ -13,7 +13,6 @@ export default function RootLayout({ children }) {
         <html lang="en">
             <head>
                 <link rel="icon" href="/logo-new.png" />
-                {/* Load the Inter font */}
                 <style>{`
                         ${inter.style}
                     `}</style>

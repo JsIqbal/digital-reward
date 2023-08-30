@@ -1,38 +1,17 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
 import Navbar from "@/components/navbar";
 import Sidebar from "@/components/sidebar";
 import "react-toastify/dist/ReactToastify.css";
-import useUser from "@/hooks/user-hook";
 import { ToastContainer } from "react-toastify";
 import Loader from "@/components/loader";
+import useDashboardLogic from "@/hooks/dashboard-hook";
+import useProfile from "@/hooks/user-profile";
 
 const DashboardLayout = ({ children }) => {
-    const { isSignedIn } = useUser();
-    const [isLoading, setIsLoading] = useState(true);
-    const router = useRouter();
-
-    useEffect(() => {
-        if (isLoading) {
-            return;
-        }
-
-        if (!isSignedIn) {
-            router.push("auth/sign-in");
-        }
-    }, [isLoading, isSignedIn, router]);
-
-    useEffect(() => {
-        const fetchUserData = async () => {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-
-            setIsLoading(false);
-        };
-
-        fetchUserData();
-    }, []);
+    const { isLoading, isSignedIn } = useDashboardLogic();
+    const userProfile = useProfile();
 
     if (isLoading) {
         return <Loader />;
@@ -45,7 +24,7 @@ const DashboardLayout = ({ children }) => {
     return (
         <div className="h-full relative p-0">
             <div className="hidden h-full md:flex md:w-72 md:flex-col md:fixed md:inset-y-0 z-[80] bg-gray-900">
-                <Sidebar />
+                {userProfile && <Sidebar />}
             </div>
             <main className="md:pl-72 flex flex-col h-full">
                 <Navbar />
