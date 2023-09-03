@@ -5,6 +5,8 @@ import { Formik, Form, Field, ErrorMessage, setIn } from "formik";
 // import { API_URL } from "@/config";
 import { profileSchema } from "@/validations/create-profile";
 import KycHeader from "./kyc-header";
+import DynamicLabel from "./label";
+import { Button } from "./ui/button";
 
 export default function CreateProfile() {
     const initialValues = {
@@ -65,12 +67,11 @@ export default function CreateProfile() {
                             >
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="mb-3">
-                                        <label
+                                        <DynamicLabel
                                             htmlFor="username"
+                                            content={"Username"}
                                             className="block text-gray-700 text-sm font-bold mb-2"
-                                        >
-                                            Username
-                                        </label>
+                                        />
                                         <Field
                                             id="username"
                                             name="username"
@@ -84,12 +85,11 @@ export default function CreateProfile() {
                                         />
                                     </div>
                                     <div className="mb-3">
-                                        <label
+                                        <DynamicLabel
                                             htmlFor="email"
+                                            content={"Email"}
                                             className="block text-gray-700 text-sm font-bold mb-2"
-                                        >
-                                            Email
-                                        </label>
+                                        />
                                         <Field
                                             id="email"
                                             name="email"
@@ -102,14 +102,12 @@ export default function CreateProfile() {
                                             className="text-red-500"
                                         />
                                     </div>
-                                    {/* Additional fields for the first column */}
                                     <div className="mb-3 col-span-2">
-                                        <label
+                                        <DynamicLabel
                                             htmlFor="fullname"
+                                            content={"Fullname"}
                                             className="block text-gray-700 text-sm font-bold mb-2"
-                                        >
-                                            Fullname
-                                        </label>
+                                        />
                                         <Field
                                             id="fullname"
                                             name="fullname"
@@ -123,12 +121,11 @@ export default function CreateProfile() {
                                         />
                                     </div>
                                     <div className="mb-3 col-span-2">
-                                        <label
+                                        <DynamicLabel
                                             htmlFor="phone"
+                                            content={"Phone"}
                                             className="block text-gray-700 text-sm font-bold mb-2"
-                                        >
-                                            Phone
-                                        </label>
+                                        />
                                         <Field
                                             id="phone"
                                             name="phone"
@@ -141,14 +138,12 @@ export default function CreateProfile() {
                                             className="text-red-500"
                                         />
                                     </div>
-                                    {/* Additional fields for the second column */}
                                     <div className="mb-3">
-                                        <label
+                                        <DynamicLabel
                                             htmlFor="password"
+                                            content={"Password"}
                                             className="block text-gray-700 text-sm font-bold mb-2"
-                                        >
-                                            Password
-                                        </label>
+                                        />
                                         <Field
                                             id="password"
                                             name="password"
@@ -162,12 +157,11 @@ export default function CreateProfile() {
                                         />
                                     </div>
                                     <div className="mb-3">
-                                        <label
+                                        <DynamicLabel
                                             htmlFor="confirm_password"
+                                            content={"Confirm Password"}
                                             className="block text-gray-700 text-sm font-bold mb-2"
-                                        >
-                                            Confirm Password
-                                        </label>
+                                        />
                                         <Field
                                             id="password"
                                             name="confirm_password"
@@ -181,12 +175,11 @@ export default function CreateProfile() {
                                         />
                                     </div>
                                     <div className="mb-3">
-                                        <label
+                                        <DynamicLabel
                                             htmlFor="role"
+                                            content={"Role"}
                                             className="block text-gray-700 text-sm font-bold mb-2"
-                                        >
-                                            Role
-                                        </label>
+                                        />
                                         <Field
                                             id="role"
                                             name="role"
@@ -209,12 +202,11 @@ export default function CreateProfile() {
                                         />
                                     </div>
                                     <div className="mb-3">
-                                        <label
+                                        <DynamicLabel
                                             htmlFor="status"
+                                            content={"Status"}
                                             className="block text-gray-700 text-sm font-bold mb-2"
-                                        >
-                                            Status
-                                        </label>
+                                        />
                                         <Field
                                             id="status"
                                             name="status"
@@ -238,21 +230,14 @@ export default function CreateProfile() {
                                         />
                                     </div>
                                 </div>
-                                <div className="modal-footer col-span-2">
-                                    <button
-                                        type="button"
-                                        className="btn border border-gray-300 text-gray-700 mx-4 mt-2"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <span className="mx-2"></span>
-                                    <button
+                                <div className="modal-footer col-span-2 text-right">
+                                    <Button
                                         type="submit"
-                                        className="btn btn-outline-primary mx-5 mt-2"
+                                        className="btn btn-outline-primary  mt-2"
                                         disabled={formikProps.isSubmitting}
                                     >
-                                        Add
-                                    </button>
+                                        Submit
+                                    </Button>
                                 </div>
                             </Form>
                         )}
