@@ -4,9 +4,9 @@
         "contact": {}
     },
     "paths": {
-        "/api/admins/create": {
-            "post": {
-                "description": "Create a new admin with a unique username and password",
+        "/api/test": {
+            "get": {
+                "description": "Test the server by sending a request to this endpoint",
                 "consumes": [
                     "application/json"
                 ],
@@ -14,23 +14,46 @@
                     "application/json"
                 ],
                 "tags": [
-                    "admin"
+                    "test"
                 ],
-                "summary": "Create a new admin",
+                "summary": "Test the server",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/rest.SuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/create": {
+            "post": {
+                "description": "Create a new user with a unique username and password",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Create a new user",
                 "parameters": [
                     {
-                        "description": "Admin creation request",
+                        "description": "User creation request",
                         "name": "req",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/rest.CreateAdminRequest"
+                            "$ref": "#/definitions/rest.CreateUserRequest"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Admin created successfully",
+                        "description": "User created successfully",
                         "schema": {
                             "type": "string"
                         }
@@ -50,9 +73,9 @@
                 }
             }
         },
-        "/api/admins/login": {
+        "/api/users/login": {
             "post": {
-                "description": "Log in as an admin with a valid username and password",
+                "description": "Log in as an user with a valid username and password",
                 "consumes": [
                     "application/json"
                 ],
@@ -60,17 +83,17 @@
                     "application/json"
                 ],
                 "tags": [
-                    "admin"
+                    "user"
                 ],
-                "summary": "Log in as an admin",
+                "summary": "Log in as an user",
                 "parameters": [
                     {
-                        "description": "Admin login request",
+                        "description": "User login request",
                         "name": "req",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/rest.CreateAdminRequest"
+                            "$ref": "#/definitions/rest.CreateUserRequest"
                         }
                     }
                 ],
@@ -102,150 +125,6 @@
                 }
             }
         },
-        "/api/admins/me": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get the details of the logged-in admin",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admins"
-                ],
-                "summary": "Get Logged In Admin",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/rest.AdminResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/admins/users": {
-            "get": {
-                "description": "Get a list of all users in the system",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "admin"
-                ],
-                "summary": "Get all users",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/rest.userResponse"
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/test": {
-            "get": {
-                "description": "Test the server by sending a request to this endpoint",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "test"
-                ],
-                "summary": "Test the server",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/rest.SuccessResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/users/create": {
-            "post": {
-                "description": "Create a new user with user ID and email address",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "Create a new user",
-                "parameters": [
-                    {
-                        "description": "Event data",
-                        "name": "eventData",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/rest.EventData"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/rest.SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/api/users/logout": {
             "post": {
                 "description": "Log out the user by removing the token cookie from the browser",
@@ -256,9 +135,9 @@
                     "application/json"
                 ],
                 "tags": [
-                    "admin"
+                    "user"
                 ],
-                "summary": "Log out the admin",
+                "summary": "Log out the user",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -268,21 +147,47 @@
                     }
                 }
             }
+        },
+        "/api/users/me": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Get the details of the logged-in user",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get Logged In User",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/rest.UserResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/rest.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/rest.ErrorResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
-        "rest.AdminResponse": {
-            "type": "object",
-            "properties": {
-                "user_id": {
-                    "type": "string"
-                },
-                "username": {
-                    "type": "string"
-                }
-            }
-        },
-        "rest.CreateAdminRequest": {
+        "rest.CreateUserRequest": {
             "type": "object",
             "required": [
                 "password",
@@ -305,30 +210,6 @@
                 }
             }
         },
-        "rest.EventData": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "object",
-                    "properties": {
-                        "email_addresses": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "email_address": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        },
-                        "id": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "rest.SuccessResponse": {
             "type": "object",
             "properties": {
@@ -337,21 +218,21 @@
                 }
             }
         },
-        "rest.loginResponse": {
-            "type": "object",
-            "properties": {
-                "token": {
-                    "type": "string"
-                }
-            }
-        },
-        "rest.userResponse": {
+        "rest.UserResponse": {
             "type": "object",
             "properties": {
                 "user_id": {
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "rest.loginResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
                     "type": "string"
                 }
             }

@@ -1,12 +1,5 @@
 definitions:
-  rest.AdminResponse:
-    properties:
-      user_id:
-        type: string
-      username:
-        type: string
-    type: object
-  rest.CreateAdminRequest:
+  rest.CreateUserRequest:
     properties:
       password:
         type: string
@@ -21,24 +14,16 @@ definitions:
       message:
         type: string
     type: object
-  rest.EventData:
-    properties:
-      data:
-        properties:
-          email_addresses:
-            items:
-              properties:
-                email_address:
-                  type: string
-              type: object
-            type: array
-          id:
-            type: string
-        type: object
-    type: object
   rest.SuccessResponse:
     properties:
       message:
+        type: string
+    type: object
+  rest.UserResponse:
+    properties:
+      user_id:
+        type: string
+      username:
         type: string
     type: object
   rest.loginResponse:
@@ -46,124 +31,9 @@ definitions:
       token:
         type: string
     type: object
-  rest.userResponse:
-    properties:
-      user_id:
-        type: string
-      username:
-        type: string
-    type: object
 info:
   contact: {}
 paths:
-  /api/admins/create:
-    post:
-      consumes:
-      - application/json
-      description: Create a new admin with a unique username and password
-      parameters:
-      - description: Admin creation request
-        in: body
-        name: req
-        required: true
-        schema:
-          $ref: '#/definitions/rest.CreateAdminRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: Admin created successfully
-          schema:
-            type: string
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/rest.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/rest.ErrorResponse'
-      summary: Create a new admin
-      tags:
-      - admin
-  /api/admins/login:
-    post:
-      consumes:
-      - application/json
-      description: Log in as an admin with a valid username and password
-      parameters:
-      - description: Admin login request
-        in: body
-        name: req
-        required: true
-        schema:
-          $ref: '#/definitions/rest.CreateAdminRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/rest.loginResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/rest.ErrorResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/rest.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/rest.ErrorResponse'
-      summary: Log in as an admin
-      tags:
-      - admin
-  /api/admins/me:
-    get:
-      description: Get the details of the logged-in admin
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/rest.AdminResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/rest.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/rest.ErrorResponse'
-      security:
-      - ApiKeyAuth: []
-      summary: Get Logged In Admin
-      tags:
-      - Admins
-  /api/admins/users:
-    get:
-      consumes:
-      - application/json
-      description: Get a list of all users in the system
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            items:
-              $ref: '#/definitions/rest.userResponse'
-            type: array
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/rest.ErrorResponse'
-      summary: Get all users
-      tags:
-      - admin
   /api/test:
     get:
       consumes:
@@ -183,34 +53,64 @@ paths:
     post:
       consumes:
       - application/json
-      description: Create a new user with user ID and email address
+      description: Create a new user with a unique username and password
       parameters:
-      - description: Event data
+      - description: User creation request
         in: body
-        name: eventData
+        name: req
         required: true
         schema:
-          $ref: '#/definitions/rest.EventData'
+          $ref: '#/definitions/rest.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User created successfully
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+      summary: Create a new user
+      tags:
+      - user
+  /api/users/login:
+    post:
+      consumes:
+      - application/json
+      description: Log in as an user with a valid username and password
+      parameters:
+      - description: User login request
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/rest.CreateUserRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/rest.SuccessResponse'
+            $ref: '#/definitions/rest.loginResponse'
         "400":
           description: Bad Request
           schema:
             $ref: '#/definitions/rest.ErrorResponse'
-        "401":
-          description: Unauthorized
+        "404":
+          description: Not Found
           schema:
             $ref: '#/definitions/rest.ErrorResponse'
-        "409":
-          description: Conflict
+        "500":
+          description: Internal Server Error
           schema:
             $ref: '#/definitions/rest.ErrorResponse'
-      summary: Create a new user
+      summary: Log in as an user
       tags:
       - user
   /api/users/logout:
@@ -225,7 +125,30 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/rest.SuccessResponse'
-      summary: Log out the admin
+      summary: Log out the user
       tags:
-      - admin
+      - user
+  /api/users/me:
+    get:
+      description: Get the details of the logged-in user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.UserResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+      security:
+      - ApiKeyAuth: []
+      summary: Get Logged In User
+      tags:
+      - user
 swagger: "2.0"

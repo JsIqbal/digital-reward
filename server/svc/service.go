@@ -10,16 +10,16 @@ import (
 
 type service struct {
 	dashboardRepo DashboardRepo
-	adminRepo     AdminRepo
+	userRepo      UserRepo
 
 	errRepo ErrorRepo
 	cache   Cache
 }
 
-func NewService(dashboardRepo DashboardRepo, adminRepo AdminRepo, errorRepo ErrorRepo, cache Cache) Service {
+func NewService(dashboardRepo DashboardRepo, userRepo UserRepo, errorRepo ErrorRepo, cache Cache) Service {
 	return &service{
 		dashboardRepo: dashboardRepo,
-		adminRepo:     adminRepo,
+		userRepo:      userRepo,
 
 		errRepo: errorRepo,
 		cache:   cache,
@@ -30,19 +30,19 @@ func (s *service) GetDashboardImages() []*Dashboard {
 	return s.dashboardRepo.Get()
 }
 
-func (s *service) CreateAdmin(std *Admin) error {
-	return s.adminRepo.Create(std)
+func (s *service) CreateUser(std *User) error {
+	return s.userRepo.Create(std)
 }
 
-func (s *service) FindAdminByUsername(username string) (*Admin, error) {
-	admin, err := s.adminRepo.Find(username)
+func (s *service) FindUserByUsername(username string) (*User, error) {
+	user, err := s.userRepo.Find(username)
 	if err != nil {
 		return nil, err
 	}
-	if admin == nil {
-		return nil, errors.New("admin not found")
+	if user == nil {
+		return nil, errors.New("user not found")
 	}
-	return admin, nil
+	return user, nil
 }
 
 func (s *service) Error(ctx context.Context, internalCode string, description string) *ErrorResponse {
@@ -102,13 +102,13 @@ func (s *service) Response(ctx context.Context, description string, data interfa
 	}
 }
 
-func (s *service) FindAdminByID(userID string) (*Admin, error) {
-	admin, err := s.adminRepo.FindByID(userID) // Use FindByID method in adminRepo
+func (s *service) FindUserByID(userID string) (*User, error) {
+	user, err := s.userRepo.FindByID(userID) // Use FindByID method in userRepo
 	if err != nil {
 		return nil, err
 	}
-	if admin == nil {
-		return nil, errors.New("admin not found")
+	if user == nil {
+		return nil, errors.New("user not found")
 	}
-	return admin, nil
+	return user, nil
 }

@@ -9,7 +9,7 @@ const useProfile = () => {
     const fetchUserProfile = async () => {
         try {
             const response = await axios.get(
-                "http://localhost:3004/api/admins/profile",
+                "http://localhost:3004/api/users/profile",
                 {
                     withCredentials: true,
                 }

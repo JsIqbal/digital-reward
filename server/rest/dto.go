@@ -39,7 +39,7 @@ type userResponse struct {
 	Username string `json:"username"`
 }
 
-type CreateAdminRequest struct {
+type CreateUserRequest struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
@@ -48,7 +48,7 @@ type loginResponse struct {
 	Token string `json:"token"`
 }
 
-type AdminResponse struct {
+type UserResponse struct {
 	UserID   string `json:"user_id"`
 	Username string `json:"username"`
 }

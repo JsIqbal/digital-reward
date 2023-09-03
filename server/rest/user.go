@@ -14,19 +14,19 @@ import (
 	"gorm.io/gorm"
 )
 
-// @Summary Log in as an admin
-// @Description Log in as an admin with a valid username and password
-// @Tags admin
+// @Summary Log in as an user
+// @Description Log in as an user with a valid username and password
+// @Tags user
 // @Accept json
 // @Produce json
-// @Param req body CreateAdminRequest true "Admin login request"
+// @Param req body CreateUserRequest true "User login request"
 // @Success 200 {object} loginResponse
 // @Failure 400 {object} ErrorResponse
 // @Failure 404 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /api/admins/login [post]
-func (s *Server) loginAdmin(ctx *gin.Context) {
-	var req CreateAdminRequest
+// @Router /api/users/login [post]
+func (s *Server) loginUser(ctx *gin.Context) {
+	var req CreateUserRequest
 	err := ctx.ShouldBindJSON(&req)
 	if err != nil {
 		logger.Error(ctx, "cannot pass validation", err)
@@ -36,7 +36,7 @@ func (s *Server) loginAdmin(ctx *gin.Context) {
 
 	logger.Info(ctx, "failed", req)
 
-	user, err := s.svc.FindAdminByUsername(req.Username)
+	user, err := s.svc.FindUserByUsername(req.Username)
 
 	if err != nil {
 		logger.Error(ctx, "cannot get user", err)
@@ -75,79 +75,79 @@ func (s *Server) loginAdmin(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, s.svc.Response(ctx, "successfully logged in", loginRes))
 }
 
-// @Summary Create a new admin
-// @Description Create a new admin with a unique username and password
-// @Tags admin
+// @Summary Create a new user
+// @Description Create a new user with a unique username and password
+// @Tags user
 // @Accept json
 // @Produce json
-// @Param req body CreateAdminRequest true "Admin creation request"
-// @Success 200 {string} string "Admin created successfully"
+// @Param req body CreateUserRequest true "User creation request"
+// @Success 200 {string} string "User created successfully"
 // @Failure 400 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /api/admins/create [post]
-func (s *Server) createAdmin(ctx *gin.Context) {
-	var adminRequest CreateAdminRequest
-	if err := ctx.ShouldBindJSON(&adminRequest); err != nil {
+// @Router /api/users/create [post]
+func (s *Server) createUser(ctx *gin.Context) {
+	var userRequest CreateUserRequest
+	if err := ctx.ShouldBindJSON(&userRequest); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Check if admin already exists
-	existingAdmin, err := s.svc.FindAdminByUsername(adminRequest.Username)
+	// Check if user already exists
+	existingUser, err := s.svc.FindUserByUsername(userRequest.Username)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			// Admin not found, continue
+			// User not found, continue
 		} else {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 			return
 		}
 	}
 
-	if existingAdmin != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Admin with the same username already exists"})
+	if existingUser != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "User with the same username already exists"})
 		return
 	}
 
 	// Hash password
-	hashedPass, err := bcrypt.GenerateFromPassword([]byte(adminRequest.Password), s.salt.SecretKey)
+	hashedPass, err := bcrypt.GenerateFromPassword([]byte(userRequest.Password), s.salt.SecretKey)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Could not hash password"})
 		return
 	}
 
-	// Create admin in database
-	adminID, err := uuid.NewUUID()
+	// Create user in database
+	userID, err := uuid.NewUUID()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 
-	admin := svc.Admin{
-		ID:        adminID.String(),
-		Username:  adminRequest.Username,
+	user := svc.User{
+		ID:        userID.String(),
+		Username:  userRequest.Username,
 		Password:  string(hashedPass),
 		CreatedAt: util.GetCurrentTimestamp(),
 	}
 
-	err = s.svc.CreateAdmin(&admin)
+	err = s.svc.CreateUser(&user)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, gin.H{"message": "Admin created successfully"})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "User created successfully"})
 }
 
-// @Summary Get Logged In Admin
-// @Description Get the details of the logged-in admin
-// @Tags Admins
+// @Summary Get Logged In User
+// @Description Get the details of the logged-in user
+// @Tags user
 // @Security ApiKeyAuth
 // @Produce json
-// @Success 200 {object} AdminResponse
+// @Success 200 {object} UserResponse
 // @Failure 401 {object} ErrorResponse
 // @Failure 500 {object} ErrorResponse
-// @Router /api/admins/me [get]
-func (s *Server) getLoggedInAdmin(ctx *gin.Context) {
+// @Router /api/users/me [get]
+func (s *Server) getLoggedInUser(ctx *gin.Context) {
 	payload, exists := ctx.Get(authorizationPayloadKey)
 	if !exists {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Not logged in"})
@@ -160,24 +160,24 @@ func (s *Server) getLoggedInAdmin(ctx *gin.Context) {
 		return
 	}
 
-	admin, err := s.svc.FindAdminByID(payloadStruct.ID)
+	user, err := s.svc.FindUserByID(payloadStruct.ID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 
-	adminResponse := AdminResponse{
-		UserID:   admin.ID,
-		Username: admin.Username,
+	userResponse := UserResponse{
+		UserID:   user.ID,
+		Username: user.Username,
 	}
 
-	ctx.JSON(http.StatusOK, adminResponse)
+	ctx.JSON(http.StatusOK, userResponse)
 }
 
 // logout godoc
-// @Summary Log out the admin
+// @Summary Log out the user
 // @Description Log out the user by removing the token cookie from the browser
-// @Tags admin
+// @Tags user
 // @Accept json
 // @Produce json
 // @Success 200 {object} SuccessResponse
