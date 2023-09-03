@@ -4,12 +4,13 @@ import Cookies from "js-cookie";
 
 const useProfile = () => {
     const [profile, setProfile] = useState(null);
+    const [profileStatus, setProfileStatus] = useState(false);
     const userJWT = Cookies.get("token");
 
     const fetchUserProfile = async () => {
         try {
             const response = await axios.get(
-                "http://localhost:3004/api/admins/profile",
+                "http://localhost:3004/api/users/profile",
                 {
                     withCredentials: true,
                 }
@@ -17,6 +18,7 @@ const useProfile = () => {
 
             if (response.status === 200) {
                 setProfile(response.data);
+                setProfileStatus(true);
             } else {
                 setProfile(null);
             }
@@ -29,7 +31,7 @@ const useProfile = () => {
         fetchUserProfile();
     }, [userJWT]);
 
-    return profile;
+    return { profile, profileStatus };
 };
 
 export default useProfile;

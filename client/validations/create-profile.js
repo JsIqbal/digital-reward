@@ -1,16 +1,17 @@
 import * as Yup from "yup";
 
 export const profileSchema = Yup.object({
-    username: Yup.string().required("Username is required"),
+    businessName: Yup.string().required("Business name is required"),
+    businessLead: Yup.string().required("Business lead name is required"),
+    pocMobile: Yup.string()
+        .required("POC mobile number is required")
+        .min(13, "POC mobile number must be 13 digits")
+        .max(13, "POC mobile number must be 13 digits"),
     email: Yup.string()
         .email("Invalid email address")
-        .required("Email is required"),
-    password: Yup.string()
-        .required("Password is required")
-        .min(6, "Password should contain at least 6 characters")
-        .max(20, "Password can be 20 characters long"),
-    fullname: Yup.string().required("Fullname is required"),
-    phone: Yup.string().required("phone number is requires"),
-    role: Yup.string().required("Role is required"),
-    status: Yup.string().required("Status is required"),
+        .required("Business email is required"),
+    nid: Yup.string()
+        .required("NID is required")
+        .matches(/^[0-9]{10,16}$/, "NID must be between 10 and 16 digits"),
+    kamName: Yup.string(),
 });

@@ -16,9 +16,9 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/admins/create": {
+        "/api/auth/sign-in": {
             "post": {
-                "description": "Create a new admin with a unique username and password",
+                "description": "Log in as an user with a valid username and password",
                 "consumes": [
                     "application/json"
                 ],
@@ -26,63 +26,17 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "admin"
+                    "user"
                 ],
-                "summary": "Create a new admin",
+                "summary": "Log in as an user",
                 "parameters": [
                     {
-                        "description": "Admin creation request",
+                        "description": "User login request",
                         "name": "req",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/rest.CreateAdminRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Admin created successfully",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/admins/login": {
-            "post": {
-                "description": "Log in as an admin with a valid username and password",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "admin"
-                ],
-                "summary": "Log in as an admin",
-                "parameters": [
-                    {
-                        "description": "Admin login request",
-                        "name": "req",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/rest.CreateAdminRequest"
+                            "$ref": "#/definitions/rest.CreateUserRequest"
                         }
                     }
                 ],
@@ -114,46 +68,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/admins/me": {
-            "get": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Get the details of the logged-in admin",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Admins"
-                ],
-                "summary": "Get Logged In Admin",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/rest.AdminResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/admins/users": {
-            "get": {
-                "description": "Get a list of all users in the system",
+        "/api/auth/sign-up": {
+            "post": {
+                "description": "Create a new user with a unique username and password",
                 "consumes": [
                     "application/json"
                 ],
@@ -161,17 +78,31 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "admin"
+                    "user"
                 ],
-                "summary": "Get all users",
+                "summary": "Create a new user",
+                "parameters": [
+                    {
+                        "description": "User creation request",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rest.CreateUserRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "User created successfully",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/rest.userResponse"
-                            }
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/rest.ErrorResponse"
                         }
                     },
                     "500": {
@@ -206,9 +137,9 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/users/create": {
+        "/api/users/logout": {
             "post": {
-                "description": "Create a new user with user ID and email address",
+                "description": "Log out the user by removing the token cookie from the browser",
                 "consumes": [
                     "application/json"
                 ],
@@ -218,23 +149,95 @@ const docTemplate = `{
                 "tags": [
                     "user"
                 ],
-                "summary": "Create a new user",
-                "parameters": [
-                    {
-                        "description": "Event data",
-                        "name": "eventData",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/rest.EventData"
-                        }
-                    }
-                ],
+                "summary": "Log out the user",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/rest.SuccessResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/users/profile": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Retrieve the user's profile and associated user data.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Get User Profile",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/rest.SuccessResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/rest.ErrorResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/rest.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/rest.ErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new user profile.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "Create user profile",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Authorization header",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "User profile request",
+                        "name": "req",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/rest.CreateUserProfileRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successfully created user profile",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
                         }
                     },
                     "400": {
@@ -249,8 +252,8 @@ const docTemplate = `{
                             "$ref": "#/definitions/rest.ErrorResponse"
                         }
                     },
-                    "409": {
-                        "description": "Conflict",
+                    "500": {
+                        "description": "Internal Server Error",
                         "schema": {
                             "$ref": "#/definitions/rest.ErrorResponse"
                         }
@@ -258,24 +261,38 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/users/logout": {
-            "post": {
-                "description": "Log out the user by removing the token cookie from the browser",
-                "consumes": [
-                    "application/json"
+        "/api/users/user": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
                 ],
+                "description": "Get the details of the logged-in user",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "admin"
+                    "user"
                 ],
-                "summary": "Log out the admin",
+                "summary": "Get Logged In User",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/rest.SuccessResponse"
+                            "$ref": "#/definitions/rest.UserResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/rest.ErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/rest.ErrorResponse"
                         }
                     }
                 }
@@ -283,18 +300,37 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "rest.AdminResponse": {
+        "rest.CreateUserProfileRequest": {
             "type": "object",
+            "required": [
+                "businessLead",
+                "businessName",
+                "email",
+                "nid",
+                "pocMobile"
+            ],
             "properties": {
-                "user_id": {
+                "businessLead": {
                     "type": "string"
                 },
-                "username": {
+                "businessName": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "kamName": {
+                    "type": "string"
+                },
+                "nid": {
+                    "type": "string"
+                },
+                "pocMobile": {
                     "type": "string"
                 }
             }
         },
-        "rest.CreateAdminRequest": {
+        "rest.CreateUserRequest": {
             "type": "object",
             "required": [
                 "password",
@@ -317,30 +353,6 @@ const docTemplate = `{
                 }
             }
         },
-        "rest.EventData": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "object",
-                    "properties": {
-                        "email_addresses": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "email_address": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        },
-                        "id": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
         "rest.SuccessResponse": {
             "type": "object",
             "properties": {
@@ -349,21 +361,21 @@ const docTemplate = `{
                 }
             }
         },
-        "rest.loginResponse": {
-            "type": "object",
-            "properties": {
-                "token": {
-                    "type": "string"
-                }
-            }
-        },
-        "rest.userResponse": {
+        "rest.UserResponse": {
             "type": "object",
             "properties": {
                 "user_id": {
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "rest.loginResponse": {
+            "type": "object",
+            "properties": {
+                "token": {
                     "type": "string"
                 }
             }

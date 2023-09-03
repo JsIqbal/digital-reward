@@ -9,15 +9,19 @@ type Service interface {
 	Error(ctx context.Context, internalCode string, description string) *ErrorResponse
 	Response(ctx context.Context, description string, data interface{}) *ResponseData
 
-	FindAdminByID(userID string) (*Admin, error)
-	CreateAdmin(std *Admin) error
-	FindAdminByUsername(username string) (*Admin, error)
+	FindUserByID(ctx context.Context, userID string) (*User, error)
+	CreateUser(ctx context.Context, std *User) error
+	FindUserByUsername(ctx context.Context, username string) (*User, error)
+	CreateUserProfile(ctx context.Context, ID string, profile *Profile) (*UserProfile, error)
+	GetUserProfile(ctx context.Context, userID string) (*Profile, error)
 }
 
-type AdminRepo interface {
-	Create(std *Admin) error
-	Find(username string) (*Admin, error)
-	FindByID(userID string) (*Admin, error) // Add this line
+type UserRepo interface {
+	Create(ctx context.Context, std *User) error
+	CreateProfile(ctx context.Context, ID string, profile *Profile) (*UserProfile, error)
+	Find(ctx context.Context, username string) (*User, error)
+	FindByID(ctx context.Context, userID string) (*User, error) // Add this line
+	Get(ctx context.Context, userID string) (*Profile, error) // Add this line
 }
 
 type DashboardRepo interface {

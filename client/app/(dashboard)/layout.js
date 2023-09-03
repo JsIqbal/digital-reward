@@ -12,7 +12,7 @@ import { KycComponent } from "@/components/kyc-component";
 
 const DashboardLayout = ({ children }) => {
     const { isLoading, isSignedIn } = useDashboardLogic();
-    const userProfile = useProfile();
+    const { profileStatus } = useProfile();
 
     if (isLoading) {
         return <Loader />;
@@ -30,7 +30,7 @@ const DashboardLayout = ({ children }) => {
             </div>
             <main className="md:pl-72 flex flex-col h-full">
                 <Navbar />
-                {(userProfile && { children }) || <KycComponent />}
+                {(profileStatus && children) || <KycComponent />}
 
                 <ToastContainer
                     position="top-right"

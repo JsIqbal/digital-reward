@@ -1,59 +1,33 @@
 import React from "react";
-// import axios from "axios";
 import { Formik, Form, Field, ErrorMessage, setIn } from "formik";
 
-// import { API_URL } from "@/config";
 import { profileSchema } from "@/validations/create-profile";
 import KycHeader from "./kyc-header";
 import DynamicLabel from "./label";
 import { Button } from "./ui/button";
+import { useAddProfile } from "@/hooks/create-profile";
 
 export default function CreateProfile() {
+    const { addProfile, isLoading, error } = useAddProfile();
     const initialValues = {
+        businessName: "",
+        businessLead: "",
+        pocMobile: "",
         email: "",
-        username: "",
-        fullname: "",
-        phone: "",
-        role: "",
-        status: "",
-        password: "",
-        confirm_password: "",
+        nid: "",
+        kamName: "",
     };
 
     return (
         <div className="fixed inset-0 flex items-center justify-center">
-            <div className="relative bg-white border border-gray-300 shadow-lg">
+            <div className="relative bg-white border border-gray-300 shadow-lg rounded-lg">
                 <KycHeader />
                 <div className="p-4 mt-4">
                     <Formik
                         initialValues={initialValues}
                         validationSchema={profileSchema}
                         onSubmit={(values, { setSubmitting }) => {
-                            console.log(
-                                "Setting----------------------",
-                                values
-                            );
-                            // axios
-                            //     .post(`${API_URL}/api/users`, values, {
-                            //         withCredentials: true,
-                            //     })
-                            //     .then((res) => {
-                            //         toast.success("User Added Successfully", {
-                            //             position: "top-right",
-                            //             autoClose: 500,
-                            //         });
-
-                            //         setInfo({});
-                            //         setToggle(!toggle);
-                            //     })
-                            //     .catch((error) => {
-                            //         console.log(error);
-
-                            //         toast.error("Failed to add user", {
-                            //             position: "top-right",
-                            //             autoClose: 500,
-                            //         });
-                            //     });
+                            addProfile(values);
                             setSubmitting(false);
                         }}
                     >
@@ -68,24 +42,45 @@ export default function CreateProfile() {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div className="mb-3">
                                         <DynamicLabel
-                                            htmlFor="username"
-                                            content={"Username"}
+                                            required
+                                            htmlFor="businessName"
+                                            content={"Business Name"}
                                             className="block text-gray-700 text-sm font-bold mb-2"
                                         />
                                         <Field
-                                            id="username"
-                                            name="username"
+                                            id="businessName"
+                                            name="businessName"
                                             type="text"
                                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                                         />
                                         <ErrorMessage
-                                            name="username"
+                                            name="businessName"
                                             component="div"
                                             className="text-red-500"
                                         />
                                     </div>
                                     <div className="mb-3">
                                         <DynamicLabel
+                                            required
+                                            htmlFor="businessLead"
+                                            content={"Business Lead"}
+                                            className="block text-gray-700 text-sm font-bold mb-2"
+                                        />
+                                        <Field
+                                            id="businessLead"
+                                            name="businessLead"
+                                            type="text"
+                                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                                        />
+                                        <ErrorMessage
+                                            name="businessLead"
+                                            component="div"
+                                            className="text-red-500"
+                                        />
+                                    </div>
+                                    <div className="mb-3 col-span-2">
+                                        <DynamicLabel
+                                            required
                                             htmlFor="email"
                                             content={"Email"}
                                             className="block text-gray-700 text-sm font-bold mb-2"
@@ -104,127 +99,56 @@ export default function CreateProfile() {
                                     </div>
                                     <div className="mb-3 col-span-2">
                                         <DynamicLabel
-                                            htmlFor="fullname"
-                                            content={"Fullname"}
+                                            required
+                                            htmlFor="nid"
+                                            content={"NID"}
                                             className="block text-gray-700 text-sm font-bold mb-2"
                                         />
                                         <Field
-                                            id="fullname"
-                                            name="fullname"
+                                            id="nid"
+                                            name="nid"
                                             type="text"
                                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                                         />
                                         <ErrorMessage
-                                            name="fullname"
+                                            name="nid"
                                             component="div"
                                             className="text-red-500"
                                         />
                                     </div>
-                                    <div className="mb-3 col-span-2">
+                                    <div className="mb-3">
                                         <DynamicLabel
-                                            htmlFor="phone"
-                                            content={"Phone"}
+                                            required
+                                            htmlFor="pocMobile"
+                                            content={"POC Mobile"}
                                             className="block text-gray-700 text-sm font-bold mb-2"
                                         />
                                         <Field
-                                            id="phone"
-                                            name="phone"
+                                            id="pocMobile"
+                                            name="pocMobile"
                                             type="text"
                                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                                         />
                                         <ErrorMessage
-                                            name="phone"
+                                            name="pocMobile"
                                             component="div"
                                             className="text-red-500"
                                         />
                                     </div>
                                     <div className="mb-3">
                                         <DynamicLabel
-                                            htmlFor="password"
-                                            content={"Password"}
+                                            htmlFor="kamName"
+                                            content={"KAM Name"}
                                             className="block text-gray-700 text-sm font-bold mb-2"
                                         />
                                         <Field
-                                            id="password"
-                                            name="password"
-                                            type="password"
+                                            id="kamName"
+                                            name="kamName"
+                                            type="kamName"
                                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                                         />
                                         <ErrorMessage
-                                            name="password"
-                                            component="div"
-                                            className="text-red-500"
-                                        />
-                                    </div>
-                                    <div className="mb-3">
-                                        <DynamicLabel
-                                            htmlFor="confirm_password"
-                                            content={"Confirm Password"}
-                                            className="block text-gray-700 text-sm font-bold mb-2"
-                                        />
-                                        <Field
-                                            id="password"
-                                            name="confirm_password"
-                                            type="password"
-                                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                                        />
-                                        <ErrorMessage
-                                            name="password"
-                                            component="div"
-                                            className="text-red-500"
-                                        />
-                                    </div>
-                                    <div className="mb-3">
-                                        <DynamicLabel
-                                            htmlFor="role"
-                                            content={"Role"}
-                                            className="block text-gray-700 text-sm font-bold mb-2"
-                                        />
-                                        <Field
-                                            id="role"
-                                            name="role"
-                                            as="select"
-                                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                                        >
-                                            <option value="">
-                                                Select Role
-                                            </option>
-                                            <option value="admin">Admin</option>
-                                            <option value="user">User</option>
-                                            <option value="reporter">
-                                                Reporter
-                                            </option>
-                                        </Field>
-                                        <ErrorMessage
-                                            name="role"
-                                            component="div"
-                                            className="text-red-500"
-                                        />
-                                    </div>
-                                    <div className="mb-3">
-                                        <DynamicLabel
-                                            htmlFor="status"
-                                            content={"Status"}
-                                            className="block text-gray-700 text-sm font-bold mb-2"
-                                        />
-                                        <Field
-                                            id="status"
-                                            name="status"
-                                            as="select"
-                                            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                                        >
-                                            <option value="">
-                                                Select Status
-                                            </option>
-                                            <option value="pending">
-                                                Inactive
-                                            </option>
-                                            <option value="approved">
-                                                Active
-                                            </option>
-                                        </Field>
-                                        <ErrorMessage
-                                            name="status"
+                                            name="kamName"
                                             component="div"
                                             className="text-red-500"
                                         />

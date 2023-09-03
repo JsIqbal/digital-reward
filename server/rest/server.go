@@ -43,14 +43,16 @@ func (s *Server) setupRouter() {
 
 	// public routes
 
-	s.router.POST("/api/auth/sign-in", s.loginAdmin)
-	s.router.POST("/api/auth/sign-up", s.createAdmin)
+	s.router.POST("/api/auth/sign-up", s.createUser)
+	s.router.POST("/api/auth/sign-in", s.loginUser)
 
 	// protected routes
 	authRoutes := s.router.Group("/").Use(s.authMiddleware())
 
-	authRoutes.GET("/api/admins/me", s.getLoggedInAdmin)
+	authRoutes.GET("/api/users/user", s.getLoggedInUser)
 	authRoutes.POST("/api/users/logout", s.logout)
+	authRoutes.POST("/api/users/profile", s.profile)
+	authRoutes.GET("/api/users/profile", s.getUserProfile)
 }
 
 func (s *Server) Start() error {

@@ -2,10 +2,12 @@ import { FormInput } from "lucide-react";
 import { Card } from "./ui/card";
 import { cn } from "@/lib/utils";
 import CreateProfile from "./kyc-form";
+import { Toaster } from "react-hot-toast";
 
 export const KycComponent = () => {
     return (
-        <div className="px-4 md:px-10 lg:px-20 xl:px-6 2xl:40 space-y-4 w-full mt-5">
+        <div className=" px-4 md:px-10 lg:px-20 xl:px-6 2xl:40 space-y-4 w-full mt-5 ">
+            <Toaster />
             <Card className="p-4 border-none shadow-none flex items-center justify-between ">
                 <div className="flex items-center gap-4">
                     <div

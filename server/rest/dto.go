@@ -1,5 +1,7 @@
 package rest
 
+import "go-rest/svc"
+
 type Product struct {
 	ProductID    string  `json:"product_id"`
 	ProductName  string  `json:"product_name"`
@@ -39,7 +41,7 @@ type userResponse struct {
 	Username string `json:"username"`
 }
 
-type CreateAdminRequest struct {
+type CreateUserRequest struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
@@ -48,7 +50,21 @@ type loginResponse struct {
 	Token string `json:"token"`
 }
 
-type AdminResponse struct {
+type UserResponse struct {
 	UserID   string `json:"user_id"`
 	Username string `json:"username"`
+}
+
+type CreateUserProfileRequest struct {
+	BusinessName string `form:"businessName" binding:"required"`
+	BusinessLead string `form:"businessLead" binding:"required"`
+	PocMobile    string `form:"pocMobile" binding:"required"`
+	Email        string `form:"email" binding:"required,email"`
+	NID          string `form:"nid" binding:"required"`
+	KamName      string `form:"kamName"`
+}
+
+type GetUserProfileResponse struct {
+	User    *svc.User
+	Profile *svc.Profile
 }
