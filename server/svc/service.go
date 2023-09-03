@@ -30,12 +30,12 @@ func (s *service) GetDashboardImages() []*Dashboard {
 	return s.dashboardRepo.Get()
 }
 
-func (s *service) CreateUser(std *User) error {
-	return s.userRepo.Create(std)
+func (s *service) CreateUser(ctx context.Context, std *User) error {
+	return s.userRepo.Create(ctx, std)
 }
 
-func (s *service) FindUserByUsername(username string) (*User, error) {
-	user, err := s.userRepo.Find(username)
+func (s *service) FindUserByUsername(ctx context.Context, username string) (*User, error) {
+	user, err := s.userRepo.Find(ctx, username)
 	if err != nil {
 		return nil, err
 	}
@@ -102,8 +102,8 @@ func (s *service) Response(ctx context.Context, description string, data interfa
 	}
 }
 
-func (s *service) FindUserByID(userID string) (*User, error) {
-	user, err := s.userRepo.FindByID(userID) // Use FindByID method in userRepo
+func (s *service) FindUserByID(ctx context.Context, userID string) (*User, error) {
+	user, err := s.userRepo.FindByID(ctx, userID) // Use FindByID method in userRepo
 	if err != nil {
 		return nil, err
 	}

@@ -36,7 +36,7 @@ func (s *Server) loginUser(ctx *gin.Context) {
 
 	logger.Info(ctx, "failed", req)
 
-	user, err := s.svc.FindUserByUsername(req.Username)
+	user, err := s.svc.FindUserByUsername(ctx, req.Username)
 
 	if err != nil {
 		logger.Error(ctx, "cannot get user", err)
@@ -93,7 +93,7 @@ func (s *Server) createUser(ctx *gin.Context) {
 	}
 
 	// Check if user already exists
-	existingUser, err := s.svc.FindUserByUsername(userRequest.Username)
+	existingUser, err := s.svc.FindUserByUsername(ctx, userRequest.Username)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			// User not found, continue
@@ -129,7 +129,7 @@ func (s *Server) createUser(ctx *gin.Context) {
 		CreatedAt: util.GetCurrentTimestamp(),
 	}
 
-	err = s.svc.CreateUser(&user)
+	err = s.svc.CreateUser(ctx, &user)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
@@ -160,7 +160,7 @@ func (s *Server) getLoggedInUser(ctx *gin.Context) {
 		return
 	}
 
-	user, err := s.svc.FindUserByID(payloadStruct.ID)
+	user, err := s.svc.FindUserByID(ctx, payloadStruct.ID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return

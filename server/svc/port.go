@@ -9,15 +9,15 @@ type Service interface {
 	Error(ctx context.Context, internalCode string, description string) *ErrorResponse
 	Response(ctx context.Context, description string, data interface{}) *ResponseData
 
-	FindUserByID(userID string) (*User, error)
-	CreateUser(std *User) error
-	FindUserByUsername(username string) (*User, error)
+	FindUserByID(ctx context.Context, userID string) (*User, error)
+	CreateUser(ctx context.Context, std *User) error
+	FindUserByUsername(ctx context.Context, username string) (*User, error)
 }
 
 type UserRepo interface {
-	Create(std *User) error
-	Find(username string) (*User, error)
-	FindByID(userID string) (*User, error) // Add this line
+	Create(ctx context.Context, std *User) error
+	Find(ctx context.Context, username string) (*User, error)
+	FindByID(ctx context.Context, userID string) (*User, error) // Add this line
 }
 
 type DashboardRepo interface {

@@ -1,6 +1,7 @@
 package repo
 
 import (
+	"context"
 	"fmt"
 	"go-rest/svc"
 
@@ -41,7 +42,7 @@ func (r *userRepo) Login(user *svc.User) *svc.User {
 	}
 }
 
-func (r *userRepo) Create(user *svc.User) error {
+func (r *userRepo) Create(ctx context.Context, user *svc.User) error {
 	result := r.db.Create(user)
 
 	if result.Error != nil {
@@ -52,7 +53,7 @@ func (r *userRepo) Create(user *svc.User) error {
 	return nil
 }
 
-func (r *userRepo) Find(username string) (*svc.User, error) {
+func (r *userRepo) Find(ctx context.Context, username string) (*svc.User, error) {
 	var user svc.User
 	result := r.db.Where("username = ?", username).First(&user)
 
@@ -64,7 +65,7 @@ func (r *userRepo) Find(username string) (*svc.User, error) {
 	return &user, nil
 }
 
-func (r *userRepo) FindByID(userID string) (*svc.User, error) {
+func (r *userRepo) FindByID(ctx context.Context, userID string) (*svc.User, error) {
 	var user svc.User
 	result := r.db.Where("id = ?", userID).First(&user)
 
