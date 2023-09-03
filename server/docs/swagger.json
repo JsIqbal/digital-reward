@@ -194,58 +194,6 @@
                 }
             }
         },
-        "/api/users/create": {
-            "post": {
-                "description": "Create a new user with user ID and email address",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "user"
-                ],
-                "summary": "Create a new user",
-                "parameters": [
-                    {
-                        "description": "Event data",
-                        "name": "eventData",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/rest.EventData"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/rest.SuccessResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    },
-                    "409": {
-                        "description": "Conflict",
-                        "schema": {
-                            "$ref": "#/definitions/rest.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/api/users/logout": {
             "post": {
                 "description": "Log out the user by removing the token cookie from the browser",
@@ -302,30 +250,6 @@
             "properties": {
                 "message": {
                     "type": "string"
-                }
-            }
-        },
-        "rest.EventData": {
-            "type": "object",
-            "properties": {
-                "data": {
-                    "type": "object",
-                    "properties": {
-                        "email_addresses": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "email_address": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        },
-                        "id": {
-                            "type": "string"
-                        }
-                    }
                 }
             }
         },

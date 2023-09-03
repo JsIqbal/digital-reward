@@ -46,8 +46,6 @@ func (s *Server) setupRouter() {
 
 	// public routes
 
-	s.router.POST("/api/users/create", s.createUser)
-
 	s.router.POST("/api/auth/sign-in", s.loginAdmin)
 	s.router.POST("/api/auth/sign-up", s.createAdmin)
 
@@ -55,7 +53,8 @@ func (s *Server) setupRouter() {
 	authRoutes := s.router.Group("/").Use(s.authMiddleware())
 
 	authRoutes.GET("/api/admins/users", s.users)
-	authRoutes.GET("/api/admins/me", s.getLoggedInAdmin)
+	authRoutes.POST("/api/admins/profile", s.createProfile)
+	authRoutes.GET("/api/admins/profile", s.getLoggedInAdmin)
 	authRoutes.POST("/api/users/logout", s.logout)
 
 	// dashboardGroup.GET("/images", getDashboardImages(service))

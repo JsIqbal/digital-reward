@@ -21,21 +21,6 @@ definitions:
       message:
         type: string
     type: object
-  rest.EventData:
-    properties:
-      data:
-        properties:
-          email_addresses:
-            items:
-              properties:
-                email_address:
-                  type: string
-              type: object
-            type: array
-          id:
-            type: string
-        type: object
-    type: object
   rest.SuccessResponse:
     properties:
       message:
@@ -179,40 +164,6 @@ paths:
       summary: Test the server
       tags:
       - test
-  /api/users/create:
-    post:
-      consumes:
-      - application/json
-      description: Create a new user with user ID and email address
-      parameters:
-      - description: Event data
-        in: body
-        name: eventData
-        required: true
-        schema:
-          $ref: '#/definitions/rest.EventData'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/rest.SuccessResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/rest.ErrorResponse'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/rest.ErrorResponse'
-        "409":
-          description: Conflict
-          schema:
-            $ref: '#/definitions/rest.ErrorResponse'
-      summary: Create a new user
-      tags:
-      - user
   /api/users/logout:
     post:
       consumes:
