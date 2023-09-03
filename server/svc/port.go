@@ -23,7 +23,7 @@ type Service interface {
 	GetUserByID(userID string) (*User, error)
 	GetUserByEmail(email string) (*User, error)
 
-	LoginAdmin(std *Admin) *Admin
+	// LoginAdmin(std *Admin) *Admin
 	FindAdminByID(userID string) (*Admin, error)
 	CreateAdmin(std *Admin) error
 	FindAdminByUsername(username string) (*Admin, error)
@@ -31,7 +31,7 @@ type Service interface {
 }
 
 type AdminRepo interface {
-	Login(std *Admin) *Admin
+	// Login(std *Admin) *Admin
 	Create(std *Admin) error
 	Find(username string) (*Admin, error)
 	FindByID(userID string) (*Admin, error) // Add this line
