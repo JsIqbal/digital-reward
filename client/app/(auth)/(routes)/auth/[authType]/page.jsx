@@ -1,64 +1,34 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import toast, { Toaster } from "react-hot-toast";
-import axios from "axios";
-import { useRouter } from "next/navigation";
+import { Toaster } from "react-hot-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Cookies from "js-cookie";
+import { X } from "lucide-react";
+import useAuth from "@/hooks/user-auth";
+import { useRouter } from "next/navigation";
 
 export default function Page({ params }) {
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm();
-
     const router = useRouter();
-
-    const [mode, setMode] = useState(`auth/${params.authType}` || "sign-up");
-    console.log(mode);
-
-    const onSubmit = async (data) => {
-        try {
-            const response = await axios.post(
-                `http://localhost:3004/api/${mode}`,
-                data
-            );
-
-            if (response.data.data.token) {
-                axios.defaults.headers.common[
-                    "token"
-                ] = `Bearer ${response.data.data.token}`;
-                localStorage.setItem("token", response.data.data.token);
-                localStorage.setItem("isLoggedIn", true);
-                localStorage.setItem("userType", true);
-                Cookies.set("token", response.data.data.token);
-            }
-
-            toast.success(`You have successfully ${mode}ed!`);
-            router.push("/dashboard");
-        } catch (error) {
-            toast.error(error.response.data.message);
-        }
-    };
-
-    const toggleMode = () => {
-        setMode(mode === "auth/sign-up" ? "auth/sign-in" : "auth/sign-up");
-    };
+    const { register, handleSubmit, errors, onSubmit, toggleMode, mode } =
+        useAuth(params);
 
     return (
         <div className="container mx-auto px-4 py-8">
             <Toaster />
             <div className="flex justify-center items-center">
                 <div className="w-full max-w-md bg-white shadow-md rounded-md p-6">
-                    <h1 className="text-2xl mb-4">
-                        {mode === "auth/sign-up"
-                            ? "Create an account"
-                            : "Log in to your account"}
-                    </h1>
+                    <div className="flex justify-between">
+                        <h1 className="text-2xl mb-4">
+                            {mode === "auth/sign-up"
+                                ? "Create an account"
+                                : "Log in to your account"}
+                        </h1>
+                        <X
+                            className="cursor-pointer"
+                            onClick={() => router.push("/")}
+                        />
+                    </div>
+
                     <form onSubmit={handleSubmit(onSubmit)}>
                         {mode === "auth/sign-up" && (
                             <div className="mb-4">

@@ -4,8 +4,10 @@ import TypewriterComponent from "typewriter-effect";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
+import useUser from "@/hooks/user";
 
 export const LandingHero = () => {
+    const { isSignedIn } = useUser();
     return (
         <div className="text-white font-bold py-36 text-center space-y-5">
             <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl space-y-5 font-extrabold">
@@ -29,7 +31,7 @@ export const LandingHero = () => {
                 Handle campaigns using our platform 10x faster.
             </div>
             <div>
-                <Link href={true ? "/dashboard" : "auth/sign-up"}>
+                <Link href={isSignedIn ? "/dashboard" : "auth/sign-up"}>
                     <Button
                         varient="outline"
                         className="md:text-lg p-4 md:p-6 rounded-full font-semibold bg-gradient-to-r from-indigo-700 to-pink-600 hover:scale-[102%] transition-all duration-150 shadow-lg"

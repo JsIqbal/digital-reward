@@ -8,6 +8,7 @@ import Link from "next/link";
 import Cookies from "js-cookie";
 
 import { Button } from "./ui/button";
+import useUser from "@/hooks/user";
 
 const font = Montserrat({
     weight: "600",
@@ -15,12 +16,7 @@ const font = Montserrat({
 });
 
 const LandingNavabr = () => {
-    const tokenExists = Cookies.get("token");
-
-    const loggedIn = localStorage.getItem("isLoggedIn");
-    const userType = localStorage.getItem("userType");
-
-    const showDashboardButton = tokenExists && loggedIn && userType;
+    const { isSignedIn } = useUser();
 
     return (
         <nav className="p-4 bg-transparent flex items-center justify-between">
@@ -38,14 +34,12 @@ const LandingNavabr = () => {
                 </h1>
             </Link>
             <div className="flex items-center gap-x-2">
-                <Link
-                    href={showDashboardButton ? "/dashboard" : "auth/sign-up"}
-                >
+                <Link href={isSignedIn ? "/dashboard" : "auth/sign-in"}>
                     <Button
                         variant="outline"
                         className="rounded-full bg-indigo-600 border-none font-bold text-white hover:bg-indigo-500 hover:text-white hover:scale-[103%] transition-all duration-150 shadow-lg"
                     >
-                        {showDashboardButton ? "Dashboard" : "Get Started"}
+                        {isSignedIn ? "Dashboard" : "Get Started"}
                     </Button>
                 </Link>
             </div>

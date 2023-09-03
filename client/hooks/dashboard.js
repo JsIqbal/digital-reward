@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import useUser from "./user-hook";
+import useUser from "./user";
 
 const useDashboardLogic = () => {
     const { isSignedIn } = useUser();

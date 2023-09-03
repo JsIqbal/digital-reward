@@ -135,7 +135,7 @@ func (s *Server) createAdmin(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "Admin created successfully"})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "Admin created successfully"})
 }
 
 // @Summary Get all users

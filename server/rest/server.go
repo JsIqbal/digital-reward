@@ -55,9 +55,7 @@ func (s *Server) setupRouter() {
 	authRoutes := s.router.Group("/").Use(s.authMiddleware())
 
 	authRoutes.GET("/api/admins/users", s.users)
-
 	authRoutes.GET("/api/admins/me", s.getLoggedInAdmin)
-
 	authRoutes.POST("/api/users/logout", s.logout)
 
 	// dashboardGroup.GET("/images", getDashboardImages(service))

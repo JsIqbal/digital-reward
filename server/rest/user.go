@@ -70,7 +70,7 @@ func (s *Server) createUser(ctx *gin.Context) {
 
 	s.svc.CreateUser(user)
 
-	ctx.JSON(http.StatusOK, gin.H{"message": "User created successfully"})
+	ctx.JSON(http.StatusCreated, gin.H{"message": "User created successfully"})
 }
 
 // logout godoc

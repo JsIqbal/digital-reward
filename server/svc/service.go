@@ -44,9 +44,6 @@ func (s *service) CreateAdmin(std *Admin) error {
 	return s.adminRepo.Create(std)
 }
 
-//	func (s *service) FindAdminByUsername(username string) (*Admin, error) {
-//		return s.adminRepo.Find(username)
-//	}
 func (s *service) FindAdminByUsername(username string) (*Admin, error) {
 	admin, err := s.adminRepo.Find(username)
 	if err != nil {

@@ -3,7 +3,7 @@
 import { DashHeader } from "@/components/dashboard-header";
 import useProfile from "@/hooks/user-profile";
 import { DashboardTool } from "@/components/dashboard-tool";
-import { KycForm } from "@/components/kyc-form";
+import { KycForm } from "@/components/kyc-component";
 
 const DashboardPage = () => {
     const userProfile = useProfile();
