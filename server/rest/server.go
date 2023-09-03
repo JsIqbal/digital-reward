@@ -33,12 +33,9 @@ func NewServer(svc svc.Service, appConfig *config.Application, salt *config.Salt
 func (s *Server) setupRouter() {
 	s.router = gin.Default() // Initialize the router here
 
-	// CORS middleware
+	// Middleware & configuration
 	s.router.Use(corsMiddleware)
-
-	// log middleware
 	s.router.Use(logger.ModifyContext)
-
 	s.router.Static("/docs", "./docs")
 
 	// healtch check
@@ -46,20 +43,14 @@ func (s *Server) setupRouter() {
 
 	// public routes
 
-	s.router.POST("/api/users/create", s.createUser)
-
 	s.router.POST("/api/auth/sign-in", s.loginAdmin)
 	s.router.POST("/api/auth/sign-up", s.createAdmin)
 
 	// protected routes
 	authRoutes := s.router.Group("/").Use(s.authMiddleware())
 
-	authRoutes.GET("/api/admins/users", s.users)
 	authRoutes.GET("/api/admins/me", s.getLoggedInAdmin)
 	authRoutes.POST("/api/users/logout", s.logout)
-
-	// dashboardGroup.GET("/images", getDashboardImages(service))
-
 }
 
 func (s *Server) Start() error {

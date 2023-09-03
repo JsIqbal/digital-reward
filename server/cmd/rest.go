@@ -8,13 +8,8 @@ import (
 	"go-rest/repo"
 	"go-rest/rest"
 	"go-rest/svc"
-	"log"
-	"time"
 
 	"github.com/go-redis/redis"
-	"github.com/google/uuid"
-	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
 )
 
 func serveRest() {
@@ -24,7 +19,6 @@ func serveRest() {
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", appConfig.DBUser, appConfig.DBPass, appConfig.DBHost, appConfig.DBPort, appConfig.DBName)
 	db := database.NewDatabase(dsn)
-	userRepo := repo.NewUserRepo(db)
 	dashRepo := repo.NewDashboardRepo(db)
 	admnRepo := repo.NewAdminRepo(db)
 	errorRepo := repo.NewErrorRepo(db)
@@ -33,9 +27,9 @@ func serveRest() {
 		Addr: "localhost:6379",
 	})
 	cache := cache.NewCache(redisClient)
-	svc := svc.NewService(dashRepo, userRepo, admnRepo, errorRepo, cache)
+	svc := svc.NewService(dashRepo, admnRepo, errorRepo, cache)
 
-	createDefaultAdmin(db)
+	// createDefaultAdmin(db)
 
 	server, err := rest.NewServer(svc, appConfig, saltConfig, tokenConfig)
 
@@ -49,36 +43,34 @@ func serveRest() {
 	}
 }
 
-func createDefaultAdmin(db *gorm.DB) {
-	// db.Exec("DELETE FROM admins")
-	// Hash password
-	hashedPass, err := bcrypt.GenerateFromPassword([]byte("P@ssword"), config.GetSalt().SecretKey)
-	if err != nil {
-		log.Printf("Error hashing password: %v", err)
-		return
-	}
+// func createDefaultAdmin(db *gorm.DB) {
+// 	// db.Exec("DELETE FROM admins")
+// 	// Hash password
+// 	hashedPass, err := bcrypt.GenerateFromPassword([]byte("P@ssword"), config.GetSalt().SecretKey)
+// 	if err != nil {
+// 		log.Printf("Error hashing password: %v", err)
+// 		return
+// 	}
 
-	adminID, err := uuid.NewUUID()
-	if err != nil {
-		log.Printf("Error generating UUID: %v", err)
-		return
-	}
+// 	adminID, err := uuid.NewUUID()
+// 	if err != nil {
+// 		log.Printf("Error generating UUID: %v", err)
+// 		return
+// 	}
 
-	// Create admin in the database
-	admin := svc.Admin{
-		ID:        adminID.String(),
-		Username:  "admin",
-		Password:  string(hashedPass),
-		CreatedAt: time.Now().Unix(),
-	}
+// 	// Create admin in the database
+// 	admin := svc.Admin{
+// 		ID:        adminID.String(),
+// 		Username:  "admin",
+// 		Password:  string(hashedPass),
+// 		CreatedAt: time.Now().Unix(),
+// 	}
 
-	err = db.Create(&admin).Error
-	if err != nil {
-		log.Printf("Error creating default admin: %v", err)
-		return
-	}
+// 	err = db.Create(&admin).Error
+// 	if err != nil {
+// 		log.Printf("Error creating default admin: %v", err)
+// 		return
+// 	}
 
-	log.Println("Default admin created successfully")
-}
-
-
+// 	log.Println("Default admin created successfully")
+// }

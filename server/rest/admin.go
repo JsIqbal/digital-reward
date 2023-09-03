@@ -37,7 +37,7 @@ func (s *Server) loginAdmin(ctx *gin.Context) {
 	logger.Info(ctx, "failed", req)
 
 	user, err := s.svc.FindAdminByUsername(req.Username)
-	
+
 	if err != nil {
 		logger.Error(ctx, "cannot get user", err)
 		ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_INTERNAL_SERVER_ERROR, "Internal server error"))
@@ -138,29 +138,6 @@ func (s *Server) createAdmin(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"message": "Admin created successfully"})
 }
 
-// @Summary Get all users
-// @Description Get a list of all users in the system
-// @Tags admin
-// @Accept json
-// @Produce json
-// @Success 200 {array} userResponse
-// @Failure 500 {object} ErrorResponse
-// @Router /api/admins/users [get]
-func (s *Server) users(ctx *gin.Context) {
-	allUsers := s.svc.GetAllUsers()
-
-	var response []userResponse
-
-	for _, user := range allUsers {
-		response = append(response, userResponse{
-			UserID: user.ID,
-			Username:  user.Email,
-		})
-	}
-
-	ctx.JSON(http.StatusOK, response)
-}
-
 // @Summary Get Logged In Admin
 // @Description Get the details of the logged-in admin
 // @Tags Admins
@@ -177,22 +154,35 @@ func (s *Server) getLoggedInAdmin(ctx *gin.Context) {
 		return
 	}
 
-	payloadStruct, ok := payload.(Payload) 
+	payloadStruct, ok := payload.(Payload)
 	if !ok {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid payload"})
 		return
 	}
 
-	admin, err := s.svc.FindAdminByID(payloadStruct.ID) 
+	admin, err := s.svc.FindAdminByID(payloadStruct.ID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 		return
 	}
 
 	adminResponse := AdminResponse{
-		UserID: admin.ID,
-		Username:  admin.Username, 
+		UserID:   admin.ID,
+		Username: admin.Username,
 	}
 
 	ctx.JSON(http.StatusOK, adminResponse)
+}
+
+// logout godoc
+// @Summary Log out the admin
+// @Description Log out the user by removing the token cookie from the browser
+// @Tags admin
+// @Accept json
+// @Produce json
+// @Success 200 {object} SuccessResponse
+// @Router /api/users/logout [post]
+func (s *Server) logout(ctx *gin.Context) {
+	ctx.SetCookie("token", "", -1, "/", "", false, true)
+	ctx.JSON(http.StatusOK, gin.H{"message": "Logged out successfully"})
 }
