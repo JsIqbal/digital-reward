@@ -26,6 +26,15 @@ func NewService(dashboardRepo DashboardRepo, userRepo UserRepo, errorRepo ErrorR
 	}
 }
 
+func (s *service) CreateUserProfile(ctx context.Context, ID string, profile *Profile) (*UserProfile, error) {
+	return s.userRepo.CreateProfile(ctx, ID, profile)
+
+}
+
+func (s *service) GetUserProfile(ctx context.Context, userID string) (*Profile, error) {
+	return s.userRepo.Get(ctx , userID)
+}
+
 func (s *service) GetDashboardImages() []*Dashboard {
 	return s.dashboardRepo.Get()
 }
@@ -33,6 +42,8 @@ func (s *service) GetDashboardImages() []*Dashboard {
 func (s *service) CreateUser(ctx context.Context, std *User) error {
 	return s.userRepo.Create(ctx, std)
 }
+
+
 
 func (s *service) FindUserByUsername(ctx context.Context, username string) (*User, error) {
 	user, err := s.userRepo.Find(ctx, username)

@@ -51,6 +51,8 @@ func (s *Server) setupRouter() {
 
 	authRoutes.GET("/api/users/user", s.getLoggedInUser)
 	authRoutes.POST("/api/users/logout", s.logout)
+	authRoutes.POST("/api/users/profile", s.profile)
+	authRoutes.GET("/api/users/profile", s.getUserProfile)
 }
 
 func (s *Server) Start() error {

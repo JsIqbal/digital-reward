@@ -12,12 +12,16 @@ type Service interface {
 	FindUserByID(ctx context.Context, userID string) (*User, error)
 	CreateUser(ctx context.Context, std *User) error
 	FindUserByUsername(ctx context.Context, username string) (*User, error)
+	CreateUserProfile(ctx context.Context, ID string, profile *Profile) (*UserProfile, error)
+	GetUserProfile(ctx context.Context, userID string) (*Profile, error)
 }
 
 type UserRepo interface {
 	Create(ctx context.Context, std *User) error
+	CreateProfile(ctx context.Context, ID string, profile *Profile) (*UserProfile, error)
 	Find(ctx context.Context, username string) (*User, error)
 	FindByID(ctx context.Context, userID string) (*User, error) // Add this line
+	Get(ctx context.Context, userID string) (*Profile, error) // Add this line
 }
 
 type DashboardRepo interface {

@@ -1,5 +1,7 @@
 package rest
 
+import "go-rest/svc"
+
 type Product struct {
 	ProductID    string  `json:"product_id"`
 	ProductName  string  `json:"product_name"`
@@ -51,4 +53,18 @@ type loginResponse struct {
 type UserResponse struct {
 	UserID   string `json:"user_id"`
 	Username string `json:"username"`
+}
+
+type CreateUserProfileRequest struct {
+	BusinessName string `form:"businessName" binding:"required"`
+	BusinessLead string `form:"businessLead" binding:"required"`
+	PocMobile    string `form:"pocMobile" binding:"required"`
+	Email        string `form:"email" binding:"required,email"`
+	NID          string `form:"nid" binding:"required"`
+	KamName      string `form:"kamName"`
+}
+
+type GetUserProfileResponse struct {
+	User    *svc.User
+	Profile *svc.Profile
 }

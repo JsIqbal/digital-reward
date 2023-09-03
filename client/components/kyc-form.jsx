@@ -1,15 +1,14 @@
 import React from "react";
-import axios from "axios";
 import { Formik, Form, Field, ErrorMessage, setIn } from "formik";
 
-// import { API_URL } from "@/config";
 import { profileSchema } from "@/validations/create-profile";
 import KycHeader from "./kyc-header";
 import DynamicLabel from "./label";
 import { Button } from "./ui/button";
-import toast from "react-hot-toast";
+import { useAddProfile } from "@/hooks/create-profile";
 
 export default function CreateProfile() {
+    const { addProfile, isLoading, error } = useAddProfile();
     const initialValues = {
         businessName: "",
         businessLead: "",
@@ -21,42 +20,14 @@ export default function CreateProfile() {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center">
-            <div className="relative bg-white border border-gray-300 shadow-lg">
+            <div className="relative bg-white border border-gray-300 shadow-lg rounded-lg">
                 <KycHeader />
                 <div className="p-4 mt-4">
                     <Formik
                         initialValues={initialValues}
                         validationSchema={profileSchema}
                         onSubmit={(values, { setSubmitting }) => {
-                            console.log(
-                                "Setting----------------------",
-                                values
-                            );
-                            axios
-                                .post(
-                                    `http://localhost:3004/api/users/profile`,
-                                    values,
-                                    {
-                                        withCredentials: true,
-                                    }
-                                )
-                                .then((res) => {
-                                    toast.success(
-                                        "Profile Added Successfully",
-                                        {
-                                            position: "top-right",
-                                            autoClose: 500,
-                                        }
-                                    );
-                                })
-                                .catch((error) => {
-                                    console.log(error);
-
-                                    toast.error("Failed to add profile", {
-                                        position: "top-right",
-                                        autoClose: 500,
-                                    });
-                                });
+                            addProfile(values);
                             setSubmitting(false);
                         }}
                     >

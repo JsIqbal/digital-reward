@@ -1,4 +1,25 @@
 definitions:
+  rest.CreateUserProfileRequest:
+    properties:
+      businessLead:
+        type: string
+      businessName:
+        type: string
+      email:
+        type: string
+      kamName:
+        type: string
+      nid:
+        type: string
+      pocMobile:
+        type: string
+    required:
+    - businessLead
+    - businessName
+    - email
+    - nid
+    - pocMobile
+    type: object
   rest.CreateUserRequest:
     properties:
       password:
@@ -34,52 +55,7 @@ definitions:
 info:
   contact: {}
 paths:
-  /api/test:
-    get:
-      consumes:
-      - application/json
-      description: Test the server by sending a request to this endpoint
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/rest.SuccessResponse'
-      summary: Test the server
-      tags:
-      - test
-  /api/users/create:
-    post:
-      consumes:
-      - application/json
-      description: Create a new user with a unique username and password
-      parameters:
-      - description: User creation request
-        in: body
-        name: req
-        required: true
-        schema:
-          $ref: '#/definitions/rest.CreateUserRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: User created successfully
-          schema:
-            type: string
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/rest.ErrorResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/rest.ErrorResponse'
-      summary: Create a new user
-      tags:
-      - user
-  /api/users/login:
+  /api/auth/sign-in:
     post:
       consumes:
       - application/json
@@ -113,6 +89,51 @@ paths:
       summary: Log in as an user
       tags:
       - user
+  /api/auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with a unique username and password
+      parameters:
+      - description: User creation request
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/rest.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User created successfully
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+      summary: Create a new user
+      tags:
+      - user
+  /api/test:
+    get:
+      consumes:
+      - application/json
+      description: Test the server by sending a request to this endpoint
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.SuccessResponse'
+      summary: Test the server
+      tags:
+      - test
   /api/users/logout:
     post:
       consumes:
@@ -126,6 +147,72 @@ paths:
           schema:
             $ref: '#/definitions/rest.SuccessResponse'
       summary: Log out the user
+      tags:
+      - user
+  /api/users/profile:
+    get:
+      description: Retrieve the user's profile and associated user data.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/rest.SuccessResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get User Profile
+      tags:
+      - user
+    post:
+      consumes:
+      - application/json
+      description: Create a new user profile.
+      parameters:
+      - description: Authorization header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: User profile request
+        in: body
+        name: req
+        required: true
+        schema:
+          $ref: '#/definitions/rest.CreateUserProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successfully created user profile
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/rest.ErrorResponse'
+      summary: Create user profile
       tags:
       - user
   /api/users/user:

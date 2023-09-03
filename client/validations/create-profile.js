@@ -5,7 +5,8 @@ export const profileSchema = Yup.object({
     businessLead: Yup.string().required("Business lead name is required"),
     pocMobile: Yup.string()
         .required("POC mobile number is required")
-        .matches(/^[0-9]{13}$/, "POC mobile number must be 13 digits"),
+        .min(13, "POC mobile number must be 13 digits")
+        .max(13, "POC mobile number must be 13 digits"),
     email: Yup.string()
         .email("Invalid email address")
         .required("Business email is required"),

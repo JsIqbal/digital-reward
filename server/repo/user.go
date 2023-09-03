@@ -18,6 +18,39 @@ func NewUserRepo(db *gorm.DB) svc.UserRepo {
 	}
 }
 
+func (r *userRepo) CreateProfile(ctx context.Context, ID string, profile *svc.Profile) (*svc.UserProfile, error) {
+    // First, create the user profile record
+    userProfile := &svc.UserProfile{
+        ProfileID: profile.ID, // Assuming profile.ID is the ID of the created profile
+        UserID:    ID,        // UserID is passed as an argument
+    }
+
+    // Create the user profile in the database
+    if err := r.db.Create(userProfile).Error; err != nil {
+        return nil, err
+    }
+
+	p := &svc.Profile{
+        ID :        profile.ID,  
+		UserID    :   ID,
+		BusinessName :profile.BusinessName,
+		BusinessLead : profile.BusinessLead,
+		Email      :  profile.Email,
+		KAMName   :   profile.KAMName,
+		Nid        :  profile.Nid,
+		PocMobile    : profile.PocMobile,
+    }
+
+	if err := r.db.Create(p).Error; err != nil {
+        return nil, err
+    }
+
+    // Return the created user profile
+    return userProfile, nil
+}
+
+
+
 func (r *userRepo) Login(user *svc.User) *svc.User {
 	var participant svc.User
 	result := r.db.Where("username = ?", user.Username).First(&participant)
@@ -76,3 +109,17 @@ func (r *userRepo) FindByID(ctx context.Context, userID string) (*svc.User, erro
 
 	return &user, nil
 }
+
+func (r *userRepo) Get(ctx context.Context, userID string) (*svc.Profile, error) {
+    // Create a variable to hold the profile
+    var profile svc.Profile
+
+    // Query the database to find the profile associated with the given userID
+    if err := r.db.Where("user_id = ?", userID).First(&profile).Error; err != nil {
+        return nil, err
+    }
+
+    // Return the retrieved profile
+    return &profile, nil
+}
+
