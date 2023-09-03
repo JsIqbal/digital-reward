@@ -32,13 +32,13 @@ func (s *service) GetDashboardImages() []*Dashboard {
 	return s.dashboardRepo.Get()
 }
 
-func (s *service) CreateUser(std *User) {
-	s.userRepo.CreateUser(std)
-}
+// func (s *service) CreateUser(std *User) {
+// 	s.userRepo.CreateUser(std)
+// }
 
-func (s *service) LoginAdmin(std *Admin) *Admin {
-	return s.adminRepo.Login(std)
-}
+// func (s *service) LoginAdmin(std *Admin) *Admin {
+// 	return s.adminRepo.Login(std)
+// }
 
 func (s *service) CreateAdmin(std *Admin) error {
 	return s.adminRepo.Create(std)

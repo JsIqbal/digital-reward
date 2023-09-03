@@ -183,16 +183,21 @@ func (s *Server) getLoggedInAdmin(ctx *gin.Context) {
 		return
 	}
 
-	admin, err := s.svc.FindAdminByID(payloadStruct.ID) 
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
-		return
-	}
+	// admin, err := s.svc.FindAdminByID(payloadStruct.ID) 
+	// if err != nil {
+	// 	ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
+	// 	return
+	// }
 
 	adminResponse := AdminResponse{
-		UserID: admin.ID,
-		Username:  admin.Username, 
+		UserID: payloadStruct.ID,
+		Username:  payloadStruct.UserName, 
 	}
 
 	ctx.JSON(http.StatusOK, adminResponse)
+}
+
+
+func (s *Server) createProfile(ctx *gin.Context) {
+	
 }

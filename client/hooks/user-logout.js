@@ -3,27 +3,33 @@ import Cookies from "js-cookie";
 
 const useLogout = () => {
     const logout = async () => {
-        try {
-            await axios.post(
-                "http://localhost:3004/api/users/logout",
+        axios
+            .post(
+                `http://localhost:3004/api/users/logout`,
                 {},
-                {
-                    withCredentials: true,
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem(
-                            "token"
-                        )}`,
+                { withCredentials: true }
+            )
+            .then((res) => {
+                console.log(
+                    "--------------------------user logged out------------------------",
+                    res
+                );
+                Cookies.remove("token");
+                delete axios.defaults.headers.common["token"]; // Remove token header
+                toast.success("Logout Successful", {
+                    position: "top-right",
+                    autoClose: 500,
+                    onClose: () => {
+                        router.push("/admin/login");
                     },
-                }
-            );
+                });
 
-            localStorage.removeItem("token");
-            localStorage.removeItem("isLoggedIn");
-            localStorage.removeItem("userType");
-            Cookies.remove("token");
-        } catch (error) {
-            console.error("Error while logging out:", error);
-        }
+                localStorage.removeItem("token");
+                localStorage.removeItem("isLoggedIn");
+                localStorage.removeItem("userType");
+                Cookies.remove("token");
+            })
+            .catch((error) => console.log(error));
     };
 
     return logout;

@@ -17,29 +17,29 @@ func NewAdminRepo(db *gorm.DB) svc.AdminRepo {
 	}
 }
 
-func (r *adminRepo) Login(admin *svc.Admin) *svc.Admin {
-	var user svc.Admin
-	result := r.db.Where("username = ?", admin.Username).First(&user)
+// func (r *adminRepo) Login(admin *svc.Admin) *svc.Admin {
+// 	var user svc.Admin
+// 	result := r.db.Where("username = ?", admin.Username).First(&user)
 
-	if result.Error != nil {
-		fmt.Println("Error while fetching user:", result.Error)
-		return nil
-	}
+// 	if result.Error != nil {
+// 		fmt.Println("Error while fetching user:", result.Error)
+// 		return nil
+// 	}
 
-	storedPassword := user.Password
-	providedPassword := admin.Password
+// 	storedPassword := user.Password
+// 	providedPassword := admin.Password
 
-	fmt.Println("Stored Password:", storedPassword)
-	fmt.Println("Provided Password:", providedPassword)
+// 	fmt.Println("Stored Password:", storedPassword)
+// 	fmt.Println("Provided Password:", providedPassword)
 
-	if storedPassword == providedPassword {
-		fmt.Println("Login Succeeded")
-		return &user
-	} else {
-		fmt.Println("Login Failed")
-		return nil
-	}
-}
+// 	if storedPassword == providedPassword {
+// 		fmt.Println("Login Succeeded")
+// 		return &user
+// 	} else {
+// 		fmt.Println("Login Failed")
+// 		return nil
+// 	}
+// }
 
 func (r *adminRepo) Create(admin *svc.Admin) error {
 	result := r.db.Create(admin)

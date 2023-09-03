@@ -6,7 +6,6 @@ import (
 )
 
 type UserRepo interface {
-	CreateUser(std *User)
 	GetUserByID(userID string) (*User, error)
 	GetUserByEmail(email string) (*User, error)
 
@@ -17,13 +16,10 @@ type Service interface {
 	Error(ctx context.Context, internalCode string, description string) *ErrorResponse
 	Response(ctx context.Context, description string, data interface{}) *ResponseData
 
-	GetDashboardImages() []*Dashboard
 
-	CreateUser(std *User)
 	GetUserByID(userID string) (*User, error)
 	GetUserByEmail(email string) (*User, error)
 
-	LoginAdmin(std *Admin) *Admin
 	FindAdminByID(userID string) (*Admin, error)
 	CreateAdmin(std *Admin) error
 	FindAdminByUsername(username string) (*Admin, error)
@@ -31,7 +27,6 @@ type Service interface {
 }
 
 type AdminRepo interface {
-	Login(std *Admin) *Admin
 	Create(std *Admin) error
 	Find(username string) (*Admin, error)
 	FindByID(userID string) (*Admin, error) // Add this line
