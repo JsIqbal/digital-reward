@@ -128,7 +128,7 @@ paths:
       summary: Log out the user
       tags:
       - user
-  /api/users/me:
+  /api/users/user:
     get:
       description: Get the details of the logged-in user
       produces:

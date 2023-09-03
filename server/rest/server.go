@@ -43,13 +43,13 @@ func (s *Server) setupRouter() {
 
 	// public routes
 
-	s.router.POST("/api/auth/sign-in", s.loginUser)
 	s.router.POST("/api/auth/sign-up", s.createUser)
+	s.router.POST("/api/auth/sign-in", s.loginUser)
 
 	// protected routes
 	authRoutes := s.router.Group("/").Use(s.authMiddleware())
 
-	authRoutes.GET("/api/users/me", s.getLoggedInUser)
+	authRoutes.GET("/api/users/user", s.getLoggedInUser)
 	authRoutes.POST("/api/users/logout", s.logout)
 }
 

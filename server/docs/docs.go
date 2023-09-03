@@ -160,7 +160,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/users/me": {
+        "/api/users/user": {
             "get": {
                 "security": [
                     {
