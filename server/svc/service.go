@@ -26,36 +26,6 @@ func NewService(dashboardRepo DashboardRepo, userRepo UserRepo, errorRepo ErrorR
 	}
 }
 
-func (s *service) CreateUserProfile(ctx context.Context, ID string, profile *Profile) (*UserProfile, error) {
-	return s.userRepo.CreateProfile(ctx, ID, profile)
-
-}
-
-func (s *service) GetUserProfile(ctx context.Context, userID string) (*Profile, error) {
-	return s.userRepo.Get(ctx , userID)
-}
-
-func (s *service) GetDashboardImages() []*Dashboard {
-	return s.dashboardRepo.Get()
-}
-
-func (s *service) CreateUser(ctx context.Context, std *User) error {
-	return s.userRepo.Create(ctx, std)
-}
-
-
-
-func (s *service) FindUserByUsername(ctx context.Context, username string) (*User, error) {
-	user, err := s.userRepo.Find(ctx, username)
-	if err != nil {
-		return nil, err
-	}
-	if user == nil {
-		return nil, errors.New("user not found")
-	}
-	return user, nil
-}
-
 func (s *service) Error(ctx context.Context, internalCode string, description string) *ErrorResponse {
 	var errDetail *ErrorDetail
 
@@ -113,6 +83,15 @@ func (s *service) Response(ctx context.Context, description string, data interfa
 	}
 }
 
+func (s *service) CreateUser(ctx context.Context, std *User) error {
+	return s.userRepo.Create(ctx, std)
+}
+
+func (s *service) CreateUserProfile(ctx context.Context, ID string, profile *Profile) (*UserProfile, error) {
+	return s.userRepo.CreateProfile(ctx, ID, profile)
+}
+
+
 func (s *service) FindUserByID(ctx context.Context, userID string) (*User, error) {
 	user, err := s.userRepo.FindByID(ctx, userID) // Use FindByID method in userRepo
 	if err != nil {
@@ -123,3 +102,56 @@ func (s *service) FindUserByID(ctx context.Context, userID string) (*User, error
 	}
 	return user, nil
 }
+
+func (s *service) FindUserByUsername(ctx context.Context, username string) (*User, error) {
+	user, err := s.userRepo.Find(ctx, username)
+	if err != nil {
+		return nil, err
+	}
+	if user == nil {
+		return nil, errors.New("user not found")
+	}
+	return user, nil
+}
+
+func (s *service) GetUserProfile(ctx context.Context, userID string) (*Profile, error) {
+	return s.userRepo.Get(ctx , userID)
+}
+
+func (s *service) GetUserByBusinessName(ctx context.Context, name string) (*Profile, error)   {
+	return s.userRepo.GetByBusiness(ctx , name)
+}
+
+func (s *service) GetUserByLeadName(ctx context.Context, lead string) (*Profile, error)   {
+	return s.userRepo.GetByLead(ctx , lead)
+}
+
+func (s *service) GetUserByEmailAddress(ctx context.Context, address string) (*Profile, error)    {
+	return s.userRepo.GetByEmail(ctx , address)
+}
+
+func (s *service) GetUserByNidNumber(ctx context.Context, nid string) (*Profile, error)   {
+	return s.userRepo.GetByNid(ctx , nid)
+}
+
+func (s *service) GetUserByKamNumber(ctx context.Context, kam string) (*Profile, error)   {
+	return s.userRepo.GetByNid(ctx , kam)
+}
+
+func (s *service) GetUserByPocNumber(ctx context.Context, poc string) (*Profile, error)    {
+	return s.userRepo.GetByPoc(ctx , poc)
+}
+
+func (s *service) GetDashboardImages() []*Dashboard {
+	return s.dashboardRepo.Get()
+}
+
+
+
+
+
+
+
+
+
+
