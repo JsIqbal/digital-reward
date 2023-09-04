@@ -25,7 +25,8 @@ export const useAddProfile = () => {
             }
             setIsLoading(false);
             return response.data;
-        } catch (error) {
+        } catch ({ message }) {
+            toast.error(message);
             setError(error);
             setIsLoading(false);
             throw error;

@@ -18,14 +18,23 @@ func NewUserRepo(db *gorm.DB) svc.UserRepo {
 	}
 }
 
+func (r *userRepo) Create(ctx context.Context, user *svc.User) error {
+	result := r.db.Create(user)
+
+	if result.Error != nil {
+		fmt.Println("Error while creating user:", result.Error)
+		return result.Error
+	}
+
+	return nil
+}
+
 func (r *userRepo) CreateProfile(ctx context.Context, ID string, profile *svc.Profile) (*svc.UserProfile, error) {
-    // First, create the user profile record
     userProfile := &svc.UserProfile{
-        ProfileID: profile.ID, // Assuming profile.ID is the ID of the created profile
-        UserID:    ID,        // UserID is passed as an argument
+        ProfileID: profile.ID, 
+        UserID:    ID,        
     }
 
-    // Create the user profile in the database
     if err := r.db.Create(userProfile).Error; err != nil {
         return nil, err
     }
@@ -45,11 +54,8 @@ func (r *userRepo) CreateProfile(ctx context.Context, ID string, profile *svc.Pr
         return nil, err
     }
 
-    // Return the created user profile
     return userProfile, nil
 }
-
-
 
 func (r *userRepo) Login(user *svc.User) *svc.User {
 	var participant svc.User
@@ -73,17 +79,6 @@ func (r *userRepo) Login(user *svc.User) *svc.User {
 		fmt.Println("Login Failed")
 		return nil
 	}
-}
-
-func (r *userRepo) Create(ctx context.Context, user *svc.User) error {
-	result := r.db.Create(user)
-
-	if result.Error != nil {
-		fmt.Println("Error while creating user:", result.Error)
-		return result.Error
-	}
-
-	return nil
 }
 
 func (r *userRepo) Find(ctx context.Context, username string) (*svc.User, error) {
@@ -111,15 +106,83 @@ func (r *userRepo) FindByID(ctx context.Context, userID string) (*svc.User, erro
 }
 
 func (r *userRepo) Get(ctx context.Context, userID string) (*svc.Profile, error) {
-    // Create a variable to hold the profile
     var profile svc.Profile
 
-    // Query the database to find the profile associated with the given userID
     if err := r.db.Where("user_id = ?", userID).First(&profile).Error; err != nil {
         return nil, err
     }
 
-    // Return the retrieved profile
     return &profile, nil
 }
 
+func (r *userRepo) GetByBusiness(ctx context.Context, name string) (*svc.Profile, error)   {
+	var profile svc.Profile
+	result := r.db.Where("business_name = ?", name).First(&profile)
+
+	if result.Error != nil {
+		fmt.Println("Error while fetching user:", result.Error)
+		return nil, result.Error
+	}
+
+	return &profile, nil
+}
+
+func (r *userRepo) GetByLead(ctx context.Context, lead string) (*svc.Profile, error)  {
+	var profile svc.Profile
+	result := r.db.Where("business_lead = ?", lead).First(&profile)
+
+	if result.Error != nil {
+		fmt.Println("Error while fetching user:", result.Error)
+		return nil, result.Error
+	}
+
+	return &profile, nil
+}
+
+func (r *userRepo) GetByEmail(ctx context.Context, email string) (*svc.Profile, error)  {
+	var profile svc.Profile
+	result := r.db.Where("email = ?", email).First(&profile)
+
+	if result.Error != nil {
+		fmt.Println("Error while fetching user:", result.Error)
+		return nil, result.Error
+	}
+
+	return &profile, nil
+}
+
+func (r *userRepo) GetByNid(ctx context.Context, nid string) (*svc.Profile, error)  {
+	var profile svc.Profile
+	result := r.db.Where("nid = ?", nid).First(&profile)
+
+	if result.Error != nil {
+		fmt.Println("Error while fetching user:", result.Error)
+		return nil, result.Error
+	}
+
+	return &profile, nil
+}
+
+func (r *userRepo) GetByKam(ctx context.Context, kam string) (*svc.Profile, error)   {
+	var profile svc.Profile
+	result := r.db.Where("kam_name = ?", kam).First(&profile)
+
+	if result.Error != nil {
+		fmt.Println("Error while fetching user:", result.Error)
+		return nil, result.Error
+	}
+
+	return &profile, nil
+}
+
+func (r *userRepo) GetByPoc(ctx context.Context, poc string) (*svc.Profile, error)  {
+	var profile svc.Profile
+	result := r.db.Where("poc_mobile = ?", poc).First(&profile)
+
+	if result.Error != nil {
+		fmt.Println("Error while fetching user:", result.Error)
+		return nil, result.Error
+	}
+
+	return &profile, nil
+}

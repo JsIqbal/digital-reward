@@ -203,6 +203,59 @@ func (s *Server) profile(ctx *gin.Context) {
 
 	authPayload := ctx.MustGet(authorizationPayloadKey).(Payload)
 
+	// profile, err := s.svc.GetUserProfile(ctx, authPayload.ID)
+	// if err != nil {
+	// 	logger.Error(ctx, "profile already esixts", err)
+	// 	ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "Already Registered"))
+	// 	return
+	// }
+
+	// if profile == nil {
+
+	// }
+
+	// profile, err = s.svc.GetUserByBusinessName(ctx, req.BusinessName)
+	// if err != nil {
+	// 	logger.Error(ctx, "BusinessName already esixts", err)
+	// 	ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "BusinessName Already Registered"))
+	// 	return
+	// }
+
+	// profile, err = s.svc.GetUserByLeadName(ctx, req.BusinessLead)
+	// if err != nil {
+	// 	logger.Error(ctx, "BusinessLead already esixts", err)
+	// 	ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "BusinessLead Already Registered"))
+	// 	return
+	// }
+
+	// profile, err = s.svc.GetUserByEmailAddress(ctx, req.Email)
+	// if err != nil {
+	// 	logger.Error(ctx, "Email already esixts", err)
+	// 	ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "Email Already Registered"))
+	// 	return
+	// }
+
+	// profile, err = s.svc.GetUserByNidNumber(ctx, req.NID)
+	// if err != nil {
+	// 	logger.Error(ctx, "NID already esixts", err)
+	// 	ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "NID Already Registered"))
+	// 	return
+	// }
+
+	// profile, err = s.svc.GetUserByKamNumber(ctx, req.KamName)
+	// if err != nil {
+	// 	logger.Error(ctx, "KamName already esixts", err)
+	// 	ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "KamName Already Registered"))
+	// 	return
+	// }
+
+	// profile, err = s.svc.GetUserByPocNumber(ctx, req.PocMobile)
+	// if err != nil {
+	// 	logger.Error(ctx, "PocMobile already esixts", err)
+	// 	ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "PocMobile Already Registered"))
+	// 	return
+	// }
+
 	userID, err := uuid.NewUUID()
 	if err != nil {
 		logger.Error(ctx, "cannot generate user id", err)
