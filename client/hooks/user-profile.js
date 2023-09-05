@@ -3,7 +3,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 const useProfile = () => {
-    const [profile, setProfile] = useState(null);
+    const [profile, setProfile] = useState([]);
     const [profileStatus, setProfileStatus] = useState(false);
     const userJWT = Cookies.get("token");
 
@@ -17,7 +17,7 @@ const useProfile = () => {
             );
 
             if (response.status === 200) {
-                setProfile(response.data);
+                setProfile(response.data.data);
                 setProfileStatus(true);
             } else {
                 setProfile(null);

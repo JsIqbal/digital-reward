@@ -26,11 +26,12 @@ function useAuth(params) {
             if (response.status === parseInt(200)) {
                 toast.success("Logged in successfully");
                 setResource(response);
+                // router.push("/dashboard");
                 setTimeout(() => router.push("/dashboard"), 3000);
             }
             if (response.status === parseInt(201)) {
                 toast.success("User created successfully");
-                router.push("/auth/sign-in");
+                // router.push("/auth/sign-in");
                 setTimeout(() => window.location.reload("auth/sign-in"), 3000);
             }
         } catch (error) {
