@@ -46,6 +46,7 @@ type CreateUserRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
+
 type loginResponse struct {
 	Token string `json:"token"`
 }

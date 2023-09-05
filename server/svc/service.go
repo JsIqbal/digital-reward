@@ -115,31 +115,31 @@ func (s *service) FindUserByUsername(ctx context.Context, username string) (*Use
 }
 
 func (s *service) GetUserProfile(ctx context.Context, userID string) (*Profile, error) {
-	return s.userRepo.Get(ctx , userID)
+	return s.userRepo.GetProfileById(ctx , userID)
 }
 
-func (s *service) GetUserByBusinessName(ctx context.Context, name string) (*Profile, error)   {
-	return s.userRepo.GetByBusiness(ctx , name)
+func (s *service) GetUserProfileByBusinessName(ctx context.Context, name string) (*Profile, error)   {
+	return s.userRepo.GetProfileByBusiness(ctx , name)
 }
 
-func (s *service) GetUserByLeadName(ctx context.Context, lead string) (*Profile, error)   {
-	return s.userRepo.GetByLead(ctx , lead)
+func (s *service) GetUserProfileByLeadName(ctx context.Context, lead string) (*Profile, error)   {
+	return s.userRepo.GetProfileByLead(ctx , lead)
 }
 
-func (s *service) GetUserByEmailAddress(ctx context.Context, address string) (*Profile, error)    {
-	return s.userRepo.GetByEmail(ctx , address)
+func (s *service) GetUserProfileByEmailAddress(ctx context.Context, address string) (*Profile, error)    {
+	return s.userRepo.GetProfileByEmail(ctx , address)
 }
 
-func (s *service) GetUserByNidNumber(ctx context.Context, nid string) (*Profile, error)   {
-	return s.userRepo.GetByNid(ctx , nid)
+func (s *service) GetUserProfileByNidNumber(ctx context.Context, nid string) (*Profile, error)   {
+	return s.userRepo.GetProfileByNid(ctx , nid)
 }
 
-func (s *service) GetUserByKamNumber(ctx context.Context, kam string) (*Profile, error)   {
-	return s.userRepo.GetByNid(ctx , kam)
+func (s *service) GetUserProfileByKamNumber(ctx context.Context, kam string) (*Profile, error)   {
+	return s.userRepo.GetProfileByNid(ctx , kam)
 }
 
-func (s *service) GetUserByPocNumber(ctx context.Context, poc string) (*Profile, error)    {
-	return s.userRepo.GetByPoc(ctx , poc)
+func (s *service) GetUserProfileByPocNumber(ctx context.Context, poc string) (*Profile, error)    {
+	return s.userRepo.GetProfileByPoc(ctx , poc)
 }
 
 func (s *service) GetDashboardImages() []*Dashboard {

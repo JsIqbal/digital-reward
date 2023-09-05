@@ -105,7 +105,7 @@ func (r *userRepo) FindByID(ctx context.Context, userID string) (*svc.User, erro
 	return &user, nil
 }
 
-func (r *userRepo) Get(ctx context.Context, userID string) (*svc.Profile, error) {
+func (r *userRepo) GetProfileById(ctx context.Context, userID string) (*svc.Profile, error) {
     var profile svc.Profile
 
     if err := r.db.Where("user_id = ?", userID).First(&profile).Error; err != nil {
@@ -115,7 +115,7 @@ func (r *userRepo) Get(ctx context.Context, userID string) (*svc.Profile, error)
     return &profile, nil
 }
 
-func (r *userRepo) GetByBusiness(ctx context.Context, name string) (*svc.Profile, error)   {
+func (r *userRepo) GetProfileByBusiness(ctx context.Context, name string) (*svc.Profile, error)   {
 	var profile svc.Profile
 	result := r.db.Where("business_name = ?", name).First(&profile)
 
@@ -127,7 +127,7 @@ func (r *userRepo) GetByBusiness(ctx context.Context, name string) (*svc.Profile
 	return &profile, nil
 }
 
-func (r *userRepo) GetByLead(ctx context.Context, lead string) (*svc.Profile, error)  {
+func (r *userRepo) GetProfileByLead(ctx context.Context, lead string) (*svc.Profile, error)  {
 	var profile svc.Profile
 	result := r.db.Where("business_lead = ?", lead).First(&profile)
 
@@ -139,7 +139,7 @@ func (r *userRepo) GetByLead(ctx context.Context, lead string) (*svc.Profile, er
 	return &profile, nil
 }
 
-func (r *userRepo) GetByEmail(ctx context.Context, email string) (*svc.Profile, error)  {
+func (r *userRepo) GetProfileByEmail(ctx context.Context, email string) (*svc.Profile, error)  {
 	var profile svc.Profile
 	result := r.db.Where("email = ?", email).First(&profile)
 
@@ -151,7 +151,7 @@ func (r *userRepo) GetByEmail(ctx context.Context, email string) (*svc.Profile, 
 	return &profile, nil
 }
 
-func (r *userRepo) GetByNid(ctx context.Context, nid string) (*svc.Profile, error)  {
+func (r *userRepo) GetProfileByNid(ctx context.Context, nid string) (*svc.Profile, error)  {
 	var profile svc.Profile
 	result := r.db.Where("nid = ?", nid).First(&profile)
 
@@ -163,7 +163,7 @@ func (r *userRepo) GetByNid(ctx context.Context, nid string) (*svc.Profile, erro
 	return &profile, nil
 }
 
-func (r *userRepo) GetByKam(ctx context.Context, kam string) (*svc.Profile, error)   {
+func (r *userRepo) GetProfileByKam(ctx context.Context, kam string) (*svc.Profile, error)   {
 	var profile svc.Profile
 	result := r.db.Where("kam_name = ?", kam).First(&profile)
 
@@ -175,7 +175,7 @@ func (r *userRepo) GetByKam(ctx context.Context, kam string) (*svc.Profile, erro
 	return &profile, nil
 }
 
-func (r *userRepo) GetByPoc(ctx context.Context, poc string) (*svc.Profile, error)  {
+func (r *userRepo) GetProfileByPoc(ctx context.Context, poc string) (*svc.Profile, error)  {
 	var profile svc.Profile
 	result := r.db.Where("poc_mobile = ?", poc).First(&profile)
 

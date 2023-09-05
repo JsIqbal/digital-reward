@@ -17,3 +17,8 @@ type ResponseData struct {
 	Description string      `json:"description"`
 	Data        interface{} `json:"data"`
 }
+
+type CreateUserRequest struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
