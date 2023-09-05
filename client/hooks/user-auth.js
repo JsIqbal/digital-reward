@@ -31,7 +31,7 @@ function useAuth(params) {
             }
             if (response.status === parseInt(201)) {
                 toast.success("User created successfully");
-                // router.push("/auth/sign-in");
+                router.push("/auth/sign-in");
                 setTimeout(() => window.location.reload("auth/sign-in"), 3000);
             }
         } catch (error) {
