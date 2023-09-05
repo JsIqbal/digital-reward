@@ -14,6 +14,11 @@ import (
 	"gorm.io/gorm"
 )
 
+var (
+    // ErrProfileNotFound is returned when a user's profile is not found.
+    ErrProfileNotFound = errors.New("profile not found controller")
+)
+
 // @Summary Create a new user
 // @Description Create a new user with a unique username and password
 // @Tags user
@@ -25,17 +30,15 @@ import (
 // @Failure 500 {object} ErrorResponse
 // @Router /api/auth/sign-up [post]
 func (s *Server) createUser(ctx *gin.Context) {
-	var userRequest CreateUserRequest
-	if err := ctx.ShouldBindJSON(&userRequest); err != nil {
+	var req CreateUserRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Check if user already exists
-	existingUser, err := s.svc.FindUserByUsername(ctx,userRequest.Username)
+	existingUser, err := s.svc.FindUserByUsername(ctx,req.Username)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			// user not found, continue
 		} else {
 			ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
 			return
@@ -47,14 +50,12 @@ func (s *Server) createUser(ctx *gin.Context) {
 		return
 	}
 
-	// Hash password
-	hashedPass, err := bcrypt.GenerateFromPassword([]byte(userRequest.Password), s.salt.SecretKey)
+	hashedPass, err := bcrypt.GenerateFromPassword([]byte(req.Password), s.salt.SecretKey)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Could not hash password"})
 		return
 	}
 
-	// Create user in database
 	userID, err := uuid.NewUUID()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Internal server error"})
@@ -63,7 +64,7 @@ func (s *Server) createUser(ctx *gin.Context) {
 
 	user := svc.User{
 		ID:        userID.String(),
-		Username:  userRequest.Username,
+		Username:  req.Username,
 		Password:  string(hashedPass),
 		CreatedAt: util.GetCurrentTimestamp(),
 	}
@@ -190,92 +191,52 @@ func (s *Server) logout(ctx *gin.Context) {
 // @Success 201 {object} map[string]interface{} "Successfully created user profile"
 // @Failure 400 {object} ErrorResponse "Bad Request"
 // @Failure 401 {object} ErrorResponse "Unauthorized"
+// @Failure 409 {object} ErrorResponse "Conflict" 
 // @Failure 500 {object} ErrorResponse "Internal Server Error"
 // @Router /api/users/profile [post]
 func (s *Server) profile(ctx *gin.Context) {
-	var req CreateUserProfileRequest
-	err := ctx.ShouldBindJSON(&req)
-	if err != nil {
-		logger.Error(ctx, "cannot pass validation", err)
-		ctx.JSON(http.StatusBadRequest, s.svc.Error(ctx, util.EN_API_PARAMETER_INVALID_ERROR, "Bad request"))
-		return
-	}
+    var req CreateUserProfileRequest
+    err := ctx.ShouldBindJSON(&req)
+    if err != nil {
+        logger.Error(ctx, "cannot pass validation", err)
+        ctx.JSON(http.StatusBadRequest, s.svc.Error(ctx, util.EN_API_PARAMETER_INVALID_ERROR, "Bad request"))
+        return
+    }
 
-	authPayload := ctx.MustGet(authorizationPayloadKey).(Payload)
+    authPayload := ctx.MustGet(authorizationPayloadKey).(Payload)
 
-	// profile, err := s.svc.GetUserProfile(ctx, authPayload.ID)
-	// if err != nil {
-	// 	logger.Error(ctx, "profile already esixts", err)
-	// 	ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "Already Registered"))
-	// 	return
-	// }
+    profile, err := s.svc.GetUserProfile(ctx, authPayload.ID)
+    if err != nil {
+        logger.Error(ctx, "error fetching user profile", err)
+        // If there's an error, it means the user's profile doesn't exist, so proceed to create it.
+    } else if profile != nil {
+        // A profile already exists for this user
+        ctx.JSON(http.StatusConflict, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "Already Registered"))
+        return
+    }
 
-	// if profile == nil {
+    // If profile is nil or there's an error, it means the user's profile doesn't exist, so proceed to create the profile.
 
-	// }
+    userID, err := uuid.NewUUID()
+    if err != nil {
+        logger.Error(ctx, "cannot generate user id", err)
+        ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_INTERNAL_SERVER_ERROR, "Internal server error"))
+        return
+    }
 
-	// profile, err = s.svc.GetUserByBusinessName(ctx, req.BusinessName)
-	// if err != nil {
-	// 	logger.Error(ctx, "BusinessName already esixts", err)
-	// 	ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "BusinessName Already Registered"))
-	// 	return
-	// }
+    profile = &svc.Profile{
+        ID:           userID.String(),
+        UserID:       authPayload.ID,
+        BusinessName: req.BusinessName,
+        BusinessLead: req.BusinessLead,
+        Email:        req.Email,
+        KAMName:      req.KamName,
+        Nid:          req.NID,
+        PocMobile:    req.PocMobile,
+        CreatedAt:    util.GetCurrentTimestamp(),
+    }
 
-	// profile, err = s.svc.GetUserByLeadName(ctx, req.BusinessLead)
-	// if err != nil {
-	// 	logger.Error(ctx, "BusinessLead already esixts", err)
-	// 	ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "BusinessLead Already Registered"))
-	// 	return
-	// }
-
-	// profile, err = s.svc.GetUserByEmailAddress(ctx, req.Email)
-	// if err != nil {
-	// 	logger.Error(ctx, "Email already esixts", err)
-	// 	ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "Email Already Registered"))
-	// 	return
-	// }
-
-	// profile, err = s.svc.GetUserByNidNumber(ctx, req.NID)
-	// if err != nil {
-	// 	logger.Error(ctx, "NID already esixts", err)
-	// 	ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "NID Already Registered"))
-	// 	return
-	// }
-
-	// profile, err = s.svc.GetUserByKamNumber(ctx, req.KamName)
-	// if err != nil {
-	// 	logger.Error(ctx, "KamName already esixts", err)
-	// 	ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "KamName Already Registered"))
-	// 	return
-	// }
-
-	// profile, err = s.svc.GetUserByPocNumber(ctx, req.PocMobile)
-	// if err != nil {
-	// 	logger.Error(ctx, "PocMobile already esixts", err)
-	// 	ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_ALREADY_REGISTERED_ERROR, "PocMobile Already Registered"))
-	// 	return
-	// }
-
-	userID, err := uuid.NewUUID()
-	if err != nil {
-		logger.Error(ctx, "cannot generate user id", err)
-		ctx.JSON(http.StatusInternalServerError, s.svc.Error(ctx, util.EN_INTERNAL_SERVER_ERROR, "Internal server error"))
-		return
-	}
-
-	profile := &svc.Profile{
-		ID:           userID.String(),
-		UserID:       authPayload.ID,
-		BusinessName: req.BusinessName,
-		BusinessLead: req.BusinessLead,
-		Email:        req.Email,
-		KAMName:      req.KamName,
-		Nid:          req.NID,
-		PocMobile:    req.PocMobile,
-		CreatedAt:    util.GetCurrentTimestamp(),
-	}
-
-	userProfile, err := s.svc.CreateUserProfile(ctx, authPayload.ID, profile)
+    userProfile, err := s.svc.CreateUserProfile(ctx, authPayload.ID, profile)
 
     if err != nil {
         logger.Error(ctx, "cannot store user into db", err)
@@ -285,6 +246,7 @@ func (s *Server) profile(ctx *gin.Context) {
 
     ctx.JSON(http.StatusCreated, s.svc.Response(ctx, "Successfully created", userProfile))
 }
+
 
 // @Summary Get User Profile
 // @Description Retrieve the user's profile and associated user data.

@@ -12,6 +12,7 @@ import { LogOut, User } from "lucide-react";
 import { Separator } from "./ui/separator";
 import useLogout from "../hooks/user-logout";
 import { useRouter } from "next/navigation";
+import { Profile } from "./profile";
 
 export const PopOver = () => {
     const logout = useLogout();
@@ -37,7 +38,7 @@ export const PopOver = () => {
                 <div className="flex flex-col">
                     <div className="flex items-center space-x-2 mb-2 hover:bg-gray-200 p-2 cursor-pointer rounded">
                         <User />
-                        <span>Profile</span>
+                        <Profile />
                     </div>
                     <Separator />
                     <div

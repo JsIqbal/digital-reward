@@ -267,3 +267,27 @@ ngrok config add-authtoken YOUR_AUTH_TOKEN
     ```
 
 -   There can be an issue like: You have initialized a new swagger documentation for a new platform but still can see the swagger documentation for another platform. In that case you have to clear browser caches and then reload the swagger documentation.
+
+<details>
+  <summary>Click to expand completed/not-completed Features: CLIENT-SERVER</summary>
+
+-   [x] Static Documentation Serving
+
+    -   [ ] Sub-feature 1: Describe the first sub-feature here.
+
+-   [x] Health Check Endpoint
+
+    -   [ ] Sub-feature 1: Describe the first sub-feature here.
+
+-   [x] User Authentication
+
+    -   [x] User Registration: Implement user registration.
+    -   [x] User Login: Implement user login.
+
+-   [x] User Profile Management : Only for logged in users.
+    -   [x] User Profile Creation: Implement user profile creation.
+    -   [x] Get Logged-in User: Implement the ability to retrieve the logged-in user.
+    -   [x] Logout: Implement user logout.
+    -   [x] Get User Profile: Implement the ability to retrieve user profiles.
+
+</details>
