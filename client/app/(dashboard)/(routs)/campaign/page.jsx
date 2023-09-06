@@ -14,9 +14,9 @@ const ImagePage = () => {
     };
 
     return (
-        <div className="h-full p-4">
+        <div className="h-full p-8 ">
             <DashHeader />
-            <div className="px-4 md:px-10 lg:px-20 xl:px-32 2xl:40 space-y-4 w-full">
+            <div className="px-4 md:px-10 lg:px-20 xl:px-32 2xl:40 space-y-4 w-full mb-12">
                 <Card
                     key={tool.href}
                     className="p-4 border-black/5 shadow-md hover:shadow-lg hover:bg-white/30 hover:scale-[101%] transition duration-150 cursor-pointer"
@@ -38,7 +38,7 @@ const ImagePage = () => {
                     </div>
                 </Card>
             </div>
-            <div className="flex items-center justify-center">
+            <div className="px-4 md:px-10 lg:px-20 xl:px-32 2xl:40 space-y-4 w-full mb-12 ">
                 <CampaignForm />
             </div>
         </div>

@@ -3,6 +3,7 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { Input } from "@/components/ui/input";
 
 const validationSchema = Yup.object({
     campaignName: Yup.string().required("Campaign name is required"),
@@ -17,6 +18,7 @@ const validationSchema = Yup.object({
     operatorName: Yup.string().required("Operator name is required"),
     rewardName: Yup.string().required("Reward name is required"),
     numberList: Yup.mixed().required("Number list is required"),
+    campaignDescription: Yup.mixed().required("Text is required"),
 });
 
 const operators = ["Operator 1", "Operator 2", "Operator 3", "Operator 4"];
@@ -40,6 +42,7 @@ export const CampaignForm = () => {
         operatorName: "",
         rewardName: "",
         numberList: null,
+        campaignDescription: "",
     };
 
     const handleSubmit = (values, { setSubmitting }) => {
@@ -55,7 +58,7 @@ export const CampaignForm = () => {
             onSubmit={handleSubmit}
         >
             {({ isSubmitting }) => (
-                <Form className="mt-4 space-y-4 md:flex md:space-x-4 mt-10">
+                <Form className="p-8 border-black/5 shadow-md hover:shadow-lg hover:bg-white/30 hover:scale-[101%] transition duration-150 cursor-pointer space-y-4 md:flex md:space-x-4 mt-12">
                     {/* Left Column */}
                     <div className="md:w-1/2 flex flex-col space-y-4">
                         <div className="flex flex-col">
@@ -81,7 +84,7 @@ export const CampaignForm = () => {
                                 htmlFor="maskedName"
                                 className="text-gray-600 font-medium"
                             >
-                                Masked Name:
+                                Masking Name:
                             </label>
                             <Field
                                 type="text"
@@ -188,6 +191,7 @@ export const CampaignForm = () => {
                                 className="text-red-500"
                             />
                         </div>
+
                         <div className="flex flex-col">
                             <label
                                 htmlFor="numberList"
@@ -195,6 +199,7 @@ export const CampaignForm = () => {
                             >
                                 Upload Number List (CSV/XLSX):
                             </label>
+                            {/* <Input name="numberList" id="picture" type="file" /> */}
                             <Field
                                 name="numberList"
                                 component={FileInput}
@@ -207,10 +212,30 @@ export const CampaignForm = () => {
                             />
                         </div>
                         <div className="flex flex-col">
+                            <label
+                                htmlFor="campaignDescription"
+                                className="text-gray-600 font-medium"
+                            >
+                                Customized Reward Text (CRT):
+                            </label>
+                            <Field
+                                id="campaignDescription"
+                                name="campaignDescription"
+                                rows="4" // Set the number of rows you want
+                                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                            />
+                            <ErrorMessage
+                                name="campaignDescription"
+                                component="div"
+                                className="text-red-500"
+                            />
+                        </div>
+
+                        <div className="flex flex-col">
                             <button
                                 type="submit"
                                 disabled={isSubmitting}
-                                className="bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 focus:outline-none"
+                                className="bg-gray-600 text-white rounded-md px-4 py-2 hover:bg-gray-600 focus:outline-none mt-11"
                             >
                                 Submit
                             </button>
