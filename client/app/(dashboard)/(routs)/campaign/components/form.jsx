@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Input } from "@/components/ui/input";
+import { prepareDataForBackend } from "@/helper/form-to-json";
 
 const validationSchema = Yup.object({
     campaignName: Yup.string().required("Campaign name is required"),
@@ -34,6 +35,8 @@ const FileInput = ({ field, form: { setFieldValue } }) => (
 );
 
 export const CampaignForm = () => {
+    const [invalid, setInvalid] = useState([]);
+    console.log("---------------------------inv", invalid);
     const initialValues = {
         campaignName: "",
         maskedName: "",
@@ -46,8 +49,7 @@ export const CampaignForm = () => {
     };
 
     const handleSubmit = (values, { setSubmitting }) => {
-        // Handle form submission here
-        console.log(values);
+        prepareDataForBackend(values, setInvalid);
         setSubmitting(false);
     };
 
@@ -199,7 +201,6 @@ export const CampaignForm = () => {
                             >
                                 Upload Number List (CSV/XLSX):
                             </label>
-                            {/* <Input name="numberList" id="picture" type="file" /> */}
                             <Field
                                 name="numberList"
                                 component={FileInput}
