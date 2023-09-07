@@ -11,15 +11,17 @@ import (
 type service struct {
 	dashboardRepo DashboardRepo
 	userRepo      UserRepo
+	dataCampaignRepoRepo      DataCampaignRepo
 
 	errRepo ErrorRepo
 	cache   Cache
 }
 
-func NewService(dashboardRepo DashboardRepo, userRepo UserRepo, errorRepo ErrorRepo, cache Cache) Service {
+func NewService(dashboardRepo DashboardRepo, userRepo UserRepo,dataCampaignRepoRepo      DataCampaignRepo, errorRepo ErrorRepo, cache Cache) Service {
 	return &service{
 		dashboardRepo: dashboardRepo,
 		userRepo:      userRepo,
+		dataCampaignRepoRepo:      dataCampaignRepoRepo,
 
 		errRepo: errorRepo,
 		cache:   cache,
@@ -140,6 +142,10 @@ func (s *service) GetUserProfileByKamNumber(ctx context.Context, kam string) (*P
 
 func (s *service) GetUserProfileByPocNumber(ctx context.Context, poc string) (*Profile, error)    {
 	return s.userRepo.GetProfileByPoc(ctx , poc)
+}
+
+func (s *service) CreateDataCampaign(ctx context.Context, ID string, std *Campaign) (*Campaign, error)    {
+	return s.dataCampaignRepoRepo.CreateCampaign(ctx, ID, std)
 }
 
 func (s *service) GetDashboardImages() []*Dashboard {

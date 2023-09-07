@@ -36,6 +36,10 @@ type Cache interface {
 	GetTTL(key string) (time.Duration, error)
 }
 
+type DataCampaignRepo interface {
+	CreateCampaign(ctx context.Context, ID string, std *Campaign) (*Campaign, error)
+}
+
 type Service interface {
 	Error(ctx context.Context, internalCode string, description string) *ErrorResponse
 	Response(ctx context.Context, description string, data interface{}) *ResponseData
@@ -51,5 +55,7 @@ type Service interface {
 	GetUserProfileByEmailAddress(ctx context.Context, address string) (*Profile, error) 
 	GetUserProfileByNidNumber(ctx context.Context, nid string) (*Profile, error) 
 	GetUserProfileByKamNumber(ctx context.Context, kam string) (*Profile, error) 
-	GetUserProfileByPocNumber(ctx context.Context, poc string) (*Profile, error) 
+	GetUserProfileByPocNumber(ctx context.Context, poc string) (*Profile, error)
+	////////// Camapign Signatures //////////// 
+	CreateDataCampaign(ctx context.Context, ID string, std *Campaign) (*Campaign, error)
 }
