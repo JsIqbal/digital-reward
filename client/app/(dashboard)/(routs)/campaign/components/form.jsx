@@ -2,27 +2,11 @@
 
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import { Input } from "@/components/ui/input";
 import { prepareDataForBackend } from "@/helper/form-to-json";
+import { campaignSchema } from "@/validations/validations";
+import { campaignValues } from "@/config/initial-values";
 
-const validationSchema = Yup.object({
-    campaignName: Yup.string().required("Campaign name is required"),
-    maskedName: Yup.string()
-        .matches(
-            /^[A-Za-z0-9]{11}$/,
-            "Masked name must be 11 alphanumeric digits"
-        )
-        .required("Masked name is required"),
-    startTime: Yup.date().required("Start time is required"),
-    endTime: Yup.date().required("End time is required"),
-    operatorName: Yup.string().required("Operator name is required"),
-    rewardName: Yup.string().required("Reward name is required"),
-    numberList: Yup.mixed().required("Number list is required"),
-    campaignDescription: Yup.mixed().required("Text is required"),
-});
-
-const operators = ["Operator 1", "Operator 2", "Operator 3", "Operator 4"];
+const operators = ["Banglalink", "Grameenphone", "Teletalk", "Robi/Airtel"];
 const rewardNames = ["Reward 1", "Reward 2", "Reward 3"];
 
 const FileInput = ({ field, form: { setFieldValue } }) => (
@@ -37,16 +21,6 @@ const FileInput = ({ field, form: { setFieldValue } }) => (
 export const CampaignForm = () => {
     const [invalid, setInvalid] = useState([]);
     console.log("---------------------------inv", invalid);
-    const initialValues = {
-        campaignName: "",
-        maskedName: "",
-        startTime: "",
-        endTime: "",
-        operatorName: "",
-        rewardName: "",
-        numberList: null,
-        campaignDescription: "",
-    };
 
     const handleSubmit = (values, { setSubmitting }) => {
         prepareDataForBackend(values, setInvalid);
@@ -55,13 +29,12 @@ export const CampaignForm = () => {
 
     return (
         <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
+            initialValues={campaignValues}
+            validationSchema={campaignSchema}
             onSubmit={handleSubmit}
         >
             {({ isSubmitting }) => (
-                <Form className="p-8 border-black/5 shadow-md hover:shadow-lg hover:bg-white/30 hover:scale-[101%] transition duration-150 cursor-pointer space-y-4 md:flex md:space-x-4 mt-12">
-                    {/* Left Column */}
+                <Form className="p-8 rounded-lg border border-black/5 shadow-md hover:shadow-lg hover:bg-white/30 hover:scale-[101%] transition duration-150 cursor-pointer space-y-4 md:flex md:space-x-4 mt-12">
                     <div className="md:w-1/2 flex flex-col space-y-4">
                         <div className="flex flex-col">
                             <label
@@ -83,18 +56,18 @@ export const CampaignForm = () => {
                         </div>
                         <div className="flex flex-col">
                             <label
-                                htmlFor="maskedName"
+                                htmlFor="masking"
                                 className="text-gray-600 font-medium"
                             >
                                 Masking Name:
                             </label>
                             <Field
                                 type="text"
-                                name="maskedName"
+                                name="masking"
                                 className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                             />
                             <ErrorMessage
-                                name="maskedName"
+                                name="masking"
                                 component="div"
                                 className="text-red-500"
                             />
@@ -135,10 +108,8 @@ export const CampaignForm = () => {
                                 className="text-red-500"
                             />
                         </div>
-                        {/* Add other fields for the left column */}
                     </div>
 
-                    {/* Right Column */}
                     <div
                         className="md:w-1/2 flex flex-col space-y-4"
                         style={{ marginTop: 0 }}
@@ -222,7 +193,7 @@ export const CampaignForm = () => {
                             <Field
                                 id="campaignDescription"
                                 name="campaignDescription"
-                                rows="4" // Set the number of rows you want
+                                rows="4"
                                 className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                             />
                             <ErrorMessage
@@ -241,7 +212,6 @@ export const CampaignForm = () => {
                                 Submit
                             </button>
                         </div>
-                        {/* Add other fields for the right column */}
                     </div>
                 </Form>
             )}
