@@ -88,6 +88,8 @@ export const prepareDataForBackend = (formValues, setInvalid) => {
             for (const row of excelData) {
                 if (isValidNumber(row.number)) {
                     excelDataArray.push({
+                        startTime,
+                        endTime,
                         ...otherFormValues,
                         ...row,
                     });
@@ -104,10 +106,7 @@ export const prepareDataForBackend = (formValues, setInvalid) => {
     }
 
     const dataToSend = {
-        startTime,
-        endTime,
         files: excelDataArray,
-        invalidNumbers, // Include the array of invalid numbers
     };
 
     console.log(

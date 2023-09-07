@@ -1,22 +1,15 @@
 import React from "react";
 import { Formik, Form, Field, ErrorMessage, setIn } from "formik";
 
-import { profileSchema } from "@/validations/create-profile";
+import { profileSchema } from "@/validations/validations";
 import KycHeader from "./kyc-header";
 import DynamicLabel from "./label";
 import { Button } from "./ui/button";
 import { useAddProfile } from "@/hooks/create-profile";
+import { profileValues } from "@/config/initial-values";
 
 export default function CreateProfile() {
     const { addProfile, isLoading, error } = useAddProfile();
-    const initialValues = {
-        businessName: "",
-        businessLead: "",
-        pocMobile: "",
-        email: "",
-        nid: "",
-        kamName: "",
-    };
 
     return (
         <div className="fixed inset-0 flex items-center justify-center">
@@ -24,7 +17,7 @@ export default function CreateProfile() {
                 <KycHeader />
                 <div className="p-4 mt-4">
                     <Formik
-                        initialValues={initialValues}
+                        initialValues={profileValues}
                         validationSchema={profileSchema}
                         onSubmit={(values, { setSubmitting }) => {
                             addProfile(values);
