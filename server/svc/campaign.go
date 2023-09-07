@@ -16,5 +16,6 @@ type Campaign struct {
 	Operator string `json:"operator"`
 	Reward string `json:"reward"`
 	Description string `json:"description"`
+	Status string `json:"status"`
     CreatedAt    int64  `json:"CreatedAt"`
 }

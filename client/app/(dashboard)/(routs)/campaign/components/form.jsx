@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { prepareDataForBackend } from "@/helper/form-to-json";
 import { campaignSchema } from "@/validations/validations";
@@ -9,23 +9,34 @@ import { campaignValues } from "@/config/initial-values";
 const operators = ["Banglalink", "Grameenphone", "Teletalk", "Robi/Airtel"];
 const rewardNames = ["Reward 1", "Reward 2", "Reward 3"];
 
-const FileInput = ({ field, form: { setFieldValue } }) => (
-    <input
-        type="file"
-        onChange={(e) => {
-            setFieldValue(field.name, e.currentTarget.files[0]);
-        }}
-    />
-);
+const FileInput = ({ field, form: { setFieldValue } }) => {
+    return (
+        <input
+            type="file"
+            onChange={(e) => {
+                setFieldValue(field.name, e.currentTarget.files[0]);
+            }}
+        />
+    );
+};
 
 export const CampaignForm = () => {
     const [invalid, setInvalid] = useState([]);
-    console.log("---------------------------inv", invalid);
+    const [fileInputKey, setFileInputKey] = useState(0); // Add a key for the file input
+    const fileInputRef = useRef(null);
 
-    const handleSubmit = (values, { setSubmitting }) => {
-        prepareDataForBackend(values, setInvalid);
+    const handleSubmit = (values, { setSubmitting, resetForm }) => {
+        prepareDataForBackend(values, setInvalid, resetForm);
         setSubmitting(false);
+        setFileInputKey(fileInputKey + 1); // Increment the key to reset the file input
     };
+
+    // Add a useEffect to re-render the component when `invalid` changes
+    useEffect(() => {
+        // You can add any code here that you want to run when `invalid` changes.
+        // For example, you can display a message to the user or perform other actions.
+        console.log("Invalid numbers changed:", invalid);
+    }, [invalid]);
 
     return (
         <Formik
@@ -165,7 +176,7 @@ export const CampaignForm = () => {
                             />
                         </div>
 
-                        <div className="flex flex-col">
+                        {/* <div className="flex flex-col">
                             <label
                                 htmlFor="numberList"
                                 className="text-gray-600 font-medium"
@@ -175,6 +186,26 @@ export const CampaignForm = () => {
                             <Field
                                 name="numberList"
                                 component={FileInput}
+                                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                            />
+                            <ErrorMessage
+                                name="numberList"
+                                component="div"
+                                className="text-red-500"
+                            />
+                        </div> */}
+                        <div className="flex flex-col">
+                            <label
+                                htmlFor="numberList"
+                                className="text-gray-600 font-medium"
+                            >
+                                Upload Number List (CSV/XLSX):
+                            </label>
+                            <Field
+                                name="numberList"
+                                key={fileInputKey} // Add a unique key to reset the input
+                                component={FileInput}
+                                innerRef={fileInputRef}
                                 className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                             />
                             <ErrorMessage

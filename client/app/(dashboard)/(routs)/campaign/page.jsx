@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { GridIcon } from "lucide-react";
 import { CampaignForm } from "./components/form";
+import { Toaster } from "react-hot-toast";
 
 const ImagePage = () => {
     const tool = {
@@ -15,6 +16,7 @@ const ImagePage = () => {
 
     return (
         <div className="h-full p-8 ">
+            <Toaster />
             <DashHeader />
             <div className="px-4 md:px-10 lg:px-20 xl:px-32 2xl:40 space-y-4 w-full mb-12">
                 <Card
