@@ -37,7 +37,7 @@ type Cache interface {
 }
 
 type DataCampaignRepo interface {
-	CreateCampaign(ctx context.Context, ID string, std *Campaign) (*Campaign, error)
+	CreateCampaign(ctx context.Context, userID string, campaigns []*Campaign) ([]*Campaign, error)
 }
 
 type Service interface {
@@ -57,5 +57,5 @@ type Service interface {
 	GetUserProfileByKamNumber(ctx context.Context, kam string) (*Profile, error) 
 	GetUserProfileByPocNumber(ctx context.Context, poc string) (*Profile, error)
 	////////// Camapign Signatures //////////// 
-	CreateDataCampaign(ctx context.Context, ID string, std *Campaign) (*Campaign, error)
+	CreateDataCampaign(ctx context.Context, userID string, campaigns []*Campaign) ([]*Campaign, error)
 }

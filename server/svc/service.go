@@ -11,17 +11,17 @@ import (
 type service struct {
 	dashboardRepo DashboardRepo
 	userRepo      UserRepo
-	dataCampaignRepoRepo      DataCampaignRepo
+	dataCampaignRepo      DataCampaignRepo
 
 	errRepo ErrorRepo
 	cache   Cache
 }
 
-func NewService(dashboardRepo DashboardRepo, userRepo UserRepo,dataCampaignRepoRepo      DataCampaignRepo, errorRepo ErrorRepo, cache Cache) Service {
+func NewService(dashboardRepo DashboardRepo, userRepo UserRepo,dataCampaignRepo      DataCampaignRepo, errorRepo ErrorRepo, cache Cache) Service {
 	return &service{
 		dashboardRepo: dashboardRepo,
 		userRepo:      userRepo,
-		dataCampaignRepoRepo:      dataCampaignRepoRepo,
+		dataCampaignRepo:      dataCampaignRepo,
 
 		errRepo: errorRepo,
 		cache:   cache,
@@ -144,9 +144,16 @@ func (s *service) GetUserProfileByPocNumber(ctx context.Context, poc string) (*P
 	return s.userRepo.GetProfileByPoc(ctx , poc)
 }
 
-func (s *service) CreateDataCampaign(ctx context.Context, ID string, std *Campaign) (*Campaign, error)    {
-	return s.dataCampaignRepoRepo.CreateCampaign(ctx, ID, std)
+func (s *service) CreateDataCampaign(ctx context.Context, userID string, campaigns []*Campaign) ([]*Campaign, error) {
+    // Iterate through the list of campaigns and associate each one with the provided userID
+    for _, campaign := range campaigns {
+        campaign.UserID = userID
+    }
+
+    // Call the repository method to create the campaigns
+    return s.dataCampaignRepo.CreateCampaign(ctx, userID, campaigns)
 }
+
 
 func (s *service) GetDashboardImages() []*Dashboard {
 	return s.dashboardRepo.Get()

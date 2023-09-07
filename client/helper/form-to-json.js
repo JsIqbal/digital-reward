@@ -1,6 +1,8 @@
+import axios from "axios";
+import toast from "react-hot-toast";
 import * as XLSX from "xlsx";
 
-export const prepareDataForBackend = (formValues, setInvalid) => {
+export const prepareDataForBackend = (formValues, setInvalid, resetForm) => {
     // Extract numberList, endTime, and startTime
     const { numberList, endTime, startTime, ...otherFormValues } = formValues;
     const excelDataArray = [];
@@ -10,7 +12,7 @@ export const prepareDataForBackend = (formValues, setInvalid) => {
     if (numberList instanceof File) {
         const reader = new FileReader();
 
-        reader.onload = (e) => {
+        reader.onload = async (e) => {
             const data = new Uint8Array(e.target.result);
             const workbook = XLSX.read(data, { type: "array" });
 
@@ -37,21 +39,26 @@ export const prepareDataForBackend = (formValues, setInvalid) => {
             }
 
             setInvalid(invalidNumbers);
+
+            // POST the data to the backend
+            try {
+                const response = await axios.post(
+                    "http://localhost:3004/api/users/campaign",
+                    excelDataArray,
+                    {
+                        withCredentials: true,
+                    }
+                );
+                toast.success("Campaign created successfully");
+                resetForm();
+                console.log("Campaign data sent successfully.", response);
+            } catch (error) {
+                console.error("Error sending campaign data:", error);
+            }
         };
 
         reader.readAsArrayBuffer(numberList);
     }
-
-    const dataToSend = {
-        files: excelDataArray,
-    };
-
-    console.log(
-        "------------------------------dataToSend----------------",
-        dataToSend
-    );
-
-    return dataToSend;
 };
 
 // Helper function to check if a number is valid
