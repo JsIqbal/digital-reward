@@ -1,12 +1,10 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 
 export const useAddProfile = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
-    const router = useRouter();
 
     const addProfile = async (values) => {
         setIsLoading(true);

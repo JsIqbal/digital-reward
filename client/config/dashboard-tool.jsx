@@ -8,7 +8,6 @@ export const tools = [
         color: "text-purple-900",
         bgColor: "bg-purple-300",
     },
-
     {
         label: "Create & manage campaigns",
         icon: GridIcon,
