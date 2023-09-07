@@ -1,5 +1,5 @@
 import React from "react";
-import { Formik, Form, Field, ErrorMessage, setIn } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 
 import { profileSchema } from "@/validations/validations";
 import KycHeader from "./kyc-header";
