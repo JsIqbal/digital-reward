@@ -21,13 +21,14 @@ func serveRest() {
 	db := database.NewDatabase(dsn)
 	dashRepo := repo.NewDashboardRepo(db)
 	userRepo := repo.NewUserRepo(db)
+	dataCampaignRepo := repo.NewDataCampaignRepo(db)
 	errorRepo := repo.NewErrorRepo(db)
 
 	redisClient := redis.NewClient(&redis.Options{
 		Addr: "localhost:6379",
 	})
 	cache := cache.NewCache(redisClient)
-	svc := svc.NewService(dashRepo, userRepo, errorRepo, cache)
+	svc := svc.NewService(dashRepo, userRepo, dataCampaignRepo, errorRepo, cache)
 
 	// createDefaultUser(db)
 
