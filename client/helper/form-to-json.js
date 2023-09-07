@@ -49,10 +49,11 @@ export const prepareDataForBackend = (formValues, setInvalid, resetForm) => {
                         withCredentials: true,
                     }
                 );
-                toast.success("Campaign created successfully");
+                toast.success(response.data.message);
                 resetForm();
                 console.log("Campaign data sent successfully.", response);
             } catch (error) {
+                toast.error(error.message);
                 console.error("Error sending campaign data:", error);
             }
         };
