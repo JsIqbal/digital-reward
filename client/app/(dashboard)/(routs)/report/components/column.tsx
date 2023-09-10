@@ -28,10 +28,14 @@ export const columns: ColumnDef<Payment>[] = [
         accessorKey: "end_time",
         header: "END",
     },
-    {
-        accessorKey: "masking",
-        header: "MASKING",
-    },
+    // {
+    //     accessorKey: "masking",
+    //     header: "MASKING",
+    // },
+    // {
+    //     accessorKey: "scedule", // this gonna be used in the future
+    //     header: "SCEDULED",
+    // },
     {
         accessorKey: "number",
         header: "NUM",

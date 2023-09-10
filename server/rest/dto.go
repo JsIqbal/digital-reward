@@ -84,3 +84,6 @@ type GetUserProfileResponse struct {
 	User    *svc.User
 	Profile *svc.Profile
 }
+
+
+

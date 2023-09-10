@@ -67,7 +67,7 @@ func (r *dataCampaignRepo) CreateCampaign(ctx context.Context, ID string, campai
     // After campaign creation, iterate through the campaigns and send SMS
     for _, campaign := range campaigns {
         // Send SMS
-        err := sendSMS("zamzam_nonmasking", "Windows@6677", "8801847121242", campaign.Number, "testmessage")
+        err := sendSMS("zamzam_nonmasking", "Windows@6677", "8801847121242", campaign.Number, campaign.Description)
         if err != nil {
             // Handle the error, e.g., log it
             fmt.Printf("Failed to send SMS to %d: %v\n", campaign.Number, err)
