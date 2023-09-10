@@ -159,7 +159,9 @@ func (s *service) GetDashboardImages() []*Dashboard {
 	return s.dashboardRepo.Get()
 }
 
-
+func (s *service) GetDataCampaignByUserId(ctx context.Context, userID string) ([]*Campaign, error)    {
+	return s.dataCampaignRepo.GetCampaignByUserId(ctx , userID)
+}
 
 
 

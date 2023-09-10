@@ -39,7 +39,9 @@ type Cache interface {
 type DataCampaignRepo interface {
     CreateCampaign(ctx context.Context, userID string, campaigns []*Campaign) ([]*Campaign, error)
     FindByCampaignName(ctx context.Context, campaignName string) ([]*Campaign, error)
+	// I have to cut the FindByUserIDAndCampaignName
     FindByUserIDAndCampaignName(ctx context.Context, userID string, campaignName string) ([]*Campaign, error)
+    GetCampaignByUserId(ctx context.Context, userID string) ([]*Campaign, error)
 }
 
 type Service interface {
@@ -60,4 +62,5 @@ type Service interface {
 	GetUserProfileByPocNumber(ctx context.Context, poc string) (*Profile, error)
 	////////// Camapign Signatures //////////// 
 	CreateDataCampaign(ctx context.Context, userID string, campaigns []*Campaign) ([]*Campaign, error)
+	GetDataCampaignByUserId(ctx context.Context, userID string) ([]*Campaign, error)
 }

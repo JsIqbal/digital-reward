@@ -147,3 +147,14 @@ func (r *dataCampaignRepo) FindByUserIDAndCampaignName(ctx context.Context, user
 
     return campaigns, nil
 }
+
+
+func (r *dataCampaignRepo) GetCampaignByUserId(ctx context.Context, userID string) ([]*svc.Campaign, error) {
+    var campaigns []*svc.Campaign
+
+    if err := r.db.Where("user_id = ?", userID).Find(&campaigns).Error; err != nil {
+        return nil, err
+    }
+
+    return campaigns, nil
+}

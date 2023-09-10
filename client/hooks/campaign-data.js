@@ -35,8 +35,9 @@ const useCampaign = () => {
 
     const fetchCampaignData = async () => {
         try {
-            const data = await getCampaignData();
-            setCampaignData(data);
+            const { campaigns } = await getCampaignData();
+
+            setCampaignData(campaigns);
             setCampaignStatus(true);
         } catch (error) {
             console.error("Error fetching campaign data:", error);

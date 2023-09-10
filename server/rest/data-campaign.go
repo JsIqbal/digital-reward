@@ -60,4 +60,18 @@ func (s *Server) createCampaign(ctx *gin.Context) {
 }
 
 
+func (s *Server) getCampaign(ctx *gin.Context) {
+    // Get the user's ID from the authorization payload
+    authPayload := ctx.MustGet(authorizationPayloadKey).(Payload)
+
+    // Call the service method to get campaigns by user ID
+    campaigns, err := s.svc.GetDataCampaignByUserId(ctx, authPayload.ID)
+    if err != nil {
+        ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+
+    // Respond with the list of campaigns
+    ctx.JSON(http.StatusOK, gin.H{"campaigns": campaigns})
+}
 

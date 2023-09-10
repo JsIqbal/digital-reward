@@ -10,7 +10,12 @@ import { columns } from "./components/column";
 import useCampaign from "@/hooks/campaign-data";
 
 const ReportPage = () => {
-    const { campaignData } = useCampaign();
+    const { campaignData, campaignStatus } = useCampaign();
+    console.log("---------campaign data---------", campaignStatus);
+
+    if (!campaignStatus) {
+        return null;
+    }
 
     return (
         <div className="h-full p-4">

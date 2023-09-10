@@ -54,6 +54,7 @@ func (s *Server) setupRouter() {
 	authRoutes.POST("/api/users/profile", s.profile)
 	authRoutes.GET("/api/users/profile", s.getUserProfile)
 	authRoutes.POST("/api/users/campaign", s.createCampaign)
+	authRoutes.GET("/api/users/campaign", s.getCampaign)
 }
 
 func (s *Server) Start() error {
