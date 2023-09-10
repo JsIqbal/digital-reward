@@ -12,7 +12,7 @@ export default function CreateProfile() {
     const { addProfile, isLoading, error } = useAddProfile();
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center">
+        <div className="fixed inset-0 flex items-center justify-center translate-x-[130px] translate-y-[10px]">
             <div className="relative bg-white border border-gray-300 shadow-lg rounded-lg">
                 <KycHeader />
                 <div className="p-4 mt-4">

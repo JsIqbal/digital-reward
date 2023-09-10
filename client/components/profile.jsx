@@ -19,7 +19,7 @@ export const Profile = () => {
     }
 
     return (
-        <Dialog className="bg-white rounded-lg shadow-lg">
+        <Dialog className="bg-white rounded-lg shadow-lg ">
             <DialogTrigger>Profile</DialogTrigger>
             <DialogContent className="p-4">
                 <DialogHeader className="text-2xl font-bold text-gray-800">

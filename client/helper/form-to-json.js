@@ -53,7 +53,7 @@ export const prepareDataForBackend = (formValues, setInvalid, resetForm) => {
                 resetForm();
                 console.log("Campaign data sent successfully.", response);
             } catch (error) {
-                toast.error(error.message);
+                toast.error(error.response.data.error);
                 console.error("Error sending campaign data:", error);
             }
         };
