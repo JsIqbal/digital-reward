@@ -37,8 +37,9 @@ type Cache interface {
 }
 
 type DataCampaignRepo interface {
-	CreateCampaign(ctx context.Context, userID string, campaigns []*Campaign) ([]*Campaign, error)
-	FindByCampaignName(ctx context.Context, campaignName string) ([]*Campaign, error)
+    CreateCampaign(ctx context.Context, userID string, campaigns []*Campaign) ([]*Campaign, error)
+    FindByCampaignName(ctx context.Context, campaignName string) ([]*Campaign, error)
+    FindByUserIDAndCampaignName(ctx context.Context, userID string, campaignName string) ([]*Campaign, error)
 }
 
 type Service interface {
