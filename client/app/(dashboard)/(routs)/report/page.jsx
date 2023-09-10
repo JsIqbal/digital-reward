@@ -1,10 +1,17 @@
+"use client";
+
 import { DashHeader } from "@/components/dashboard-header";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { ListChecks } from "lucide-react";
 import React from "react";
+import { DataTable } from "./components/data-table";
+import { columns } from "./components/column";
+import useCampaign from "@/hooks/campaign-data";
 
-const VideoPage = () => {
+const ReportPage = () => {
+    const { campaignData } = useCampaign();
+
     return (
         <div className="h-full p-4">
             <DashHeader />
@@ -26,9 +33,12 @@ const VideoPage = () => {
                         </p>
                     </div>
                 </Card>
+                <div className="  w-full">
+                    <DataTable columns={columns} data={campaignData} />
+                </div>
             </div>
         </div>
     );
 };
 
-export default VideoPage;
+export default ReportPage;
