@@ -10,9 +10,11 @@ import { AlertDestructive } from "@/components/invalid-num-alert";
 const InvalidShet = ({ closeSheet, isSheetOpen, invalid }) => {
     return (
         <Sheet onOpenChange={closeSheet} open={isSheetOpen}>
-            <SheetContent side="right">
+            <SheetContent className="overflow-auto" side="right">
                 <SheetHeader>
-                    <SheetTitle>List of Invalid Numbers:</SheetTitle>
+                    <SheetTitle>
+                        List of Invalid Numbers: {invalid.length}
+                    </SheetTitle>
                     <SheetDescription>
                         <AlertDestructive invalid={invalid} />
                     </SheetDescription>
