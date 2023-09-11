@@ -15,7 +15,7 @@ const ImagePage = () => {
     };
 
     return (
-        <div className="h-full p-8 ">
+        <div className="h-full p-4 ">
             <Toaster />
             <DashHeader />
             <div className="px-4 md:px-10 lg:px-20 xl:px-32 2xl:40 space-y-4 w-full mb-12">
