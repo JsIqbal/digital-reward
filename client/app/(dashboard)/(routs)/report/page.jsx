@@ -8,6 +8,7 @@ import React from "react";
 import { DataTable } from "./components/data-table";
 import { columns } from "./components/column";
 import useCampaign from "@/hooks/campaign-data";
+import { DatePickerWithRange } from "@/components/date-picker";
 
 const ReportPage = () => {
     const { campaignData, campaignStatus } = useCampaign();
@@ -20,8 +21,8 @@ const ReportPage = () => {
     return (
         <div className="h-full p-4">
             <DashHeader />
-            <div className="px-4 md:px-10 lg:px-20 xl:px-32 2xl:40 space-y-4 w-full">
-                <Card className="p-4 border-black/5 flex items-center justify-between shadow-md hover:shadow-lg hover:bg-white/30 hover:scale-[101%] transition duration-150 cursor-pointer">
+            <div className="px-4 md:px-10 lg:px-20 xl:px-32 2xl:40 space-y-4 w-full mb-12">
+                <Card className="p-4 border-black/5 shadow-md hover:shadow-lg hover:bg-white/30 hover:scale-[101%] transition duration-150 cursor-pointer">
                     <div className="flex items-center gap-4">
                         <div
                             className={cn(
@@ -36,6 +37,7 @@ const ReportPage = () => {
                         <p className="font-semibold">
                             Download & Visualize Reports
                         </p>
+                        <DatePickerWithRange className="ml-auto" />
                     </div>
                 </Card>
                 <div className="  w-full">
