@@ -28,6 +28,7 @@ export const CampaignForm = () => {
     const fileInputRef = useRef(null);
 
     const handleSubmit = (values, { setSubmitting, resetForm }) => {
+        console.log(values);
         prepareDataForBackend(values, setInvalid, resetForm);
         setSubmitting(false);
         setFileInputKey(fileInputKey + 1);

@@ -39,6 +39,8 @@ type Cache interface {
 type DataCampaignRepo interface {
     CreateCampaign(ctx context.Context, userID string, campaigns []*Campaign) ([]*Campaign, error)
     FindByCampaignName(ctx context.Context, campaignName string) ([]*Campaign, error)
+	// GetDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]*Campaign, error)
+	GetDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]byte, error)
 	// I have to cut the FindByUserIDAndCampaignName
     FindByUserIDAndCampaignName(ctx context.Context, userID string, campaignName string) ([]*Campaign, error)
     GetCampaignByUserId(ctx context.Context, userID string) ([]*Campaign, error)
@@ -51,6 +53,8 @@ type Service interface {
 	CreateUser(ctx context.Context, std *User) error
 	FindUserByID(ctx context.Context, ID string) (*User, error)
 	FindUserByUsername(ctx context.Context, username string) (*User, error)
+	// GetUserDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]*Campaign, error)
+	GetUserDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]byte, error)
 	////////// User Profile Signatures ////////////
 	GetUserProfile(ctx context.Context, ID string) (*Profile, error)
 	CreateUserProfile(ctx context.Context, ID string, profile *Profile) (*UserProfile, error)

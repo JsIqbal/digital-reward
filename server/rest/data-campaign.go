@@ -1,6 +1,7 @@
 package rest
 
 import (
+	"fmt"
 	"go-rest/svc"
 	"net/http"
 
@@ -74,4 +75,36 @@ func (s *Server) getCampaign(ctx *gin.Context) {
     // Respond with the list of campaigns
     ctx.JSON(http.StatusOK, gin.H{"campaigns": campaigns})
 }
+
+
+func (s *Server) getCampaignReport(ctx *gin.Context) {
+	// Retrieve 'from' and 'to' query parameters
+	from := ctx.Query("from")
+	to := ctx.Query("to")
+	fmt.Println("-----------rest-----------from", from)
+	fmt.Println("------------rest----------to", to)
+
+	// Check if 'from' and 'to' are not empty
+	if from == "" || to == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Both 'from' and 'to' query parameters are required"})
+		return
+	}
+
+	authPayload := ctx.MustGet(authorizationPayloadKey).(Payload)
+
+	// Call the service method to get campaign data within the specified date range
+	campaignData, err := s.svc.GetUserDataCampaignReport(ctx, authPayload.ID, from, to)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Respond with the campaign data
+	ctx.JSON(http.StatusOK, gin.H{"campaignData": campaignData})
+}
+
+
+
+
+
 

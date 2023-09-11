@@ -116,6 +116,10 @@ func (s *service) FindUserByUsername(ctx context.Context, username string) (*Use
 	return user, nil
 }
 
+func (s *service) GetUserDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]byte, error) {
+	return s.dataCampaignRepo.GetDataCampaignReport(ctx , ID, from, to) 
+}
+
 func (s *service) GetUserProfile(ctx context.Context, userID string) (*Profile, error) {
 	return s.userRepo.GetProfileById(ctx , userID)
 }

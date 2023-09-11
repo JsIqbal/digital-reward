@@ -2,6 +2,7 @@ package rest
 
 import (
 	"go-rest/svc"
+	"time"
 )
 
 type Product struct {
@@ -87,3 +88,7 @@ type GetUserProfileResponse struct {
 
 
 
+type DateRange struct {
+	From time.Time `json:"from"`
+	To   time.Time `json:"to"`
+}

@@ -1,13 +1,17 @@
 package repo
 
 import (
+	"archive/zip"
+	"bytes"
 	"context"
+	"encoding/csv"
 	"errors"
 	"fmt"
 	"go-rest/svc"
 	"net/http"
 	"net/url"
 	"strconv"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -21,29 +25,6 @@ func NewDataCampaignRepo(db *gorm.DB) svc.DataCampaignRepo {
 		db: db,
 	}
 }
-
-// func (r *dataCampaignRepo) CreateCampaign(ctx context.Context, ID string, campaigns []*svc.Campaign) ([]*svc.Campaign, error) {
-//     for _, campaign := range campaigns {
-//         // Check if a campaign with the same name already exists for the user
-//         existingCampaigns, err := r.FindByUserIDAndCampaignName(ctx, ID, campaign.CampaignName)
-//         if err != nil {
-//             return nil, err
-//         }
-
-//         // If a campaign with the same name exists for the user, return an error
-//         if len(existingCampaigns) > 0 {
-//             return nil, errors.New("campaign with the same name already exists for the user")
-//         }
-//     }
-
-//     // Create campaigns in the database
-//     if err := r.db.Create(&campaigns).Error; err != nil {
-//         return nil, err
-//     }
-
-//     return campaigns, nil
-// }
-
 
 func (r *dataCampaignRepo) CreateCampaign(ctx context.Context, ID string, campaigns []*svc.Campaign) ([]*svc.Campaign, error) {
     for _, campaign := range campaigns {
@@ -121,8 +102,6 @@ func sendSMS(username string, password string, from string, to int64, message st
         return fmt.Errorf("API returned status code %d", resp.StatusCode)
     }
 
-    // You can also check the response body for further details
-
     return nil
 }
 
@@ -157,4 +136,131 @@ func (r *dataCampaignRepo) GetCampaignByUserId(ctx context.Context, userID strin
     }
 
     return campaigns, nil
+}
+
+// func (r *dataCampaignRepo) GetDataCampaignReport(ctx context.Context, userID string, from string, to string) ([]*svc.Campaign, error) {
+//     userCampaigns, err := r.GetCampaignByUserId(ctx, userID)
+//     if err != nil {
+//         return nil, err
+//     }
+
+//     fromDate, err := time.Parse(time.RFC3339, from)
+//     if err != nil {
+//         return nil, fmt.Errorf("error parsing 'from' date: %v", err)
+//     }
+
+//     toDate, err := time.Parse(time.RFC3339, to)
+//     if err != nil {
+//         return nil, fmt.Errorf("error parsing 'to' date: %v", err)
+//     }
+
+//     var filteredCampaigns []*svc.Campaign
+
+//     for _, campaign := range userCampaigns {
+//         campaignStartTime, err := time.Parse("2006-01-02T15:04", campaign.StartTime)
+// 		if err != nil {
+// 			fmt.Printf("Error parsing campaign start time: %v\n", err)
+// 			continue // Skip campaigns with invalid start time
+// 		}
+
+//         campaignEndTime, err := time.Parse("2006-01-02T15:04", campaign.EndTime)
+// 		if err != nil {
+// 			fmt.Printf("Error parsing campaign end time: %v\n", err)
+// 			continue // Skip campaigns with invalid end time
+// 		}
+
+//         if campaignStartTime.After(fromDate) && campaignEndTime.Before(toDate) {
+//             filteredCampaigns = append(filteredCampaigns, campaign)
+//         }
+//     }
+
+//     return filteredCampaigns, nil
+// }
+
+func (r *dataCampaignRepo) GetDataCampaignReport(ctx context.Context, userID string, from string, to string) ([]byte, error) {
+    userCampaigns, err := r.GetCampaignByUserId(ctx, userID)
+    if err != nil {
+        return nil, err
+    }
+
+    fromDate, err := time.Parse(time.RFC3339, from)
+    if err != nil {
+        return nil, fmt.Errorf("error parsing 'from' date: %v", err)
+    }
+
+    toDate, err := time.Parse(time.RFC3339, to)
+    if err != nil {
+        return nil, fmt.Errorf("error parsing 'to' date: %v", err)
+    }
+
+    var filteredCampaigns []*svc.Campaign
+
+    for _, campaign := range userCampaigns {
+        campaignStartTime, err := time.Parse("2006-01-02T15:04", campaign.StartTime)
+        if err != nil {
+            fmt.Printf("Error parsing campaign start time: %v\n", err)
+            continue // Skip campaigns with invalid start time
+        }
+
+        campaignEndTime, err := time.Parse("2006-01-02T15:04", campaign.EndTime)
+        if err != nil {
+            fmt.Printf("Error parsing campaign end time: %v\n", err)
+            continue // Skip campaigns with invalid end time
+        }
+
+        if campaignStartTime.After(fromDate) && campaignEndTime.Before(toDate) {
+            filteredCampaigns = append(filteredCampaigns, campaign)
+        }
+    }
+
+    // Generate CSV data
+    var csvData bytes.Buffer
+    csvWriter := csv.NewWriter(&csvData)
+
+    // Write CSV headers
+    headers := []string{"ID", "UserID", "CampaignName", "StartTime", "EndTime", "Masking", "Number", "Operator", "Reward", "Description", "Status"}
+    csvWriter.Write(headers)
+
+    // Write CSV rows
+    for _, campaign := range filteredCampaigns {
+		csvWriter.Write([]string{
+			campaign.ID,
+			campaign.UserID,
+			campaign.CampaignName,
+			campaign.StartTime,
+			campaign.EndTime,
+			campaign.Masking,
+			strconv.FormatInt(campaign.Number, 10),
+			campaign.Operator,
+			campaign.Reward,
+			campaign.Description,
+			campaign.Status,
+		})
+	}
+	
+
+    csvWriter.Flush()
+
+    // Create a zip archive
+    var zipData bytes.Buffer
+    zipWriter := zip.NewWriter(&zipData)
+
+    // Create a file within the zip archive for the CSV data
+    csvFile, err := zipWriter.Create("campaign_report.csv")
+    if err != nil {
+        return nil, err
+    }
+
+    // Write the CSV data to the file within the zip archive
+    _, err = csvFile.Write(csvData.Bytes())
+    if err != nil {
+        return nil, err
+    }
+
+    // Close the zip archive
+    if err := zipWriter.Close(); err != nil {
+        return nil, err
+    }
+
+    return zipData.Bytes(), nil
 }
