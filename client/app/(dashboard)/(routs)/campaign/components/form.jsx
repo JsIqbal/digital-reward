@@ -24,12 +24,16 @@ const FileInput = ({ field, form: { setFieldValue } }) => {
 
 export const CampaignForm = () => {
     const [invalid, setInvalid] = useState([]);
+    const [duplicate, setDuplicate] = useState([]);
     const [fileInputKey, setFileInputKey] = useState(0);
     const fileInputRef = useRef(null);
 
+    console.log("duplicate", duplicate);
+    console.log("invalid", invalid);
+
     const handleSubmit = (values, { setSubmitting, resetForm }) => {
         console.log(values);
-        prepareDataForBackend(values, setInvalid, resetForm);
+        prepareDataForBackend(values, setInvalid, resetForm, setDuplicate);
         setSubmitting(false);
         setFileInputKey(fileInputKey + 1);
     };
@@ -51,6 +55,7 @@ export const CampaignForm = () => {
                 closeSheet={closeSheet}
                 isSheetOpen={isSheetOpen}
                 invalid={invalid}
+                duplicate={duplicate}
             />
             <Formik
                 initialValues={campaignValues}
