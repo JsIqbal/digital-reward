@@ -43,7 +43,6 @@ function useAuth(params) {
         axios.defaults.headers.common[
             "token"
         ] = `Bearer ${response.data.data.token}`;
-        localStorage.setItem("token", response.data.data.token);
         localStorage.setItem("isLoggedIn", true);
         localStorage.setItem("userType", true);
         Cookies.set("token", response.data.data.token);

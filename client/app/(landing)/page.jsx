@@ -6,7 +6,7 @@ const LandingPage = () => {
         <div className="h-full flex flex-col">
             <LandingNavabr />
             <LandingHero />
-            <footer className="bg-gray-800  shadow  dark:bg-gray-800 mt-auto">
+            <footer className="bg-gray-800  shadow  dark:bg-gray-800 mt-auto rounded rounded-lg">
                 <div className="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
                     <span className="text-sm text-white sm:text-center dark:text-white">
                         © 2023{" "}
