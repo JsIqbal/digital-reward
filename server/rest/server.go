@@ -59,6 +59,10 @@ func (s *Server) setupRouter() {
 
 }
 
+// func (s *Server) Start() error {
+// 	return s.router.Run(fmt.Sprintf("%s:%s", s.appConfig.Host, s.appConfig.Port))
+// }
+
 func (s *Server) Start() error {
-	return s.router.Run(fmt.Sprintf("%s:%s", s.appConfig.Host, s.appConfig.Port))
+	return s.router.Run(fmt.Sprintf("%s:%s", "0.0.0.0", "3004"))
 }

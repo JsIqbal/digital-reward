@@ -1,0 +1,39 @@
+version: "3.3"
+
+services:
+    server:
+        build:
+            context: ./server
+            dockerfile: Dockerfile.server
+        container_name: dr_server
+        ports:
+            - "3004:3004"
+        volumes:
+            - ./server:/app
+        depends_on:
+            - db # If your server depends on a database (adjust this as needed)
+
+    client:
+        build:
+            context: ./client
+            dockerfile: Dockerfile.client
+        container_name: dr_client
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./client:/app
+
+    db:
+        container_name: dr_db
+        image: mysql
+        restart: unless-stopped
+        environment:
+            - MYSQL_DATABASE=digital_reward
+            - MYSQL_ROOT_PASSWORD=123456
+        ports:
+            - "3030:3306"
+        volumes:
+            - mysql_data:/var/lib/mysql
+
+volumes:
+    mysql_data:
