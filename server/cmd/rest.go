@@ -17,7 +17,9 @@ func serveRest() {
 	saltConfig := config.GetSalt()
 	tokenConfig := config.GetToken()
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", appConfig.DBUser, appConfig.DBPass, appConfig.DBHost, appConfig.DBPort, appConfig.DBName)
+	// dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", appConfig.DBUser, appConfig.DBPass, appConfig.DBHost, appConfig.DBPort, appConfig.DBName)
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", "root", "123456", "db", "3306", "digital_reward")
+
 	db := database.NewDatabase(dsn)
 	dashRepo := repo.NewDashboardRepo(db)
 	userRepo := repo.NewUserRepo(db)
