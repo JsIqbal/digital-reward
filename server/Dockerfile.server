@@ -8,7 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Build the Go server
-RUN go build -o main .
+# RUN go build -o main . // this ain't working
 
 # Expose the port that the server will listen on
 EXPOSE 3004

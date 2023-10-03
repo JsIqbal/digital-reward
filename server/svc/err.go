@@ -6,7 +6,6 @@ import (
 
 type ErrorModel struct {
 	gorm.Model
-    InternalCode string
-    Message      string
-    // Additional fields if any
+	InternalCode string
+	Message      string
 }

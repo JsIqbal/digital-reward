@@ -20,6 +20,7 @@ export const useAddProfile = () => {
             if (response.status === parseInt(201)) {
                 toast.success("KYC Successfully Submitted!");
                 setTimeout(() => window.location.reload("/dashboard"), 3000);
+                // window.location.reload("/dashboard");
             }
             setIsLoading(false);
             return response.data;

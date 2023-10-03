@@ -5,6 +5,9 @@ import Cookies from "js-cookie";
 const useProfile = () => {
     const [profile, setProfile] = useState([]);
     const [profileStatus, setProfileStatus] = useState(false);
+    const [approvalStatus, setApprovalStatus] = useState(false);
+    const [kyc, setKyc] = useState(false);
+
     const userJWT = Cookies.get("token");
 
     const fetchUserProfile = async () => {
@@ -18,7 +21,9 @@ const useProfile = () => {
 
             if (response.status === 200) {
                 setProfile(response.data.data);
-                setProfileStatus(true);
+                setProfileStatus(response.data.data.Profile.status);
+                setApprovalStatus(profileStatus);
+                setKyc(true);
             } else {
                 setProfile(null);
             }
@@ -31,7 +36,7 @@ const useProfile = () => {
         fetchUserProfile();
     }, [userJWT]);
 
-    return { profile, profileStatus };
+    return { profile, profileStatus, approvalStatus, kyc };
 };
 
 export default useProfile;

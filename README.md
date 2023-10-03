@@ -268,31 +268,7 @@ ngrok config add-authtoken YOUR_AUTH_TOKEN
 
 -   There can be an issue like: You have initialized a new swagger documentation for a new platform but still can see the swagger documentation for another platform. In that case you have to clear browser caches and then reload the swagger documentation.
 
-<details>
-  <summary>Click to expand completed/not-completed Features: CLIENT-SERVER</summary>
-
--   [x] Static Documentation Serving
-
-    -   [ ] Sub-feature 1: Describe the first sub-feature here.
-
--   [x] Health Check Endpoint
-
-    -   [ ] Sub-feature 1: Describe the first sub-feature here.
-
--   [x] User Authentication
-
-    -   [x] User Registration: Implement user registration.
-    -   [x] User Login: Implement user login.
-
--   [x] User Profile Management : Only for logged in users.
-    -   [x] User Profile Creation: Implement user profile creation.
-    -   [x] Get Logged-in User: Implement the ability to retrieve the logged-in user.
-    -   [x] Logout: Implement user logout.
-    -   [x] Get User Profile: Implement the ability to retrieve user profiles.
-
-</details>
-
-## Next Phase of the project - Docker Port Forwarding:
+## Docker Port Forwarding:
 
 -   Run a mysql container and configure it with the project:
 
@@ -337,3 +313,38 @@ Docker will forward the request to the container's port (3306),
 and you should be able to access the database, for example, using tools like TablePlus.
 
 This method of exposing a container's port to the host machine is known as port forwarding.
+
+### Completed docker compose for client server architectures.
+
+    look at the docker-compose file in the root directory for further clarifications.
+
+## TODO:
+
+<details>
+  <summary>Click to expand completed/not-completed Features: CLIENT-SERVER</summary>
+
+-   [x] Static Documentation Serving
+
+    -   [ ] Sub-feature 1: Describe the first sub-feature here.
+
+-   [x] Health Check Endpoint
+
+    -   [ ] Sub-feature 1: Describe the first sub-feature here.
+
+-   [x] User Authentication
+
+    -   [x] User Registration: Implement user registration.
+    -   [x] User Login: Implement user login.
+
+-   [x] User Profile Management : Only for logged in users.
+    -   [x] User Profile Creation: Implement user profile creation.
+    -   [x] Get Logged-in User: Implement the ability to retrieve the logged-in user.
+    -   [x] Logout: Implement user logout.
+    -   [x] Get User Profile: Implement the ability to retrieve user profiles.
+-   [x] API specifications : Only for logged in users.
+
+        -   [x] Method signatures: Completed method signature for service and data-pact repository.
+        -   [] Create all necessary service and repo helper methods.
+        -   [] Create the controller for the singledatapack api service
+
+    </details>
