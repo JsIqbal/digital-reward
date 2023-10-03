@@ -12,13 +12,13 @@ type UserRepo interface {
 	FindByID(ctx context.Context, ID string) (*User, error)
 	////////// User Profile Signatures ////////////
 	CreateProfile(ctx context.Context, ID string, profile *Profile) (*UserProfile, error)
-	GetProfileById(ctx context.Context, ID string) (*Profile, error) 
-	GetProfileByBusiness(ctx context.Context, name string) (*Profile, error) 
-	GetProfileByLead(ctx context.Context, lead string) (*Profile, error) 
-	GetProfileByEmail(ctx context.Context, email string) (*Profile, error) 
-	GetProfileByNid(ctx context.Context, nid string) (*Profile, error) 
-	GetProfileByKam(ctx context.Context, kam string) (*Profile, error) 
-	GetProfileByPoc(ctx context.Context, poc string) (*Profile, error) 
+	GetProfileById(ctx context.Context, ID string) (*Profile, error)
+	GetProfileByBusiness(ctx context.Context, name string) (*Profile, error)
+	GetProfileByLead(ctx context.Context, lead string) (*Profile, error)
+	GetProfileByEmail(ctx context.Context, email string) (*Profile, error)
+	GetProfileByNid(ctx context.Context, nid string) (*Profile, error)
+	GetProfileByKam(ctx context.Context, kam string) (*Profile, error)
+	GetProfileByPoc(ctx context.Context, poc string) (*Profile, error)
 }
 
 type DashboardRepo interface {
@@ -37,13 +37,14 @@ type Cache interface {
 }
 
 type DataCampaignRepo interface {
-    CreateCampaign(ctx context.Context, userID string, campaigns []*Campaign) ([]*Campaign, error)
-    FindByCampaignName(ctx context.Context, campaignName string) ([]*Campaign, error)
+	CreateCampaign(ctx context.Context, userID string, campaigns []*Campaign) ([]*Campaign, error)
+	FindByCampaignName(ctx context.Context, campaignName string) ([]*Campaign, error)
 	// GetDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]*Campaign, error)
 	GetDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]byte, error)
 	// I have to cut the FindByUserIDAndCampaignName
-    FindByUserIDAndCampaignName(ctx context.Context, userID string, campaignName string) ([]*Campaign, error)
-    GetCampaignByUserId(ctx context.Context, userID string) ([]*Campaign, error)
+	FindByUserIDAndCampaignName(ctx context.Context, userID string, campaignName string) ([]*Campaign, error)
+	GetCampaignByUserId(ctx context.Context, userID string) ([]*Campaign, error)
+	SingleDatapack(ctx context.Context, std *SingleDataPack) (*SingleDataPack, error)
 }
 
 type Service interface {
@@ -56,15 +57,16 @@ type Service interface {
 	// GetUserDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]*Campaign, error)
 	GetUserDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]byte, error)
 	////////// User Profile Signatures ////////////
-	GetUserProfile(ctx context.Context, ID string) (*Profile, error)
 	CreateUserProfile(ctx context.Context, ID string, profile *Profile) (*UserProfile, error)
-	GetUserProfileByBusinessName(ctx context.Context, name string) (*Profile, error) 
-	GetUserProfileByLeadName(ctx context.Context, lead string) (*Profile, error) 
-	GetUserProfileByEmailAddress(ctx context.Context, address string) (*Profile, error) 
-	GetUserProfileByNidNumber(ctx context.Context, nid string) (*Profile, error) 
-	GetUserProfileByKamNumber(ctx context.Context, kam string) (*Profile, error) 
+	GetUserProfile(ctx context.Context, ID string) (*Profile, error)
+	GetUserProfileByBusinessName(ctx context.Context, name string) (*Profile, error)
+	GetUserProfileByLeadName(ctx context.Context, lead string) (*Profile, error)
+	GetUserProfileByEmailAddress(ctx context.Context, address string) (*Profile, error)
+	GetUserProfileByNidNumber(ctx context.Context, nid string) (*Profile, error)
+	GetUserProfileByKamNumber(ctx context.Context, kam string) (*Profile, error)
 	GetUserProfileByPocNumber(ctx context.Context, poc string) (*Profile, error)
-	////////// Camapign Signatures //////////// 
+	////////// Camapign Signatures ////////////
 	CreateDataCampaign(ctx context.Context, userID string, campaigns []*Campaign) ([]*Campaign, error)
 	GetDataCampaignByUserId(ctx context.Context, userID string) ([]*Campaign, error)
+	SubmitSingleDatapack(ctx context.Context, std *SingleDataPack) (*SingleDataPack, error)
 }

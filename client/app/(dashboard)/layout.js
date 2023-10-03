@@ -9,11 +9,11 @@ import Loader from "@/components/loader";
 import useDashboardLogic from "@/hooks/dashboard";
 import useProfile from "@/hooks/user-profile";
 import { KycComponent } from "@/components/kyc-component";
+import { ApprovalCard } from "@/components/approval-card";
 
 const DashboardLayout = ({ children }) => {
     const { isLoading, isSignedIn } = useDashboardLogic();
-    const { profileStatus } = useProfile();
-
+    const { profileStatus, approvalStatus, kyc } = useProfile();
     if (isLoading) {
         return <Loader />;
     }
@@ -29,7 +29,13 @@ const DashboardLayout = ({ children }) => {
             </div>
             <main className="md:pl-72 flex flex-col h-full">
                 <Navbar />
-                {(profileStatus && children) || <KycComponent />}
+                {profileStatus ? (
+                    children
+                ) : !profileStatus && !approvalStatus && kyc ? (
+                    <ApprovalCard />
+                ) : (
+                    <KycComponent />
+                )}
 
                 <ToastContainer
                     position="top-right"

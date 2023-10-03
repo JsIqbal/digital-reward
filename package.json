@@ -1,20 +1,7 @@
 {
-    "name": "muse-client-server",
+    "name": "digital-reward",
     "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
     "scripts": {
-        "server": "cd server && go run main.go",
-        "client": "cd client && npm run dev",
-        "dev": "cd client && npm run dev",
-        "build": "cd client && npm run build",
-        "start-client-prod": "cd client && npm run start",
-        "lint": "cd client && npm run lint"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "devDependencies": {
-        "next": "13.4.13"
+        "start": "docker-compose down && docker-compose up --build"
     }
 }
