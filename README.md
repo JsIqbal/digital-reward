@@ -341,10 +341,14 @@ This method of exposing a container's port to the host machine is known as port 
     -   [x] Get Logged-in User: Implement the ability to retrieve the logged-in user.
     -   [x] Logout: Implement user logout.
     -   [x] Get User Profile: Implement the ability to retrieve user profiles.
--   [x] API specifications : Only for logged in users.
+-   [x] API specifications
 
-        -   [x] Method signatures: Completed method signature for service and data-pact repository.
-        -   [] Create all necessary service and repo helper methods.
-        -   [] Create the controller for the singledatapack api service
+    -   [x] Method signatures: Completed method signature for service and data-pact repository.
+    -   [x] Create all necessary service and repo helper methods.
+    -   [x] Create the controller for the singledatapack api service
+
+-   [x] Refactor KYC Service : Only for logged in users.
+
+    -   [] validations:do validations for know your customer form so that one customer doesn't have same profile for 2 different emails and such.
 
     </details>
