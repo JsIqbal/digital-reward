@@ -57,4 +57,8 @@ export const columns = [
         accessorKey: "description",
         header: "CONTENT",
     },
+    {
+        accessorKey: "transaction_id",
+        header: "TRANSACTION",
+    },
 ];

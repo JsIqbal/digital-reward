@@ -5,16 +5,22 @@ import (
 	"bytes"
 	"context"
 	"encoding/csv"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"go-rest/config"
 	"go-rest/svc"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
 )
+
+var appConfig = config.GetApp()
 
 type dataCampaignRepo struct {
 	db *gorm.DB
@@ -26,8 +32,28 @@ func NewDataCampaignRepo(db *gorm.DB) svc.DataCampaignRepo {
 	}
 }
 
-func (r *dataCampaignRepo) CreateCampaign(ctx context.Context, ID string, campaigns []*svc.Campaign) ([]*svc.Campaign, error) {
+func (r *dataCampaignRepo) findMobiCredsByMasking(ctx context.Context, masking string) (*svc.Masking, error) {
+	var m svc.Masking
+	if err := r.db.Where("masking = ?", masking).First(&m).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			// Handle the case when no record is found
+			return nil, fmt.Errorf("no matching record found for masking: %s", masking)
+		}
+		// Handle other database errors
+		return nil, err
+	}
+
+	return &m, nil
+}
+
+func (r *dataCampaignRepo) CreateCampaign(ctx context.Context, ID string, masking string, campaigns []*svc.Campaign) ([]*svc.Campaign, error) {
+	maskingCreds, err := r.findMobiCredsByMasking(ctx, masking)
+	if err != nil {
+		return nil, err
+	}
+
 	for _, campaign := range campaigns {
+
 		// Check if a campaign with the same name already exists for the user
 		existingCampaigns, err := r.FindByUserIDAndCampaignName(ctx, ID, campaign.CampaignName)
 		if err != nil {
@@ -42,13 +68,24 @@ func (r *dataCampaignRepo) CreateCampaign(ctx context.Context, ID string, campai
 
 	// Create campaigns in the database
 	if err := r.db.Create(&campaigns).Error; err != nil {
+
 		return nil, err
 	}
 
 	// After campaign creation, iterate through the campaigns and send SMS
 	for _, campaign := range campaigns {
+		// Execute singleDataPack for this campaign
+		recurring := "No"
+		transactionID, err := singleDataPack(campaign.Number, recurring)
+		fmt.Printf("--------------transactionID-----------------%+v", transactionID)
+		if err != nil {
+			// Handle the error from singleDataPack, e.g., log it
+			fmt.Printf("Failed to provision data pack for %d: %v\n", campaign.Number, err)
+			continue // Move to the next campaign if singleDataPack fails
+		}
+
 		// Send SMS
-		err := sendSMS("zamzam_nonmasking", "Windows@6677", "8801847121242", campaign.Number, campaign.Description)
+		err = sendSMS(maskingCreds.Username, maskingCreds.Password, maskingCreds.Masking, campaign.Number, campaign.Description)
 		if err != nil {
 			// Handle the error, e.g., log it
 			fmt.Printf("Failed to send SMS to %d: %v\n", campaign.Number, err)
@@ -56,9 +93,10 @@ func (r *dataCampaignRepo) CreateCampaign(ctx context.Context, ID string, campai
 			// SMS sent successfully, mark the number as completed
 			fmt.Printf("SMS sent to %d\n", campaign.Number)
 
-			// Update the campaign's status in the database as completed
-			if err := r.db.Model(&campaign).Update("Status", "completed").Error; err != nil {
-				return nil, err
+			// Update the campaign's status and TransactionId in the database as completed
+			if err := r.db.Model(&campaign).Updates(map[string]interface{}{"Status": "completed", "TransactionId": transactionID}).Error; err != nil {
+				// Handle the error, e.g., log it
+				fmt.Printf("Failed to update campaign status: %v\n", err)
 			}
 		}
 	}
@@ -66,7 +104,7 @@ func (r *dataCampaignRepo) CreateCampaign(ctx context.Context, ID string, campai
 	return campaigns, nil
 }
 
-func sendSMS(username string, password string, from string, to int64, message string) error {
+func sendSMS(username string, password string, maskingName string, to int64, message string) error {
 	apiUrl := "https://api.mobireach.com.bd/SendTextMessage"
 
 	// Convert the 'to' variable to a string
@@ -81,7 +119,7 @@ func sendSMS(username string, password string, from string, to int64, message st
 	q := u.Query()
 	q.Set("Username", username)
 	q.Set("Password", password)
-	q.Set("From", from)
+	q.Set("From", maskingName)
 	q.Set("To", toStr) // Pass the string representation of 'to'
 	q.Set("Message", message)
 
@@ -219,6 +257,132 @@ func (r *dataCampaignRepo) GetDataCampaignReport(ctx context.Context, userID str
 	return zipData.Bytes(), nil
 }
 
-func (r *dataCampaignRepo) SingleDatapack(ctx context.Context, std *svc.SingleDataPack) (*svc.SingleDataPack, error) {
-	return nil, nil
+func (r *dataCampaignRepo) SingleDatapack(ctx context.Context, std *svc.SingleDataPack) error {
+	return nil
+}
+
+func getAccessToken() (string, error) {
+	// Define the token endpoint URL
+	tokenURL := "https://api.robi.com.bd/token"
+
+	// Create the request payload
+	data := url.Values{}
+	data.Set("grant_type", appConfig.ROBIGrantType)
+	data.Set("username", appConfig.ROBIUsername)
+	data.Set("password", appConfig.ROBIPass)
+	data.Set("scope", appConfig.ROBIScope)
+
+	// Encode the data
+	payload := data.Encode()
+
+	// Create a new HTTP POST request
+	req, err := http.NewRequest("POST", tokenURL, bytes.NewBufferString(payload))
+	if err != nil {
+		return "", err
+	}
+
+	// Set the request headers
+	req.Header.Set("Authorization", appConfig.ROBIAuth)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	// Send the HTTP request
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	// Read and parse the response
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("failed to obtain access token: %s", body)
+	}
+
+	// Extract the access token from the response
+	var tokenResponse map[string]interface{}
+	if err := json.Unmarshal(body, &tokenResponse); err != nil {
+		return "", err
+	}
+
+	accessToken, ok := tokenResponse["access_token"].(string)
+	if !ok {
+		return "", fmt.Errorf("access token not found in response")
+	}
+
+	return accessToken, nil
+}
+
+// provisionDataPack sends a data pack provisioning request
+func provisionDataPack(accessToken string, msisdn int64, recurring string) (string, error) {
+	// Define the API endpoint URL
+	apiURL := "https://api.robi.com.bd/adcs/adcspackProvisioningNormal/v1/packProvisioningNormal"
+
+	// Create the request payload
+	data := url.Values{}
+	data.Set("MSISDN", strconv.FormatInt(msisdn, 10))
+	data.Set("name", "1GB_OKB_EB_7D")
+	data.Set("Recurring", recurring)
+	data.Set("CN_THIRDPARTYID", "620")
+
+	// Create a new HTTP POST request
+	req, err := http.NewRequest("POST", apiURL, strings.NewReader(data.Encode()))
+	if err != nil {
+		return "", err
+	}
+
+	// Set the request headers
+	req.Header.Set("Authorization", "Bearer "+accessToken)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	// Send the HTTP request
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer resp.Body.Close()
+
+	// Read and parse the response
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	// if resp.StatusCode != http.StatusOK {
+	// 	return "", fmt.Errorf("failed to send data pack provisioning request: %s", body)
+	// }
+
+	return string(body), nil
+}
+
+func singleDataPack(msisdn int64, recurring string) (string, error) {
+	accessToken, err := getAccessToken()
+	if err != nil {
+		fmt.Println("Error obtaining access token:", err)
+		return "", err
+	}
+
+	response, err := provisionDataPack(accessToken, msisdn, recurring)
+	if err != nil {
+		return "", err
+	}
+
+	fmt.Println("Data Pack Provisioning Response:", response)
+
+	var responseData map[string]interface{}
+	if err := json.Unmarshal([]byte(response), &responseData); err != nil {
+		return "", err
+	}
+
+	transactionID, ok := responseData["TransactionId"].(string)
+	if !ok {
+		return "", fmt.Errorf("TransactionId not found in response")
+	}
+
+	return transactionID, nil
 }

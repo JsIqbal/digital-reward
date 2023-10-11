@@ -37,14 +37,14 @@ type Cache interface {
 }
 
 type DataCampaignRepo interface {
-	CreateCampaign(ctx context.Context, userID string, campaigns []*Campaign) ([]*Campaign, error)
+	CreateCampaign(ctx context.Context, userID string, masking string, campaigns []*Campaign) ([]*Campaign, error)
 	FindByCampaignName(ctx context.Context, campaignName string) ([]*Campaign, error)
 	// GetDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]*Campaign, error)
 	GetDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]byte, error)
 	// I have to cut the FindByUserIDAndCampaignName
 	FindByUserIDAndCampaignName(ctx context.Context, userID string, campaignName string) ([]*Campaign, error)
 	GetCampaignByUserId(ctx context.Context, userID string) ([]*Campaign, error)
-	SingleDatapack(ctx context.Context, std *SingleDataPack) (*SingleDataPack, error)
+	SingleDatapack(ctx context.Context, std *SingleDataPack) error
 }
 
 type Service interface {
@@ -66,7 +66,7 @@ type Service interface {
 	GetUserProfileByKamNumber(ctx context.Context, kam string) (*Profile, error)
 	GetUserProfileByPocNumber(ctx context.Context, poc string) (*Profile, error)
 	////////// Camapign Signatures ////////////
-	CreateDataCampaign(ctx context.Context, userID string, campaigns []*Campaign) ([]*Campaign, error)
+	CreateDataCampaign(ctx context.Context, userID string, masking string, campaigns []*Campaign) ([]*Campaign, error)
 	GetDataCampaignByUserId(ctx context.Context, userID string) ([]*Campaign, error)
-	SubmitSingleDatapack(ctx context.Context, std *SingleDataPack) (*SingleDataPack, error)
+	SubmitSingleDatapack(ctx context.Context, std *SingleDataPack) error
 }

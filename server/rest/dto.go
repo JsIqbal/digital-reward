@@ -49,7 +49,6 @@ type CreateUserRequest struct {
 	Password string `json:"password" binding:"required"`
 }
 
-
 type loginResponse struct {
 	Token string `json:"token"`
 }
@@ -69,24 +68,25 @@ type CreateUserProfileRequest struct {
 }
 
 type CreateCampaignRequest struct {
-    CampaignName       string    `json:"campaignName" binding:"required"`
-    StartTime          string `json:"startTime" binding:"required"`
-    EndTime            string `json:"endTime" binding:"required"`
-    Masking            string    `json:"masking" binding:"required"`
-    Number             int64     `json:"number" binding:"required"`
-    OperatorName       string    `json:"operatorName" binding:"required"`
-    RewardName         string    `json:"rewardName" binding:"required"`
-    CampaignDescription string    `json:"campaignDescription" binding:"required"`
+	CampaignName        string `json:"campaignName" binding:"required"`
+	StartTime           string `json:"startTime" binding:"required"`
+	EndTime             string `json:"endTime" binding:"required"`
+	Masking             string `json:"masking" binding:"required"`
+	Number              int64  `json:"number" binding:"required"`
+	OperatorName        string `json:"operatorName" binding:"required"`
+	RewardName          string `json:"rewardName" binding:"required"`
+	CampaignDescription string `json:"campaignDescription" binding:"required"`
 }
 
-
+type CreateCampaignRequestData struct {
+	Masking string                  `json:"masking" binding:"required"`
+	Arra    []CreateCampaignRequest `json:"arra" binding:"required"`
+}
 
 type GetUserProfileResponse struct {
 	User    *svc.User
 	Profile *svc.Profile
 }
-
-
 
 type DateRange struct {
 	From time.Time `json:"from"`

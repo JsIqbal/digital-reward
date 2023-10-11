@@ -10,14 +10,24 @@ import (
 )
 
 func (s *Server) createCampaign(ctx *gin.Context) {
-	var reqs []CreateCampaignRequest
+	var requestData CreateCampaignRequestData
 
-	// Bind the list of campaign data from the request
-	if err := ctx.BindJSON(&reqs); err != nil {
+	// Bind the JSON data from the request
+	if err := ctx.BindJSON(&requestData); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	// Access masking value
+	masking := requestData.Masking
 
+	// Access campaign requests
+	reqs := requestData.Arra
+
+	// The rest of your code to process campaign requests
+	// ...
+
+	fmt.Printf("Incoming Create Campaign Request (masking): %s\n", masking)
+	fmt.Printf("Incoming Create Campaign Request (campaigns): %+v\n", reqs)
 	authPayload := ctx.MustGet(authorizationPayloadKey).(Payload)
 
 	// Create a slice to hold the Campaign structs
@@ -49,7 +59,7 @@ func (s *Server) createCampaign(ctx *gin.Context) {
 	}
 
 	// Call the service method to create the campaigns
-	createdCampaigns, err := s.svc.CreateDataCampaign(ctx, authPayload.ID, campaigns)
+	createdCampaigns, err := s.svc.CreateDataCampaign(ctx, authPayload.ID, masking, campaigns)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -78,8 +88,6 @@ func (s *Server) getCampaignReport(ctx *gin.Context) {
 	// Retrieve 'from' and 'to' query parameters
 	from := ctx.Query("from")
 	to := ctx.Query("to")
-	fmt.Println("-----------rest-----------from", from)
-	fmt.Println("------------rest----------to", to)
 
 	// Check if 'from' and 'to' are not empty
 	if from == "" || to == "" {
