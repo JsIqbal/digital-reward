@@ -18,12 +18,13 @@ export const profileSchema = Yup.object({
 
 export const campaignSchema = Yup.object({
     campaignName: Yup.string().required("Campaign name is required"),
-    masking: Yup.string()
-        .matches(
-            /^[A-Za-z0-9]{11}$/,
-            "masking name must be 11 alphanumeric digits"
-        )
-        .required("masking name is required"),
+    // masking: Yup.string()
+    //     .matches(
+    //         /^[A-Za-z0-9]{11}$/,
+    //         "masking name must be 11 alphanumeric digits"
+    //     )
+    //     .required("masking name is required"),
+    masking: Yup.string().required("Masking name is required"),
     startTime: Yup.date().required("Start time is required"),
     endTime: Yup.date().required("End time is required"),
     operatorName: Yup.string().required("Operator name is required"),

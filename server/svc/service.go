@@ -147,20 +147,20 @@ func (s *service) GetUserProfileByPocNumber(ctx context.Context, poc string) (*P
 	return s.userRepo.GetProfileByPoc(ctx, poc)
 }
 
-func (s *service) CreateDataCampaign(ctx context.Context, userID string, campaigns []*Campaign) ([]*Campaign, error) {
+func (s *service) CreateDataCampaign(ctx context.Context, userID string, masking string, campaigns []*Campaign) ([]*Campaign, error) {
 	// Iterate through the list of campaigns and associate each one with the provided userID
 	for _, campaign := range campaigns {
 		campaign.UserID = userID
 	}
 
 	// Call the repository method to create the campaigns
-	return s.dataCampaignRepo.CreateCampaign(ctx, userID, campaigns)
+	return s.dataCampaignRepo.CreateCampaign(ctx, userID, masking, campaigns)
 }
 
 func (s *service) GetDataCampaignByUserId(ctx context.Context, userID string) ([]*Campaign, error) {
 	return s.dataCampaignRepo.GetCampaignByUserId(ctx, userID)
 }
 
-func (s *service) SubmitSingleDatapack(ctx context.Context, std *SingleDataPack) (*SingleDataPack, error) {
+func (s *service) SubmitSingleDatapack(ctx context.Context, std *SingleDataPack) error {
 	return s.dataCampaignRepo.SingleDatapack(ctx, std)
 }

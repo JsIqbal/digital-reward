@@ -56,7 +56,8 @@ func (s *Server) setupRouter() {
 	authRoutes.POST("/api/users/campaign", s.createCampaign)
 	authRoutes.GET("/api/users/campaign", s.getCampaign)
 	authRoutes.GET("/api/campaign/report", s.getCampaignReport)
-	authRoutes.GET("/api/dr/data", s.sendDatapack)
+	// Single data pack for authenticated users
+	// authRoutes.GET("/api/dr/data", s.sendDatapack)
 }
 
 func (s *Server) Start() error {
