@@ -12,7 +12,7 @@ export const campaignValues = {
     masking: "",
     startTime: "",
     endTime: "",
-    operatorName: "",
+    // operatorName: "",
     rewardName: "",
     numberList: null,
     campaignDescription: "",

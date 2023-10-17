@@ -30,7 +30,7 @@ WORKDIR /app
 COPY . .
 
 # Install dependencies
-RUN npm install
+# RUN npm install
 
 # Build the Next.js client for production
 # RUN npm run build

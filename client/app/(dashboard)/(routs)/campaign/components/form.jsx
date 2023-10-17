@@ -8,8 +8,8 @@ import { campaignValues } from "@/config/initial-values";
 
 import InvalidShet from "@/components/invalid-sheet";
 
-const operators = ["Banglalink", "Grameenphone", "Teletalk", "Robi/Airtel"];
-const rewardNames = ["Reward 1", "Reward 2", "Reward 3"];
+// const operators = ["Banglalink", "Grameenphone", "Teletalk", "Robi/Airtel"];
+const rewardNames = ["1GB_OKB_EB_7D", "Reward 2", "Reward 3"];
 
 const FileInput = ({ field, form: { setFieldValue } }) => {
     return (
@@ -32,7 +32,7 @@ export const CampaignForm = () => {
     console.log("invalid", invalid);
 
     const handleSubmit = (values, { setSubmitting, resetForm }) => {
-        console.log(values);
+        console.log("Came inside handle submit");
         prepareDataForBackend(values, setInvalid, resetForm, setDuplicate);
         setSubmitting(false);
         setFileInputKey(fileInputKey + 1);
@@ -45,7 +45,6 @@ export const CampaignForm = () => {
     }
 
     useEffect(() => {
-        console.log("Invalid numbers changed:", invalid);
         setIsSheetOpen(invalid.length > 0);
     }, [invalid]);
 
@@ -143,7 +142,7 @@ export const CampaignForm = () => {
                             className="md:w-1/2 flex flex-col space-y-4"
                             style={{ marginTop: 0 }}
                         >
-                            <div className="flex flex-col">
+                            {/* <div className="flex flex-col">
                                 <label
                                     htmlFor="operatorName"
                                     className="text-gray-600 font-medium"
@@ -167,7 +166,7 @@ export const CampaignForm = () => {
                                     component="div"
                                     className="text-red-500"
                                 />
-                            </div>
+                            </div> */}
                             <div className="flex flex-col">
                                 <label
                                     htmlFor="rewardName"

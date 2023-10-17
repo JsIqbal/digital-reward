@@ -1,29 +1,33 @@
-const express = require("express");
-const router = express.Router();
-const { sequelize, User, Order } = require("./models"); // Import your Sequelize models
+function setOperator(number) {
+    const prefixes = [
+        "88019",
+        "88018",
+        "88017",
+        "88014",
+        "88016",
+        "88013",
+        "88015",
+    ];
+    const operators = [
+        "Banglalink",
+        "Airtel/Robi",
+        "Grameenphone",
+        "Banglalink",
+        "Airtel/Robi",
+        "Grameenphone",
+        "Teletalk",
+    ];
 
-router.post("/place-order", async (req, res) => {
-    try {
-        await sequelize.transaction(async (transaction) => {
-            // Perform database operations for placing an order
-            const user = await User.findOne({
-                where: { id: req.userId },
-                transaction,
-            });
-            const order = await Order.create({ /* order data */ transaction });
-
-            // Update user's balance and other operations
-
-            // Commit the transaction if everything is successful
-            await transaction.commit();
-        });
-
-        res.status(200).json({ message: "Order placed successfully!" });
-    } catch (error) {
-        // Handle errors and roll back the transaction if needed
-        console.error("Order placement failed:", error);
-        res.status(500).json({ error: "Order placement failed." });
+    for (let i = 0; i < prefixes.length; i++) {
+        if (number.startsWith(prefixes[i])) {
+            return operators[i];
+        }
     }
-});
 
-module.exports = router;
+    // If the number doesn't match any of the prefixes, return a default value
+    return "Unknown";
+}
+
+const number = "8801734567890"; // Sample number
+const operator = setOperator(number); // Get the operator for the number
+console.log(operator);
