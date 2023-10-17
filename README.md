@@ -188,10 +188,8 @@ ngrok config add-authtoken YOUR_AUTH_TOKEN
 
 ## DB Architecture
 
--   There will be 3 tables
--   A user table: user_id, email
--   A product table: product_id, product_name, product_description, product_price
--   A user product table naming user_prod: user_id, product_id
+-   There has been massieve change and no Entity relationship diagram was created before the project and it became a headache now because we did not follow a principle.
+-   Before deployment of the software we will update this section.
 
 ## Swagger Documentation:
 
