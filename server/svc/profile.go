@@ -6,8 +6,9 @@ import (
 
 type Profile struct {
 	gorm.Model
-	ID           string `json:"ID"`
-	UserID       string `json:"user_id"` // Reference to User
+	// ID           string `json:"ID"`
+	ID           string `json:"ID" gorm:"primarykey"` // Define ID as the primary key
+	UserID       string `json:"user_id"`              // Reference to User
 	BusinessName string `json:"business_name"`
 	BusinessLead string `json:"business_lead"`
 	Email        string `json:"email"`

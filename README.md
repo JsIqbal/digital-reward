@@ -347,6 +347,15 @@ This method of exposing a container's port to the host machine is known as port 
 
 -   [x] Refactor KYC Service : Only for logged in users.
 
-    -   [] validations:do validations for know your customer form so that one customer doesn't have same profile for 2 different emails and such.
+    -   [] validations: Do validations for know your customer form so that one customer doesn't have same profile for 2 different emails and such.
+    -   [] API: Create Api to get maskings for customers []
+    -   [] API: Create Api to get Rewards for customers []
+    -   [] API Specification: For Create Campaign create a custom API specification
+    -   [] Make the date time fields responsive
+    -   [] Make the Profile modal responsive
+    -   [] Make Dummy charts in the dashboard
+    -   [] Do database Indexing
+    -   [] Create pagination in backend for reports
+    -   [] Create pagination in frontend for reports
 
     </details>

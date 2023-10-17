@@ -8,8 +8,10 @@ export const prepareDataForBackend = async (
     resetForm,
     setDuplicate
 ) => {
+    console.log("---------fokin data from the props:", formValues);
     // Extract numberList, endTime, and startTime
-    const { numberList, endTime, startTime, ...otherFormValues } = formValues;
+    const { numberList, endTime, startTime, operatorName, ...otherFormValues } =
+        formValues;
     const excelDataArray = [];
     const invalidNumbers = []; // Array to store invalid numbers
     const duplicateNumbers = []; // Array to store duplicate numbers
@@ -38,10 +40,20 @@ export const prepareDataForBackend = async (
                         duplicateNumbers.push(row.number);
                     } else {
                         // Unique number, add to unique set
-                        uniqueNumbers.add(row.number);
+                        // uniqueNumbers.add(row.number);
+                        // console.log(
+                        //     "--------fokin row.number--------",
+                        //     row.number
+                        // );
+                        // const operatorName = setOperator(row.number); // Call setOperator for each row's number
+                        // console.log(
+                        //     "--------fokin operatorName--------",
+                        //     operatorName
+                        // );
                         excelDataArray.push({
                             startTime,
                             endTime,
+                            operatorName: setOperator(row.number),
                             ...otherFormValues,
                             ...row,
                         });
@@ -52,6 +64,27 @@ export const prepareDataForBackend = async (
                 }
             }
 
+            // for (const row of excelData) {
+            //     if (isValidNumber(row.number)) {
+            //         if (uniqueNumbers.has(row.number)) {
+            //             // Duplicate number, add to duplicate array
+            //             duplicateNumbers.push(row.number);
+            //         } else {
+            //             // Unique number, add to unique set
+            //             uniqueNumbers.add(row.number);
+            //             excelDataArray.push({
+            //                 startTime,
+            //                 endTime,
+            //                 ...otherFormValues,
+            //                 ...row,
+            //             });
+            //         }
+            //     } else {
+            //         // Store invalid numbers in the array
+            //         invalidNumbers.push(row.number);
+            //     }
+            // }
+
             setInvalid(invalidNumbers);
             setDuplicate(duplicateNumbers);
 
@@ -61,7 +94,7 @@ export const prepareDataForBackend = async (
                     masking: formValues.masking,
                     arra: excelDataArray, // Assuming excelDataArray contains your data
                 };
-
+                console.log("--------fokin Data--------", requestData);
                 const response = await axios.post(
                     "http://localhost:3004/api/users/campaign",
                     requestData,
@@ -93,4 +126,36 @@ function isValidNumber(number) {
         numberString.startsWith("880") &&
         numberString.length === 13
     );
+}
+
+function setOperator(number) {
+    const prefixes = [
+        "88019",
+        "88018",
+        "88017",
+        "88014",
+        "88016",
+        "88013",
+        "88015",
+    ];
+    const operators = [
+        "Banglalink",
+        "Airtel/Robi",
+        "Grameenphone",
+        "Banglalink",
+        "Airtel/Robi",
+        "Grameenphone",
+        "Teletalk",
+    ];
+
+    const numberString = String(number); // Convert to string
+
+    for (let i = 0; i < prefixes.length; i++) {
+        if (numberString.startsWith(prefixes[i])) {
+            return operators[i];
+        }
+    }
+
+    // If the number doesn't match any of the prefixes, return a default value
+    return "Unknown";
 }

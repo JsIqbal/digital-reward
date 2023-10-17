@@ -27,7 +27,7 @@ export const campaignSchema = Yup.object({
     masking: Yup.string().required("Masking name is required"),
     startTime: Yup.date().required("Start time is required"),
     endTime: Yup.date().required("End time is required"),
-    operatorName: Yup.string().required("Operator name is required"),
+    // operatorName: Yup.string().required("Operator name is required"),
     rewardName: Yup.string().required("Reward name is required"),
     numberList: Yup.mixed().required("Number list is required"),
     campaignDescription: Yup.mixed().required("Text is required"),
