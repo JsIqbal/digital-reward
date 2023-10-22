@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"go-rest/config"
 	"go-rest/svc"
+	"go-rest/util"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -32,6 +33,7 @@ func NewDataCampaignRepo(db *gorm.DB) svc.DataCampaignRepo {
 	}
 }
 
+// helper function for creating a new data campaign
 func (r *dataCampaignRepo) findMobiCredsByMasking(ctx context.Context, masking string) (*svc.Masking, error) {
 	var m svc.Masking
 	if err := r.db.Where("masking = ?", masking).First(&m).Error; err != nil {
@@ -104,6 +106,7 @@ func (r *dataCampaignRepo) CreateCampaign(ctx context.Context, ID string, maskin
 	return campaigns, nil
 }
 
+// helper function for creating a new data campaign
 func sendSMS(username string, password string, maskingName string, to int64, message string) error {
 	apiUrl := "https://api.mobireach.com.bd/SendTextMessage"
 
@@ -144,26 +147,6 @@ func (r *dataCampaignRepo) FindByCampaignName(ctx context.Context, campaignName 
 	var campaigns []*svc.Campaign
 
 	if err := r.db.Where("campaign_name = ?", campaignName).Find(&campaigns).Error; err != nil {
-		return nil, err
-	}
-
-	return campaigns, nil
-}
-
-func (r *dataCampaignRepo) FindByUserIDAndCampaignName(ctx context.Context, userID string, campaignName string) ([]*svc.Campaign, error) {
-	var campaigns []*svc.Campaign
-
-	if err := r.db.Where("user_id = ? AND campaign_name = ?", userID, campaignName).Find(&campaigns).Error; err != nil {
-		return nil, err
-	}
-
-	return campaigns, nil
-}
-
-func (r *dataCampaignRepo) GetCampaignByUserId(ctx context.Context, userID string) ([]*svc.Campaign, error) {
-	var campaigns []*svc.Campaign
-
-	if err := r.db.Where("user_id = ?", userID).Find(&campaigns).Error; err != nil {
 		return nil, err
 	}
 
@@ -257,10 +240,27 @@ func (r *dataCampaignRepo) GetDataCampaignReport(ctx context.Context, userID str
 	return zipData.Bytes(), nil
 }
 
-func (r *dataCampaignRepo) SingleDatapack(ctx context.Context, std *svc.SingleDataPack) error {
-	return nil
+func (r *dataCampaignRepo) FindByUserIDAndCampaignName(ctx context.Context, userID string, campaignName string) ([]*svc.Campaign, error) {
+	var campaigns []*svc.Campaign
+
+	if err := r.db.Where("user_id = ? AND campaign_name = ?", userID, campaignName).Find(&campaigns).Error; err != nil {
+		return nil, err
+	}
+
+	return campaigns, nil
 }
 
+func (r *dataCampaignRepo) GetCampaignByUserId(ctx context.Context, userID string) ([]*svc.Campaign, error) {
+	var campaigns []*svc.Campaign
+
+	if err := r.db.Where("user_id = ?", userID).Find(&campaigns).Error; err != nil {
+		return nil, err
+	}
+
+	return campaigns, nil
+}
+
+// helper function to create data campaign
 func getAccessToken() (string, error) {
 	// Define the token endpoint URL
 	tokenURL := "https://api.robi.com.bd/token"
@@ -318,6 +318,8 @@ func getAccessToken() (string, error) {
 }
 
 // provisionDataPack sends a data pack provisioning request
+
+// helper function to create data campaign
 func provisionDataPack(accessToken string, msisdn int64, recurring string) (string, error) {
 	// Define the API endpoint URL
 	apiURL := "https://api.robi.com.bd/adcs/adcspackProvisioningNormal/v1/packProvisioningNormal"
@@ -360,6 +362,7 @@ func provisionDataPack(accessToken string, msisdn int64, recurring string) (stri
 	return string(body), nil
 }
 
+// helper function to create data campaign
 func singleDataPack(msisdn int64, recurring string) (string, error) {
 	accessToken, err := getAccessToken()
 	if err != nil {
@@ -385,4 +388,8 @@ func singleDataPack(msisdn int64, recurring string) (string, error) {
 	}
 
 	return transactionID, nil
+}
+
+func (r *dataCampaignRepo) SingleDatapack(ctx context.Context, std *util.SingleDataPack) error {
+	return nil
 }
