@@ -2,6 +2,7 @@ package svc
 
 import (
 	"context"
+	"go-rest/util"
 	"time"
 )
 
@@ -44,7 +45,7 @@ type DataCampaignRepo interface {
 	// I have to cut the FindByUserIDAndCampaignName
 	FindByUserIDAndCampaignName(ctx context.Context, userID string, campaignName string) ([]*Campaign, error)
 	GetCampaignByUserId(ctx context.Context, userID string) ([]*Campaign, error)
-	SingleDatapack(ctx context.Context, std *SingleDataPack) error
+	SingleDatapack(ctx context.Context, std *util.SingleDataPack) error
 }
 
 type Service interface {
@@ -54,8 +55,6 @@ type Service interface {
 	CreateUser(ctx context.Context, std *User) error
 	FindUserByID(ctx context.Context, ID string) (*User, error)
 	FindUserByUsername(ctx context.Context, username string) (*User, error)
-	// GetUserDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]*Campaign, error)
-	GetUserDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]byte, error)
 	////////// User Profile Signatures ////////////
 	CreateUserProfile(ctx context.Context, ID string, profile *Profile) (*UserProfile, error)
 	GetUserProfile(ctx context.Context, ID string) (*Profile, error)
@@ -67,6 +66,7 @@ type Service interface {
 	GetUserProfileByPocNumber(ctx context.Context, poc string) (*Profile, error)
 	////////// Camapign Signatures ////////////
 	CreateDataCampaign(ctx context.Context, userID string, masking string, campaigns []*Campaign) ([]*Campaign, error)
+	GetUserDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]byte, error)
 	GetDataCampaignByUserId(ctx context.Context, userID string) ([]*Campaign, error)
-	SubmitSingleDatapack(ctx context.Context, std *SingleDataPack) error
+	SubmitSingleDatapack(ctx context.Context, std *util.SingleDataPack) error
 }

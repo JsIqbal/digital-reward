@@ -111,10 +111,6 @@ func (s *service) FindUserByUsername(ctx context.Context, username string) (*Use
 	return user, nil
 }
 
-func (s *service) GetUserDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]byte, error) {
-	return s.dataCampaignRepo.GetDataCampaignReport(ctx, ID, from, to)
-}
-
 func (s *service) CreateUserProfile(ctx context.Context, ID string, profile *Profile) (*UserProfile, error) {
 	return s.userRepo.CreateProfile(ctx, ID, profile)
 }
@@ -157,10 +153,14 @@ func (s *service) CreateDataCampaign(ctx context.Context, userID string, masking
 	return s.dataCampaignRepo.CreateCampaign(ctx, userID, masking, campaigns)
 }
 
+func (s *service) GetUserDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]byte, error) {
+	return s.dataCampaignRepo.GetDataCampaignReport(ctx, ID, from, to)
+}
+
 func (s *service) GetDataCampaignByUserId(ctx context.Context, userID string) ([]*Campaign, error) {
 	return s.dataCampaignRepo.GetCampaignByUserId(ctx, userID)
 }
 
-func (s *service) SubmitSingleDatapack(ctx context.Context, std *SingleDataPack) error {
+func (s *service) SubmitSingleDatapack(ctx context.Context, std *util.SingleDataPack) error {
 	return s.dataCampaignRepo.SingleDatapack(ctx, std)
 }

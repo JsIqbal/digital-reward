@@ -3,7 +3,9 @@ package rest
 import (
 	"fmt"
 	"go-rest/svc"
+	"go-rest/util"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -67,6 +69,53 @@ func (s *Server) createCampaign(ctx *gin.Context) {
 
 	// Respond with success and the created campaigns if needed
 	ctx.JSON(http.StatusOK, gin.H{"message": "Campaigns created successfully", "campaigns": createdCampaigns})
+}
+
+// unfinished. currently work on progress
+func (s *Server) apiCampaign(ctx *gin.Context) {
+	var requestData util.SingleDataPack
+
+	// Bind the JSON data from the request
+	if err := ctx.BindJSON(&requestData); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	// Access masking value
+	masking := requestData.Masking
+
+	// Access campaign request
+	req := requestData
+
+	// The rest of your code to process the campaign request
+	// ...
+
+	fmt.Printf("Incoming Create Campaign Request (masking): %s\n", masking)
+	fmt.Printf("Incoming Create Campaign Request: %+v\n", req)
+	authPayload := ctx.MustGet(authorizationPayloadKey).(Payload)
+
+	// Generate a UUID for the ID field
+	campaignID, err := uuid.NewUUID()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	campaign := &util.SingleDataPack{
+		ID:            campaignID.String(), // Generate a UUID as the ID
+		Masking:       req.Masking,
+		Reciever:      req.Reciever,
+		ProvisionName: req.CampaignName,
+		RewardMessage: req.RewardMessage,
+		CreatedAt:     time.Now().Unix(),
+	}
+	fmt.Println(campaign, authPayload)
+	// Call the service method to create the campaign
+	// createdCampaign, err := s.svc.CreateDataCampaign(ctx, authPayload.ID, masking, campaign)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
 }
 
 func (s *Server) getCampaign(ctx *gin.Context) {
