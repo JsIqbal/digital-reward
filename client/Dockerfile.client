@@ -39,4 +39,4 @@ COPY . .
 EXPOSE 3000
 
 # Define the command to start the Next.js client in production mode
-CMD ["npm", "start"]
+CMD ["sh", "-c", "npm install && npm start"]

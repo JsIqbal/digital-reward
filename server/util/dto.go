@@ -12,10 +12,8 @@ type Credentials struct {
 }
 
 type SingleDataPack struct {
-	ID            string `json:"ID"`
 	Masking       string `json:"masking"`
-	CampaignName  string `json:"campaign_name"`
-	Reciever      string `json:"reciever"`
+	Reciever      int64  `json:"reciever"`
 	ProvisionName string `json:"provision_name"`
 	RewardMessage string `json:"reward_message"`
 	Status        string `json:"status" default:"pending"`

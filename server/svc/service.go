@@ -152,6 +152,9 @@ func (s *service) CreateDataCampaign(ctx context.Context, userID string, masking
 	// Call the repository method to create the campaigns
 	return s.dataCampaignRepo.CreateCampaign(ctx, userID, masking, campaigns)
 }
+func (s *service) CreateApiDataCampaign(ctx context.Context, userID string, masking string, campaign *Campaign) (*Campaign, error) {
+	return s.dataCampaignRepo.CreateApiCampaign(ctx, userID, masking, campaign)
+}
 
 func (s *service) GetUserDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]byte, error) {
 	return s.dataCampaignRepo.GetDataCampaignReport(ctx, ID, from, to)

@@ -106,6 +106,98 @@ func (r *dataCampaignRepo) CreateCampaign(ctx context.Context, ID string, maskin
 	return campaigns, nil
 }
 
+// func (r *dataCampaignRepo) CreateApiCampaign(ctx context.Context, ID string, masking string, campaign *svc.Campaign) (*svc.Campaign, error) {
+// 	maskingCreds, err := r.findMobiCredsByMasking(ctx, masking)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	// Check if a campaign with the same name already exists for the user
+// 	existingCampaigns, err := r.FindByUserIDAndCampaignName(ctx, ID, campaign.CampaignName)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	// If a campaign with the same name exists for the user, return an error
+// 	if len(existingCampaigns) > 0 {
+// 		return nil, errors.New("campaign with the same name already exists for the user")
+// 	}
+
+// 	// Create campaigns in the database
+// 	if err := r.db.Create(&campaign).Error; err != nil {
+
+// 		return nil, err
+// 	}
+
+// 	// After campaign creation, iterate through the campaigns and send SMS
+
+// 	recurring := "No"
+// 	transactionID, err := singleDataPack(campaign.Number, recurring)
+// 	fmt.Printf("--------------transactionID-----------------%+v", transactionID)
+// 	if err != nil {
+// 		// Handle the error from singleDataPack, e.g., log it
+// 		fmt.Printf("Failed to provision data pack for %d: %v\n", campaign.Number, err)
+// 	}
+
+// 	// Send SMS
+// 	err = sendSMS(maskingCreds.Username, maskingCreds.Password, maskingCreds.Masking, campaign.Number, campaign.Description)
+// 	if err != nil {
+// 		// Handle the error, e.g., log it
+// 		fmt.Printf("Failed to send SMS to %d: %v\n", campaign.Number, err)
+// 	} else {
+// 		// SMS sent successfully, mark the number as completed
+// 		fmt.Printf("SMS sent to %d\n", campaign.Number)
+
+// 		// Update the campaign's status and TransactionId in the database as completed
+// 		if err := r.db.Model(&campaign).Updates(map[string]interface{}{"Status": "completed", "TransactionId": transactionID}).Error; err != nil {
+// 			// Handle the error, e.g., log it
+// 			fmt.Printf("Failed to update campaign status: %v\n", err)
+// 		}
+// 	}
+
+// 	return campaign, nil
+// }
+
+func (r *dataCampaignRepo) CreateApiCampaign(ctx context.Context, ID string, masking string, campaign *svc.Campaign) (*svc.Campaign, error) {
+	maskingCreds, err := r.findMobiCredsByMasking(ctx, masking)
+	if err != nil {
+		return nil, err
+	}
+
+	recurring := "No"
+	transactionID, err := singleDataPack(campaign.Number, recurring)
+	fmt.Printf("--------------transactionID-----------------%+v", transactionID)
+	if err != nil {
+		// Handle the error from singleDataPack, e.g., log it
+		fmt.Printf("Failed to provision data pack for %d: %v\n", campaign.Number, err)
+		return nil, err
+	}
+
+	// Send SMS
+	err = sendSMS(maskingCreds.Username, maskingCreds.Password, maskingCreds.Masking, campaign.Number, campaign.Description)
+	if err != nil {
+		// Handle the error, e.g., log it
+		fmt.Printf("Failed to send SMS to %d: %v\n", campaign.Number, err)
+		return nil, err
+	} else {
+		// SMS sent successfully, mark the number as completed
+		fmt.Printf("SMS sent to %d\n", campaign.Number)
+
+		// Update the campaign's status and TransactionId in the database as completed
+		if err := r.db.Model(&campaign).Updates(map[string]interface{}{"Status": "completed", "TransactionId": transactionID}).Error; err != nil {
+			// Handle the error, e.g., log it
+			fmt.Printf("Failed to update campaign status: %v\n", err)
+			return nil, err
+		}
+	}
+
+	if err := r.db.Create(&campaign).Error; err != nil {
+		return nil, err
+	}
+
+	return campaign, nil
+}
+
 // helper function for creating a new data campaign
 func sendSMS(username string, password string, maskingName string, to int64, message string) error {
 	apiUrl := "https://api.mobireach.com.bd/SendTextMessage"

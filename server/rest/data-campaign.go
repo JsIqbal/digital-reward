@@ -2,9 +2,12 @@ package rest
 
 import (
 	"fmt"
+	"go-rest/logger"
 	"go-rest/svc"
 	"go-rest/util"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -71,7 +74,38 @@ func (s *Server) createCampaign(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "Campaigns created successfully", "campaigns": createdCampaigns})
 }
 
-// unfinished. currently work on progress
+func setOperator(number int64) string {
+	prefixes := []string{
+		"88019",
+		"88018",
+		"88017",
+		"88014",
+		"88016",
+		"88013",
+		"88015",
+	}
+	operators := []string{
+		"Banglalink",
+		"Airtel/Robi",
+		"Grameenphone",
+		"Banglalink",
+		"Airtel/Robi",
+		"Grameenphone",
+		"Teletalk",
+	}
+
+	numberString := strconv.FormatInt(number, 10) // Convert to string
+
+	for i := 0; i < len(prefixes); i++ {
+		if strings.HasPrefix(numberString, prefixes[i]) {
+			return operators[i]
+		}
+	}
+
+	// If the number doesn't match any of the prefixes, return a default value
+	return "Unknown"
+}
+
 func (s *Server) apiCampaign(ctx *gin.Context) {
 	var requestData util.SingleDataPack
 
@@ -80,42 +114,55 @@ func (s *Server) apiCampaign(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	// Access masking value
+
+	// Access masking, receiver, and reward message
 	masking := requestData.Masking
+	operator := setOperator(requestData.Reciever)
+	receiver := requestData.Reciever
+	rewardMessage := requestData.RewardMessage
+	provisionName := requestData.ProvisionName
 
-	// Access campaign request
-	req := requestData
-
-	// The rest of your code to process the campaign request
-	// ...
-
-	fmt.Printf("Incoming Create Campaign Request (masking): %s\n", masking)
-	fmt.Printf("Incoming Create Campaign Request: %+v\n", req)
 	authPayload := ctx.MustGet(authorizationPayloadKey).(Payload)
 
-	// Generate a UUID for the ID field
+	user, err := s.svc.FindUserByID(ctx, authPayload.ID)
+	if err != nil {
+		logger.Error(ctx, "cannot find user", err)
+		ctx.JSON(http.StatusBadRequest, s.svc.Error(ctx, util.EN_INTERNAL_SERVER_ERROR, "Bad request"))
+		return
+	}
+
 	campaignID, err := uuid.NewUUID()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	campaign := &util.SingleDataPack{
-		ID:            campaignID.String(), // Generate a UUID as the ID
-		Masking:       req.Masking,
-		Reciever:      req.Reciever,
-		ProvisionName: req.CampaignName,
-		RewardMessage: req.RewardMessage,
-		CreatedAt:     time.Now().Unix(),
+	// You can set the start time and end time to the requested time
+	startTime := time.Now()
+	startTimeStr := startTime.Format("2006-01-02T15:04")
+	endTimeStr := startTime.Format("2006-01-02T15:04")
+
+	campaign := &svc.Campaign{
+		ID:           campaignID.String(), // Generate a UUID as the ID
+		UserID:       authPayload.ID,      // Use the UserID from user
+		CampaignName: "API_" + user.Username,
+		StartTime:    startTimeStr,
+		EndTime:      endTimeStr,
+		Masking:      masking,
+		Number:       receiver,
+		Operator:     operator,
+		Reward:       provisionName,
+		Status:       requestData.Status,
+		Description:  rewardMessage,
 	}
-	fmt.Println(campaign, authPayload)
+
 	// Call the service method to create the campaign
-	// createdCampaign, err := s.svc.CreateDataCampaign(ctx, authPayload.ID, masking, campaign)
+	createdCampaign, err := s.svc.CreateApiDataCampaign(ctx, authPayload.ID, masking, campaign)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
+	ctx.JSON(http.StatusOK, gin.H{"message": "Campaigns created successfully", "campaigns": createdCampaign})
 }
 
 func (s *Server) getCampaign(ctx *gin.Context) {

@@ -42,7 +42,6 @@ func (s *Server) setupRouter() {
 	s.router.GET("/api/test", s.test)
 
 	// public routes
-
 	s.router.POST("/api/auth/sign-up", s.createUser)
 	s.router.POST("/api/auth/sign-in", s.loginUser)
 
