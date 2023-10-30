@@ -32,7 +32,7 @@ export const CampaignForm = () => {
     console.log("invalid", invalid);
 
     const handleSubmit = (values, { setSubmitting, resetForm }) => {
-        console.log("Came inside handle submit");
+        console.log("Came inside handle submit:", values);
         prepareDataForBackend(values, setInvalid, resetForm, setDuplicate);
         setSubmitting(false);
         setFileInputKey(fileInputKey + 1);
