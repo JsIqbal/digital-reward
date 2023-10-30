@@ -198,6 +198,29 @@ func (r *dataCampaignRepo) CreateApiCampaign(ctx context.Context, ID string, mas
 	return campaign, nil
 }
 
+func (r *dataCampaignRepo) CheckReward(ctx context.Context, transactionID string) (util.CheckRewardTransaction, error) {
+	var campaign svc.Campaign
+	if err := r.db.First(&campaign, "transaction_id = ?", transactionID).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return util.CheckRewardTransaction{}, errors.New("record not found")
+		}
+		return util.CheckRewardTransaction{}, err
+	}
+
+	// Construct the CheckRewardTransaction object
+	checkRewardTransaction := util.CheckRewardTransaction{
+		TransactionId: campaign.TransactionId,
+		CampaignName:  campaign.CampaignName,
+		Number:        campaign.Number,
+		Operator:      campaign.Operator,
+		Reward:        campaign.Reward,
+		Description:   campaign.Description,
+		Status:        campaign.Status,
+	}
+
+	return checkRewardTransaction, nil
+}
+
 // helper function for creating a new data campaign
 func sendSMS(username string, password string, maskingName string, to int64, message string) error {
 	apiUrl := "https://api.mobireach.com.bd/SendTextMessage"

@@ -156,6 +156,10 @@ func (s *service) CreateApiDataCampaign(ctx context.Context, userID string, mask
 	return s.dataCampaignRepo.CreateApiCampaign(ctx, userID, masking, campaign)
 }
 
+func (s *service) CheckRewardTransaction(ctx context.Context, transactionId string) (util.CheckRewardTransaction, error) {
+	return s.dataCampaignRepo.CheckReward(ctx, transactionId)
+}
+
 func (s *service) GetUserDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]byte, error) {
 	return s.dataCampaignRepo.GetDataCampaignReport(ctx, ID, from, to)
 }

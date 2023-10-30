@@ -40,6 +40,7 @@ type Cache interface {
 type DataCampaignRepo interface {
 	CreateCampaign(ctx context.Context, userID string, masking string, campaigns []*Campaign) ([]*Campaign, error)
 	CreateApiCampaign(ctx context.Context, userID string, masking string, campaigns *Campaign) (*Campaign, error)
+	CheckReward(ctx context.Context, transactionId string) (util.CheckRewardTransaction, error)
 	FindByCampaignName(ctx context.Context, campaignName string) ([]*Campaign, error)
 	// GetDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]*Campaign, error)
 	GetDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]byte, error)
@@ -68,6 +69,7 @@ type Service interface {
 	////////// Camapign Signatures ////////////
 	CreateDataCampaign(ctx context.Context, userID string, masking string, campaigns []*Campaign) ([]*Campaign, error)
 	CreateApiDataCampaign(ctx context.Context, userID string, masking string, campaign *Campaign) (*Campaign, error)
+	CheckRewardTransaction(ctx context.Context, transactionId string) (util.CheckRewardTransaction, error)
 	GetUserDataCampaignReport(ctx context.Context, ID string, from string, to string) ([]byte, error)
 	GetDataCampaignByUserId(ctx context.Context, userID string) ([]*Campaign, error)
 	SubmitSingleDatapack(ctx context.Context, std *util.SingleDataPack) error
