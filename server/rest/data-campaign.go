@@ -165,6 +165,18 @@ func (s *Server) apiCampaign(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "Campaigns created successfully", "campaigns": createdCampaign})
 }
 
+func (s *Server) rewardApiChecker(ctx *gin.Context) {
+	transactionID := ctx.Param("id")
+
+	checkRewardTransaction, err := s.svc.CheckRewardTransaction(ctx, transactionID)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, checkRewardTransaction)
+}
+
 func (s *Server) getCampaign(ctx *gin.Context) {
 	// Get the user's ID from the authorization payload
 	authPayload := ctx.MustGet(authorizationPayloadKey).(Payload)
@@ -202,12 +214,4 @@ func (s *Server) getCampaignReport(ctx *gin.Context) {
 
 	// Respond with the campaign data
 	ctx.JSON(http.StatusOK, gin.H{"campaignData": campaignData})
-}
-
-func (s *Server) sendDatapack(ctx *gin.Context) {
-
-	authPayload := ctx.MustGet(authorizationPayloadKey).(Payload)
-
-	// Respond with the campaign data
-	ctx.JSON(http.StatusOK, gin.H{"campaignData": authPayload})
 }

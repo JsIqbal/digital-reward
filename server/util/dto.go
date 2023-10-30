@@ -19,3 +19,13 @@ type SingleDataPack struct {
 	Status        string `json:"status" default:"pending"`
 	CreatedAt     int64  `json:"CreatedAt"`
 }
+
+type CheckRewardTransaction struct {
+	TransactionId string `json:"transaction_id"`
+	CampaignName  string `json:"campaign_name"`
+	Number        int64  `json:"number"`
+	Operator      string `json:"operator"`
+	Reward        string `json:"reward"`
+	Description   string `json:"description"`
+	Status        string `json:"status"`
+}

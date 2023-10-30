@@ -54,6 +54,7 @@ func (s *Server) setupRouter() {
 	authRoutes.GET("/api/users/profile", s.getUserProfile)
 	authRoutes.POST("/api/users/campaign", s.createCampaign)
 	authRoutes.POST("/api/users/api-campaign", s.apiCampaign)
+	authRoutes.GET("/api/users/api-campaign/transaction/:id", s.rewardApiChecker)
 	authRoutes.GET("/api/users/campaign", s.getCampaign)
 	authRoutes.GET("/api/campaign/report", s.getCampaignReport)
 	// Single data pack for authenticated users
