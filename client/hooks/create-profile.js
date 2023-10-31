@@ -11,7 +11,7 @@ export const useAddProfile = () => {
 
         try {
             const response = await axios.post(
-                `http://localhost:3004/api/users/profile`,
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/profile`,
                 values,
                 {
                     withCredentials: true,

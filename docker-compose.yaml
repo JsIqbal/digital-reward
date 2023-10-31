@@ -11,7 +11,7 @@ services:
         volumes:
             - ./server:/app
         depends_on:
-            - db # If your server depends on a database (adjust this as needed)
+            - db
 
     client:
         build:

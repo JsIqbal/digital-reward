@@ -19,7 +19,7 @@ function useAuth(params) {
     const onSubmit = async (data) => {
         try {
             const response = await axios.post(
-                `http://localhost:3004/api/${mode}`,
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/${mode}`,
                 data
             );
 

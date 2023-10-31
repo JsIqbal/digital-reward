@@ -4,7 +4,7 @@ import axios from "axios";
 async function getCampaignData() {
     try {
         const response = await axios.get(
-            "http://localhost:3004/api/users/campaign",
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/campaign`,
             {
                 withCredentials: true,
             }

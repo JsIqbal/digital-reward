@@ -35,7 +35,7 @@ export function DatePickerWithRange({ className }) {
     //         to: date.to.toISOString(),
     //     };
     //     console.log(formattedDate);
-    //     const backendUrl = `http://localhost:3004/api/campaign/report?from=${formattedDate.from}&to=${formattedDate.to}`;
+    //     const backendUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}//api/campaign/report?from=${formattedDate.from}&to=${formattedDate.to}`;
 
     //     try {
     //         // Send a GET request to your backend to retrieve the base64-encoded zip data
@@ -98,7 +98,7 @@ export function DatePickerWithRange({ className }) {
             to: toDate.toISOString(),
         };
         console.log(formattedDate);
-        const backendUrl = `http://localhost:3004/api/campaign/report?from=${formattedDate.from}&to=${formattedDate.to}`;
+        const backendUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}/api/campaign/report?from=${formattedDate.from}&to=${formattedDate.to}`;
 
         try {
             // Send a GET request to your backend to retrieve the base64-encoded zip data

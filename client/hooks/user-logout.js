@@ -5,7 +5,7 @@ const useLogout = () => {
     const logout = async () => {
         try {
             await axios.post(
-                "http://localhost:3004/api/users/logout",
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/logout`,
                 {},
                 {
                     withCredentials: true,
