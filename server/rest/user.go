@@ -135,7 +135,7 @@ func (s *Server) loginUser(ctx *gin.Context) {
 	}
 
 	// Set the token as a cookie and send the login response
-	ctx.SetCookie("token", token, 3600, "/", "http://localhost:3000", false, true)
+	ctx.SetCookie("token", token, 3600, "/", "http://103.191.179.43:3000", false, true)
 	ctx.JSON(http.StatusOK, s.svc.Response(ctx, "successfully logged in", loginRes))
 }
 

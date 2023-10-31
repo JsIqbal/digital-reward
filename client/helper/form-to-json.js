@@ -96,7 +96,7 @@ export const prepareDataForBackend = async (
                 };
                 console.log("--------fokin Data--------", requestData);
                 const response = await axios.post(
-                    "http://localhost:3004/api/users/campaign",
+                    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/campaign`,
                     requestData,
                     {
                         withCredentials: true,

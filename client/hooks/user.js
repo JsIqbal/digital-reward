@@ -10,7 +10,7 @@ const useUser = () => {
     const fetchUser = async () => {
         try {
             const response = await axios.get(
-                "http://localhost:3004/api/users/user",
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/api/users/user`,
                 {
                     withCredentials: true,
                 }
