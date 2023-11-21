@@ -8,7 +8,6 @@ import { campaignValues } from "@/config/initial-values";
 
 import InvalidShet from "@/components/invalid-sheet";
 
-// const operators = ["Banglalink", "Grameenphone", "Teletalk", "Robi/Airtel"];
 const rewardNames = ["1GB_OKB_EB_7D", "Reward 2", "Reward 3"];
 
 const FileInput = ({ field, form: { setFieldValue } }) => {
@@ -28,11 +27,7 @@ export const CampaignForm = () => {
     const [fileInputKey, setFileInputKey] = useState(0);
     const fileInputRef = useRef(null);
 
-    console.log("duplicate", duplicate);
-    console.log("invalid", invalid);
-
     const handleSubmit = (values, { setSubmitting, resetForm }) => {
-        console.log("Came inside handle submit:", values);
         prepareDataForBackend(values, setInvalid, resetForm, setDuplicate);
         setSubmitting(false);
         setFileInputKey(fileInputKey + 1);
@@ -45,6 +40,10 @@ export const CampaignForm = () => {
     }
 
     useEffect(() => {
+        console.log(
+            "Came inside handle submit:  invalid.length",
+            invalid.length
+        );
         setIsSheetOpen(invalid.length > 0);
     }, [invalid]);
 
@@ -142,31 +141,6 @@ export const CampaignForm = () => {
                             className="md:w-1/2 flex flex-col space-y-4"
                             style={{ marginTop: 0 }}
                         >
-                            {/* <div className="flex flex-col">
-                                <label
-                                    htmlFor="operatorName"
-                                    className="text-gray-600 font-medium"
-                                >
-                                    Operator Name:
-                                </label>
-                                <Field
-                                    as="select"
-                                    name="operatorName"
-                                    className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                                >
-                                    <option value="">Select an operator</option>
-                                    {operators.map((operator, index) => (
-                                        <option key={index} value={operator}>
-                                            {operator}
-                                        </option>
-                                    ))}
-                                </Field>
-                                <ErrorMessage
-                                    name="operatorName"
-                                    component="div"
-                                    className="text-red-500"
-                                />
-                            </div> */}
                             <div className="flex flex-col">
                                 <label
                                     htmlFor="rewardName"
@@ -193,24 +167,6 @@ export const CampaignForm = () => {
                                 />
                             </div>
 
-                            {/* <div className="flex flex-col">
-                            <label
-                                htmlFor="numberList"
-                                className="text-gray-600 font-medium"
-                            >
-                                Upload Number List (CSV/XLSX):
-                            </label>
-                            <Field
-                                name="numberList"
-                                component={FileInput}
-                                className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                            />
-                            <ErrorMessage
-                                name="numberList"
-                                component="div"
-                                className="text-red-500"
-                            />
-                        </div> */}
                             <div className="flex flex-col">
                                 <label
                                     htmlFor="numberList"
@@ -220,7 +176,7 @@ export const CampaignForm = () => {
                                 </label>
                                 <Field
                                     name="numberList"
-                                    key={fileInputKey} // Add a unique key to reset the input
+                                    key={fileInputKey}
                                     component={FileInput}
                                     innerRef={fileInputRef}
                                     className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"

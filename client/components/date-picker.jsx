@@ -21,63 +21,6 @@ const initialDateRange = {
 
 export function DatePickerWithRange({ className }) {
     const [date, setDate] = useState(initialDateRange);
-    // Replace 'your_backend_url' with your actual backend URL
-
-    // async function sendDateRangeToBackend() {
-    //     if (!date) {
-    //         console.error("Date is undefined.");
-    //         return;
-    //     }
-
-    //     // Format the date object to match your backend's expected format
-    //     const formattedDate = {
-    //         from: date.from.toISOString(),
-    //         to: date.to.toISOString(),
-    //     };
-    //     console.log(formattedDate);
-    //     const backendUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}//api/campaign/report?from=${formattedDate.from}&to=${formattedDate.to}`;
-
-    //     try {
-    //         // Send a GET request to your backend to retrieve the base64-encoded zip data
-    //         const response = await axios.get(backendUrl, {
-    //             responseType: "json", // Ensure that the response is treated as JSON
-    //             withCredentials: true,
-    //         });
-
-    //         // Handle the response from your backend
-    //         const base64Data = response.data.campaignData;
-
-    //         // Decode the base64 data into binary data
-    //         const binaryData = atob(base64Data);
-
-    //         // Convert the binary data into a Blob
-    //         const blob = new Blob(
-    //             [
-    //                 new Uint8Array(
-    //                     [...binaryData].map((char) => char.charCodeAt(0))
-    //                 ),
-    //             ],
-    //             { type: "application/zip" }
-    //         );
-
-    //         // Create a download link for the Blob
-    //         const objectURL = URL.createObjectURL(blob);
-
-    //         // Create an anchor element (<a>) for the download link
-    //         const downloadLink = document.createElement("a");
-    //         downloadLink.href = objectURL;
-    //         downloadLink.download = "campaign_report.zip"; // Set the desired file name
-
-    //         // Trigger a click event to simulate download link click
-    //         downloadLink.click();
-
-    //         // Clean up the object URL when done
-    //         URL.revokeObjectURL(objectURL);
-    //     } catch (error) {
-    //         // Handle errors, e.g., network issues or backend errors
-    //         console.error("Error sending data to backend:", error);
-    //     }
-    // }
 
     async function sendDateRangeToBackend() {
         if (!date) {

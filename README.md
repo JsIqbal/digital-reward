@@ -359,3 +359,12 @@ This method of exposing a container's port to the host machine is known as port 
     -   [] Create pagination in frontend for reports
 
     </details>
+
+*   new feature: store invalid numbers in db and expire them after some time -14 days
+
+-   check invalid number:
+
+    -   if number has characters
+    -   if numberdoesn't start with operator wise
+
+*   campaign summary first, after clicking on it then the details. \*\*\* - 5 working days
