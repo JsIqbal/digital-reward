@@ -8,7 +8,24 @@ import { campaignValues } from "@/config/initial-values";
 
 import InvalidShet from "@/components/invalid-sheet";
 
-const rewardNames = ["1GB_OKB_EB_7D", "Reward 2", "Reward 3"];
+const rewardNames = [
+    {
+        name: "1GB 30 days",
+        value: 7001370,
+    },
+    {
+        name: "2GB 30 days",
+        value: 7001373,
+    },
+    {
+        name: "3GB 30 days",
+        value: 7001372,
+    },
+    {
+        name: "5GB 30 days",
+        value: 7001371,
+    },
+];
 
 const FileInput = ({ field, form: { setFieldValue } }) => {
     return (
@@ -154,11 +171,16 @@ export const CampaignForm = () => {
                                     className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                                 >
                                     <option value="">Select a reward</option>
-                                    {rewardNames.map((reward, index) => (
-                                        <option key={index} value={reward}>
-                                            {reward}
-                                        </option>
-                                    ))}
+                                    {rewardNames.map((reward, index) => {
+                                        return (
+                                            <option
+                                                key={reward.name}
+                                                value={reward.value}
+                                            >
+                                                {reward.name}
+                                            </option>
+                                        );
+                                    })}
                                 </Field>
                                 <ErrorMessage
                                     name="rewardName"
