@@ -18,6 +18,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -77,9 +78,9 @@ func (r *dataCampaignRepo) CreateCampaign(ctx context.Context, ID string, maskin
 	// After campaign creation, iterate through the campaigns and send SMS
 	for _, campaign := range campaigns {
 		// Execute singleDataPack for this campaign
-		recurring := "No"
-		transactionID, err := singleDataPack(campaign.Number, recurring)
-		fmt.Printf("--------------transactionID-----------------%+v", transactionID)
+		fmt.Printf("--------------campaign information-----------------%+v", campaign)
+		transactionID, err := singleDataPack(ctx, campaign.Number, campaign.Reward)
+
 		if err != nil {
 			// Handle the error from singleDataPack, e.g., log it
 			fmt.Printf("Failed to provision data pack for %d: %v\n", campaign.Number, err)
@@ -106,66 +107,13 @@ func (r *dataCampaignRepo) CreateCampaign(ctx context.Context, ID string, maskin
 	return campaigns, nil
 }
 
-// func (r *dataCampaignRepo) CreateApiCampaign(ctx context.Context, ID string, masking string, campaign *svc.Campaign) (*svc.Campaign, error) {
-// 	maskingCreds, err := r.findMobiCredsByMasking(ctx, masking)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	// Check if a campaign with the same name already exists for the user
-// 	existingCampaigns, err := r.FindByUserIDAndCampaignName(ctx, ID, campaign.CampaignName)
-// 	if err != nil {
-// 		return nil, err
-// 	}
-
-// 	// If a campaign with the same name exists for the user, return an error
-// 	if len(existingCampaigns) > 0 {
-// 		return nil, errors.New("campaign with the same name already exists for the user")
-// 	}
-
-// 	// Create campaigns in the database
-// 	if err := r.db.Create(&campaign).Error; err != nil {
-
-// 		return nil, err
-// 	}
-
-// 	// After campaign creation, iterate through the campaigns and send SMS
-
-// 	recurring := "No"
-// 	transactionID, err := singleDataPack(campaign.Number, recurring)
-// 	fmt.Printf("--------------transactionID-----------------%+v", transactionID)
-// 	if err != nil {
-// 		// Handle the error from singleDataPack, e.g., log it
-// 		fmt.Printf("Failed to provision data pack for %d: %v\n", campaign.Number, err)
-// 	}
-
-// 	// Send SMS
-// 	err = sendSMS(maskingCreds.Username, maskingCreds.Password, maskingCreds.Masking, campaign.Number, campaign.Description)
-// 	if err != nil {
-// 		// Handle the error, e.g., log it
-// 		fmt.Printf("Failed to send SMS to %d: %v\n", campaign.Number, err)
-// 	} else {
-// 		// SMS sent successfully, mark the number as completed
-// 		fmt.Printf("SMS sent to %d\n", campaign.Number)
-
-// 		// Update the campaign's status and TransactionId in the database as completed
-// 		if err := r.db.Model(&campaign).Updates(map[string]interface{}{"Status": "completed", "TransactionId": transactionID}).Error; err != nil {
-// 			// Handle the error, e.g., log it
-// 			fmt.Printf("Failed to update campaign status: %v\n", err)
-// 		}
-// 	}
-
-// 	return campaign, nil
-// }
-
 func (r *dataCampaignRepo) CreateApiCampaign(ctx context.Context, ID string, masking string, campaign *svc.Campaign) (*svc.Campaign, error) {
 	maskingCreds, err := r.findMobiCredsByMasking(ctx, masking)
 	if err != nil {
 		return nil, err
 	}
 
-	recurring := "No"
-	transactionID, err := singleDataPack(campaign.Number, recurring)
+	transactionID, err := singleDataPack(ctx, campaign.Number, campaign.Reward)
 	fmt.Printf("--------------transactionID-----------------%+v", transactionID)
 	if err != nil {
 		// Handle the error from singleDataPack, e.g., log it
@@ -432,19 +380,73 @@ func getAccessToken() (string, error) {
 	return accessToken, nil
 }
 
-// provisionDataPack sends a data pack provisioning request
-
 // helper function to create data campaign
-func provisionDataPack(accessToken string, msisdn int64, recurring string) (string, error) {
+func singleDataPack(ctx context.Context, msisdn int64, reward string) (string, error) {
+	accessToken, err := getAccessToken()
+	if err != nil {
+		fmt.Println("Error obtaining access token:", err)
+		return "", err
+	}
+
+	// Convert int64 msisdn to string
+	msisdnStr := strconv.FormatInt(msisdn, 10)
+
+	// Remove "880" prefix from msisdn
+	if strings.HasPrefix(msisdnStr, "880") {
+		msisdnStr = msisdnStr[3:]
+	}
+
+	response, err := provisionDataPack(ctx, accessToken, msisdnStr, reward)
+	if err != nil {
+		return "", err
+	}
+
+	fmt.Println("Data Pack Provisioning Response:", response)
+
+	var responseData map[string]interface{}
+	if err := json.Unmarshal([]byte(response), &responseData); err != nil {
+		return "", err
+	}
+
+	resultHeader, ok := responseData["ResultHeader"].(map[string]interface{})
+	if !ok {
+		return "", fmt.Errorf("ResultHeader not found in response")
+	}
+
+	transactionID, ok := resultHeader["TransactionId"].(string)
+	if !ok {
+		// TransactionId not found, generate a UUID
+		uuid, err := uuid.NewUUID()
+		if err != nil {
+			return "", fmt.Errorf("Error generating UUID: %v", err)
+		}
+		transactionID = uuid.String()
+	}
+
+	return transactionID, nil
+}
+
+func (r *dataCampaignRepo) SingleDatapack(ctx context.Context, std *util.SingleDataPack) error {
+	return nil
+}
+
+func provisionDataPack(ctx context.Context, accessToken string, msisdn string, reward string) (string, error) {
 	// Define the API endpoint URL
-	apiURL := "https://api.robi.com.bd/adcs/adcspackProvisioningNormal/v1/packProvisioningNormal"
+	apiURL := "https://api.robi.com.bd/cbs/CbsChangeSubOfferingNormal/v1/cbsChangeSubOfferingNormal?"
 
 	// Create the request payload
 	data := url.Values{}
-	data.Set("MSISDN", strconv.FormatInt(msisdn, 10))
-	data.Set("name", "1GB_OKB_EB_7D")
-	data.Set("Recurring", recurring)
-	data.Set("CN_THIRDPARTYID", "620")
+
+	messageSeq, err := uuid.NewUUID()
+	if err != nil {
+		return "", err
+	}
+
+	data.Set("MessageSeq", messageSeq.String())
+	data.Set("PrimaryIdentity", msisdn)
+	data.Set("OfferingID", reward)
+	data.Set("Mode", "I")
+	data.Set("CN_THIRDPARTYID", "MIFE:adareach:")
 
 	// Create a new HTTP POST request
 	req, err := http.NewRequest("POST", apiURL, strings.NewReader(data.Encode()))
@@ -470,41 +472,9 @@ func provisionDataPack(accessToken string, msisdn int64, recurring string) (stri
 		return "", err
 	}
 
-	// if resp.StatusCode != http.StatusOK {
-	// 	return "", fmt.Errorf("failed to send data pack provisioning request: %s", body)
-	// }
+	if resp.StatusCode != http.StatusOK {
+		return "", fmt.Errorf("failed to send data pack provisioning request: %s", body)
+	}
 
 	return string(body), nil
-}
-
-// helper function to create data campaign
-func singleDataPack(msisdn int64, recurring string) (string, error) {
-	accessToken, err := getAccessToken()
-	if err != nil {
-		fmt.Println("Error obtaining access token:", err)
-		return "", err
-	}
-
-	response, err := provisionDataPack(accessToken, msisdn, recurring)
-	if err != nil {
-		return "", err
-	}
-
-	fmt.Println("Data Pack Provisioning Response:", response)
-
-	var responseData map[string]interface{}
-	if err := json.Unmarshal([]byte(response), &responseData); err != nil {
-		return "", err
-	}
-
-	transactionID, ok := responseData["TransactionId"].(string)
-	if !ok {
-		return "", fmt.Errorf("TransactionId not found in response")
-	}
-
-	return transactionID, nil
-}
-
-func (r *dataCampaignRepo) SingleDatapack(ctx context.Context, std *util.SingleDataPack) error {
-	return nil
 }
